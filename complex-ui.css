@@ -1,0 +1,448 @@
+/* =========================================================================
+   COMPLEX UI - TRADITIONAL & ELITE EXTENSIONS
+   ========================================================================= */
+
+/* Section Margins for Operatic Pacing */
+.elite-section {
+    position: relative;
+    width: 100%;
+    padding: 10vh 5vw;
+    background: var(--bg);
+    color: var(--text);
+    z-index: 10;
+}
+
+/* =========================================================================
+   SCENE SPLIT LAYOUT (Narrative Flow)
+   ========================================================================= */
+.scene-split {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10vh 10vw;
+    gap: 8vw;
+    min-height: 80vh;
+}
+
+.scene-split.reverse {
+    flex-direction: row-reverse;
+}
+
+.split-image {
+    width: 45%;
+    height: 60vh;
+    background: var(--bg-dark);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    position: relative;
+}
+
+.split-image img {
+    height: 80%;
+    width: auto;
+    object-fit: contain;
+    filter: drop-shadow(0 20px 40px rgba(0,0,0,0.08));
+    transition: transform 1.2s var(--easing);
+}
+
+.scene-split:hover .split-image img {
+    transform: scale(1.05) translateY(-10px);
+}
+
+.split-text {
+    width: 50%;
+    max-width: 500px;
+}
+
+.split-text .label {
+    display: block;
+    font-size: 0.6rem;
+    letter-spacing: 0.3em;
+    color: var(--accent);
+    margin-bottom: 20px;
+    text-transform: uppercase;
+}
+
+.split-text h2 {
+    font-family: 'Noto Serif', serif;
+    font-size: 3rem;
+    font-weight: 300;
+    margin-bottom: 30px;
+    line-height: 1.2;
+}
+
+.split-text p {
+    font-size: 1rem;
+    line-height: 1.8;
+    font-weight: 300;
+    color: var(--text-dim);
+}
+
+@media (max-width: 768px) {
+    .scene-split, .scene-split.reverse {
+        flex-direction: column;
+        padding: 5vh 5vw;
+        gap: 40px;
+        min-height: auto;
+    }
+    .split-image, .split-text {
+        width: 100%;
+        max-width: 100%;
+    }
+    .split-image {
+        height: 50vh;
+    }
+    .split-text h2 {
+        font-size: 2.2rem;
+    }
+}
+
+.elite-section.dark {
+    background: var(--text);
+    color: var(--bg);
+}
+
+.elite-section.dark .label {
+    color: var(--bg-dark);
+}
+
+.elite-section.dark h2, 
+.elite-section.dark h3 {
+    color: var(--bg);
+}
+
+.elite-header {
+    text-align: center;
+    margin-bottom: 10vh;
+    max-width: 800px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.elite-header .label {
+    margin-bottom: 1rem;
+}
+
+.elite-header h2 {
+    font-family: 'Noto Serif', serif;
+    font-size: 2.5rem;
+    font-weight: 300;
+    line-height: 1.2;
+    margin-bottom: 20px;
+    letter-spacing: 0.05em;
+}
+
+.elite-header p {
+    font-size: 1.2rem;
+    line-height: 1.8;
+    color: var(--text-dim);
+    font-weight: 200;
+}
+
+/* =========================================================================
+   EDITORIAL / HERITAGE BLOCK
+   ========================================================================= */
+.editorial-grid {
+    display: grid;
+    grid-template-columns: 1fr 1.5fr;
+    gap: 8vw;
+    align-items: center;
+}
+
+.editorial-text p {
+    font-size: 1.1rem;
+    line-height: 2;
+    margin-bottom: 2rem;
+    color: var(--text-dim);
+}
+
+.editorial-text p:first-child::first-letter {
+    font-family: 'Noto Serif', serif;
+    font-size: 2rem;
+    color: var(--text);
+}
+
+.editorial-image-wrapper {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 4/5;
+    background: var(--bg-dark);
+    overflow: hidden;
+}
+
+.editorial-image-wrapper img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 3s var(--easing);
+}
+
+.editorial-image-wrapper:hover img {
+    transform: scale(1.05);
+}
+
+/* =========================================================================
+   BENTO GRID / INGREDIENT BOXES
+   ========================================================================= */
+.bento-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-auto-rows: 400px;
+    gap: 20px;
+}
+
+.bento-box {
+    position: relative;
+    border: 1px solid rgba(116, 120, 120, 0.2);
+    overflow: hidden;
+    padding: 40px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    background: var(--bg);
+    transition: transform 0.6s var(--easing), box-shadow 0.6s var(--easing);
+}
+
+.bento-box:hover {
+    transform: translateY(-5px);
+}
+
+.bento-box.large {
+    grid-column: span 2;
+}
+
+.bento-product {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 180px;
+    margin: 20px 0;
+}
+
+.bento-product-img {
+    height: 100%;
+    width: auto;
+    object-fit: contain;
+    filter: drop-shadow(0 15px 30px rgba(0,0,0,0.05));
+    transition: transform 0.8s var(--easing);
+}
+
+.bento-box:hover .bento-product-img {
+    transform: scale(1.05) translateY(-5px);
+}
+
+.bento-content {
+    position: relative;
+    z-index: 2;
+}
+
+.bento-content h3 {
+    font-family: 'Noto Serif', serif;
+    font-size: 1.5rem;
+    font-weight: 300;
+    margin-bottom: 10px;
+}
+
+.bento-content p {
+    font-size: 0.9rem;
+    line-height: 1.6;
+    color: var(--text-dim);
+}
+
+.bento-meta {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.65rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--accent);
+}
+
+/* =========================================================================
+   EXPANDED PRODUCT CATALOG
+   ========================================================================= */
+.catalog-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 40px;
+}
+
+.catalog-item {
+    position: relative;
+    text-align: center;
+    padding-bottom: 20px;
+}
+
+.catalog-image {
+    width: 100%;
+    aspect-ratio: 3/4;
+    background: var(--bg-dark);
+    margin-bottom: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    position: relative;
+}
+
+.catalog-image img {
+    height: 80%;
+    width: auto;
+    object-fit: contain;
+    transition: transform 1.2s var(--easing);
+    filter: drop-shadow(0 15px 30px rgba(0,0,0,0.05));
+}
+
+.catalog-item:hover .catalog-image img {
+    transform: scale(1.05) translateY(-10px);
+}
+
+.catalog-title {
+    font-family: 'Noto Serif', serif;
+    font-size: 1.2rem;
+    margin-bottom: 10px;
+}
+
+.catalog-price {
+    font-size: 0.9rem;
+    color: var(--text-dim);
+    margin-bottom: 20px;
+}
+
+.catalog-action {
+    background: transparent;
+    border: 1px solid var(--border);
+    padding: 10px 0;
+    width: 100%;
+    font-family: 'Manrope', sans-serif;
+    font-size: 0.65rem;
+    letter-spacing: 0.15em;
+    color: var(--text);
+    cursor: pointer;
+    transition: all 0.4s var(--easing);
+}
+
+.catalog-action:hover {
+    background: var(--text);
+    color: var(--bg);
+}
+
+/* =========================================================================
+   MANIFESTO / QUOTE BLOCK
+   ========================================================================= */
+.manifesto-block {
+    text-align: center;
+    padding: 15vh 10vw;
+}
+
+.manifesto-block h2 {
+    font-family: 'Noto Serif', serif;
+    font-weight: 300;
+    font-size: 2.5rem;
+    line-height: 1.4;
+    max-width: 800px;
+    margin: 0 auto;
+    color: var(--text);
+    font-style: italic;
+}
+
+/* =========================================================================
+   ELITE FOOTER
+   ========================================================================= */
+.elite-footer {
+    border-top: 1px solid var(--border);
+    padding: 8vh 10vw 4vh;
+    background: var(--bg);
+    color: var(--text);
+    position: relative;
+    z-index: 10;
+}
+
+.footer-top {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1fr;
+    gap: 40px;
+    margin-bottom: 8vh;
+}
+
+.footer-brand h2 {
+    font-family: 'Noto Serif', serif;
+    font-size: 2rem;
+    margin-bottom: 20px;
+}
+
+.footer-brand p {
+    font-size: 0.85rem;
+    color: var(--text-dim);
+    line-height: 1.6;
+    max-width: 300px;
+}
+
+.footer-column h4 {
+    font-size: 0.65rem;
+    letter-spacing: 0.2em;
+    margin-bottom: 25px;
+    color: var(--text-dim);
+}
+
+.footer-column ul {
+    list-style: none;
+}
+
+.footer-column ul li {
+    margin-bottom: 12px;
+}
+
+.footer-column a {
+    text-decoration: none;
+    color: var(--text);
+    font-size: 0.9rem;
+    transition: color 0.3s;
+}
+
+.footer-column a:hover {
+    color: var(--accent);
+}
+
+.footer-bottom {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 4vh;
+    border-top: 1px solid rgba(116, 120, 120, 0.2);
+    font-size: 0.75rem;
+    color: var(--text-dim);
+}
+
+@media (max-width: 1024px) {
+    .bento-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    .catalog-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 768px) {
+    .editorial-grid {
+        grid-template-columns: 1fr;
+    }
+    .bento-grid {
+        grid-template-columns: 1fr;
+        grid-auto-rows: 300px;
+    }
+    .bento-box.large {
+        grid-column: span 1;
+    }
+    .catalog-grid {
+        grid-template-columns: 1fr;
+    }
+    .footer-top {
+        grid-template-columns: 1fr;
+        gap: 60px;
+    }
+}

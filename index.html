@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Perfume Bar by Sugandh Ink | Artisanal Indian Fragrances</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="complex-ui.css">
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif:ital,wght@0,400;0,700;1,400&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Libraries -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/studio-freight/lenis@1.0.19/bundled/lenis.min.js"></script>
+</head>
+<body class="is-loading coming-soon-mode">
+    
+    <!-- Custom Cursor -->
+    <div class="cursor">
+        <div class="cursor-dot"></div>
+        <div class="cursor-circle"></div>
+        <div class="cursor-text">EXPLORE</div>
+    </div>
+
+    <!-- Preloader -->
+    <div id="loader" class="loader">
+        <div class="loader-bg"></div>
+        <div class="loader-content">
+            <div class="loader-counter">
+                <span id="counter-text">0</span><span class="percent">%</span>
+            </div>
+            <div class="loader-title cursive">Sugandh Ink</div>
+            <div class="loader-tagline">Artisanal Indian Fragrances</div>
+            <div class="loader-ornament">
+                <svg viewBox="0 0 100 100" width="40" height="40">
+                    <path fill="var(--accent)" d="M50 0 C50 30, 80 50, 100 50 C80 50, 50 70, 50 100 C50 70, 20 50, 0 50 C20 50, 50 30, 50 0 Z"/>
+                </svg>
+            </div>
+        </div>
+    </div>
+
+    <!-- Global Navigation -->
+    <nav class="main-nav">
+        <div class="nav-logo cursive">Sugandh Ink</div>
+        <div class="nav-links">
+            <a href="#journey" class="nav-item">THE JOURNEY</a>
+            <a href="#collection" class="nav-item">COLLECTION</a>
+            <a href="#about" class="nav-item">OUR ART</a>
+        </div>
+        <button id="toggle-shop" class="nav-shop-btn">SHOP [0]</button>
+    </nav>
+
+    <div id="smooth-wrapper">
+        <div id="smooth-content">
+            
+            <!-- Hero / Scene 1 -->
+            <section class="scene hero-scene" id="hero">
+                <div class="scene-content">
+                    <h1 class="split-text cursive">Perfume Bar</h1>
+                    <div class="hero-sub">
+                        <span class="line"></span>
+                        <p>BY SUGANDH INK | EST. 2026</p>
+                        <span class="line"></span>
+                    </div>
+                    <p class="hero-desc">A singular olfactory signature for those who transcend the ordinary.</p>
+                    <div class="scroll-hint">
+                        <div class="mouse"></div>
+                        <span>SCROLL TO DESCEND</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Scene 2: The Laboratory -->
+            <section class="scene-split" id="journey">
+                <div class="split-image">
+                    <img src="Products/OUD-09.png" alt="The Art of Attar">
+                </div>
+                <div class="split-text">
+                    <span class="label">01 / THE ALCHEMICAL DISTILLATION</span>
+                    <h2>The Art of Attar</h2>
+                    <p>We extract the soul of the botanical through centuries-old Deg-Bhapka methods, a process of patience and absolute reverence.</p>
+                </div>
+            </section>
+
+            <!-- Scene 3: The Library (Base Notes) -->
+            <section class="scene-split reverse">
+                <div class="split-text">
+                    <span class="label">02 / THE MYSORE MATURATION</span>
+                    <h2>Sandalwood Silence</h2>
+                    <p>Decades spent maturing in darkened vitrines. A sacred resonance, an uncompromising depth.</p>
+                </div>
+                <div class="split-image">
+                    <img src="Products/WDS-02.png" alt="Sandalwood Silence">
+                </div>
+            </section>
+
+            <!-- Scene 4: The Perfumer -->
+            <section class="scene-split" id="about">
+                <div class="split-image">
+                    <img src="Products/MSK-10.png" alt="Olfactory Architect">
+                </div>
+                <div class="split-text">
+                    <span class="label">THE NOSE</span>
+                    <h2>Olfactory Architect</h2>
+                    <p>Jean-Luc Aurelia has spent five decades cataloging over 10,000 distinct scent molecules. A monastic devotion to isolation and eventual revelation.</p>
+                </div>
+            </section>
+
+            <!-- Scene 5: Sourcing -->
+            <section class="scene-split reverse">
+                <div class="split-text">
+                    <span class="label">THE EPHEMERAL HARVEST</span>
+                    <h2>Grasse at Dawn</h2>
+                    <p>Plucked precisely during the twenty-minute window before the morning dew yields to the sun. Unapologetic precision.</p>
+                </div>
+                <div class="split-image">
+                    <img src="Products/GRN-14.png" alt="Grasse at Dawn">
+                </div>
+            </section>
+
+            <!-- Scene 6: Horizontal Notes Explorer (NEW) -->
+            <section class="horizontal-section" id="explorer">
+                <div class="horizontal-wrapper">
+                    <!-- Slide 1: Molecular Architecture -->
+                    <div class="slide molecular-slide">
+                        <div class="slide-content">
+                            <span class="label">SCENT ARCHITECTURE</span>
+                            <h2>Structural Elegance</h2>
+                            <p>147 raw essences, harmonized in absolute silence before the first drop materializes.</p>
+                        </div>
+                    </div>
+                    <!-- Slide 2: Top Note Detail -->
+                    <div class="slide">
+                        <div class="slide-content center">
+                            <span class="label">THE PRELUDE</span>
+                            <h2>Luminescence</h2>
+                            <div class="molecule-id">#AURA-TOP-01</div>
+                        </div>
+                    </div>
+                    <!-- Slide 3: Heart Note Detail -->
+                    <div class="slide">
+                        <div class="slide-content center">
+                            <span class="label">THE CORE</span>
+                            <h2>Pulsation</h2>
+                            <div class="molecule-id">#AURA-HEART-04</div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- BRAND HERITAGE / EDITORIAL -->
+            <section class="elite-section">
+                <div class="elite-header">
+                    <span class="label">THE MANIFESTO</span>
+                    <h2>A Monastic Devotion to Scent</h2>
+                    <p>True luxury is born in silence. Away from the noise of the modern world, we cultivate rare botanicals, extracting their absolute truth through methods unchanged since the 18th century.</p>
+                </div>
+                <div class="editorial-grid">
+                    <div class="editorial-text">
+                        <p>Our philosophy is rooted in the absence of compromise. Each vial represents years of patient maturation, endless trials of molecular balancing, and an unwavering commitment to the olfactory arts. We do not create perfumes; we capture ephemeral memories and preserve them in liquid amber.</p>
+                        <p>The journey begins not in a laboratory, but in the soil. From the high-altitude lavender fields of Kashmir to the deeply shadowed sandalwood groves of Mysore, our raw materials are selected with an unforgiving standard.</p>
+                    </div>
+                    <div class="editorial-image-wrapper">
+                        <img src="Products/VAN-01.png" alt="Heritage">
+                    </div>
+                </div>
+            </section>
+
+            <!-- INGREDIENT BOXES / BENTO GRID -->
+            <section class="elite-section dark">
+                <div class="elite-header">
+                    <span class="label">RAW MATERIALS</span>
+                    <h2>The Elements of Prestige</h2>
+                </div>
+                <div class="bento-grid">
+                    <div class="bento-box large">
+                        <div class="bento-meta">
+                            <span>CODE AMB/12</span>
+                            <span>EVENING, WINTER</span>
+                        </div>
+                        <div class="bento-product">
+                            <img src="Products/AMB-12.png" alt="Dark Amber" class="bento-product-img">
+                        </div>
+                        <div class="bento-content">
+                            <h3>Dark Amber</h3>
+                            <p>Dark, smoky, and deep. Built for strong presence and long-lasting trail.</p>
+                        </div>
+                    </div>
+                    <div class="bento-box">
+                        <div class="bento-meta">
+                            <span>CODE FLR/07</span>
+                            <span>DAY, SIGNATURE</span>
+                        </div>
+                        <div class="bento-product">
+                            <img src="Products/FLR-07.png" alt="White Bloom" class="bento-product-img">
+                        </div>
+                        <div class="bento-content">
+                            <h3>White Bloom</h3>
+                            <p>A dense white floral that feels natural and full. Rich bloom without sharp edges.</p>
+                        </div>
+                    </div>
+                    <div class="bento-box">
+                        <div class="bento-meta">
+                            <span>CODE VAN/01</span>
+                            <span>DAILY WEAR</span>
+                        </div>
+                        <div class="bento-product">
+                            <img src="Products/VAN-01.png" alt="Vanilla Luxe" class="bento-product-img">
+                        </div>
+                        <div class="bento-content">
+                            <h3>Vanilla Luxe</h3>
+                            <p>A smooth vanilla built around warmth and softness.</p>
+                        </div>
+                    </div>
+                    <div class="bento-box large">
+                        <div class="bento-meta">
+                            <span>CODE OUD/15</span>
+                            <span>LUXURY, EVENING</span>
+                        </div>
+                        <div class="bento-product">
+                            <img src="Products/OUD-15.png" alt="Oud Intense" class="bento-product-img">
+                        </div>
+                        <div class="bento-content">
+                            <h3>Oud Intense</h3>
+                            <p>Strong oud composition with spicy lift and smooth base. Power held back, quiet dominance.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- EXPANDED PRODUCT CATALOG -->
+            <section class="elite-section" id="collection">
+                <div class="elite-header">
+                    <span class="label">THE LIBRARY</span>
+                    <h2>Curated Signatures</h2>
+                    <p>Acquire the essence of extraordinary existence.</p>
+                </div>
+                <div class="catalog-grid">
+                    <!-- Item 1 -->
+                    <div class="catalog-item">
+                        <div class="catalog-image">
+                            <img src="Products/OUD-09.png" alt="Oud Royal">
+                        </div>
+                        <h3 class="catalog-title">09 / Oud Royal</h3>
+                        <p class="catalog-price">₹24,000</p>
+                        <button class="catalog-action">ACQUIRE</button>
+                    </div>
+                    <!-- Item 2 -->
+                    <div class="catalog-item">
+                        <div class="catalog-image">
+                            <img src="Products/SPC-03.png" alt="Oriental Spice">
+                        </div>
+                        <h3 class="catalog-title">03 / Oriental Spice</h3>
+                        <p class="catalog-price">₹19,500</p>
+                        <button class="catalog-action">ACQUIRE</button>
+                    </div>
+                    <!-- Item 3 -->
+                    <div class="catalog-item">
+                        <div class="catalog-image">
+                            <img src="Products/MSK-04.png" alt="Musk Sauvage">
+                        </div>
+                        <h3 class="catalog-title">04 / Musk Sauvage</h3>
+                        <p class="catalog-price">₹16,000</p>
+                        <button class="catalog-action">ACQUIRE</button>
+                    </div>
+                    <!-- Item 4 -->
+                    <div class="catalog-item">
+                        <div class="catalog-image">
+                            <img src="Products/SMK-18.png" alt="Smoky Woods">
+                        </div>
+                        <h3 class="catalog-title">18 / Smoky Woods</h3>
+                        <p class="catalog-price">₹24,500</p>
+                        <button class="catalog-action">ACQUIRE</button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- THE MANIFESTO / QUOTE -->
+            <section class="manifesto-block">
+                <h2>"A perfume is not smelled; it is remembered. It is the invisible architecture of a moment."</h2>
+            </section>
+
+        </div>
+    </div>
+
+    <!-- PREMIUM COMING SOON LAYOUT -->
+    <main id="coming-soon-wrapper">
+        <!-- Floating Ambient Particles Container -->
+        <div id="coming-soon-particles" style="position:absolute; top:0; left:0; width:100%; height:100%; overflow:hidden; pointer-events:none; z-index:1;"></div>
+
+        <div class="coming-soon-hero">
+            <span class="coming-soon-badge">Launching Autumn 2026</span>
+            <h1>A Singular Olfactory Journey,<br><span class="cursive">Awaiting Whispers.</span></h1>
+            <p>We are currently mature-distilling our collection of rare attars and artisanal perfumes, extracting their absolute botanical truth in deep silence. A singular online boutique will emerge in due time. Until then, the library is closed, but our scent-architects remain at your service.</p>
+        </div>
+
+        <!-- Contact & Inquiry Bento Grid -->
+        <section class="coming-soon-grid">
+            <!-- Card 1: Email -->
+            <div class="coming-soon-card">
+                <div class="card-icon">
+                    <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.5">
+                        <rect x="2" y="4" width="20" height="16" rx="0" />
+                        <path d="M22 4L12 12L2 4" />
+                    </svg>
+                </div>
+                <h3>Digital Atelier</h3>
+                <p><a href="mailto:maison@sugandhink.com">maison@sugandhink.com</a></p>
+            </div>
+
+            <!-- Card 2: Phone -->
+            <div class="coming-soon-card">
+                <div class="card-icon">
+                    <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.5">
+                        <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z" />
+                    </svg>
+                </div>
+                <h3>Scent Consultation</h3>
+                <p><a href="tel:+919876543210">+91 98765 43210</a></p>
+            </div>
+
+            <!-- Card 3: Location -->
+            <div class="coming-soon-card">
+                <div class="card-icon">
+                    <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.5">
+                        <path d="M12 2a8 8 0 0 0-8 8c0 5.25 8 12 8 12s8-6.75 8-12a8 8 0 0 0-8-8z" />
+                        <circle cx="12" cy="10" r="3" />
+                    </svg>
+                </div>
+                <h3>Maturation Ateliers</h3>
+                <p>Mysore | Grasse | Paris</p>
+            </div>
+        </section>
+
+        <!-- Newsletter Subscription Form -->
+        <section class="coming-soon-newsletter">
+            <h4>Be Notified on Revelation</h4>
+            <p>Subscribe to receive private invitations to our early collection release.</p>
+            <form class="subscribe-form" onsubmit="event.preventDefault(); alert('Your email has been added to our private ledger.'); this.reset();">
+                <input type="email" placeholder="ENTER YOUR EMAIL ADDRESS" required>
+                <button type="submit">Subscribe</button>
+            </form>
+        </section>
+    </main>
+
+    <!-- ELITE FOOTER -->
+    <footer class="elite-footer">
+        <div class="footer-top">
+            <div class="footer-brand">
+                <div class="nav-logo cursive">Sugandh Ink</div>
+                <p>Artisanal fragrances crafted with unyielding precision and historical reverence. A testament to the silent art of olfaction.</p>
+            </div>
+            <div class="footer-column">
+                <h4>THE MAISON</h4>
+                <ul>
+                    <li><a href="#">Our Heritage</a></li>
+                    <li><a href="#">The Ingredients</a></li>
+                    <li><a href="#">Bespoke Creation</a></li>
+                    <li><a href="#">Boutiques</a></li>
+                </ul>
+            </div>
+            <div class="footer-column">
+                <h4>CLIENT CARE</h4>
+                <ul>
+                    <li><a href="#">Contact Us</a></li>
+                    <li><a href="#">Shipping & Returns</a></li>
+                    <li><a href="#">Fragrance Consultation</a></li>
+                    <li><a href="#">FAQ</a></li>
+                </ul>
+            </div>
+            <div class="footer-column">
+                <h4>LEGAL</h4>
+                <ul>
+                    <li><a href="#">Terms of Service</a></li>
+                    <li><a href="#">Privacy Policy</a></li>
+                    <li><a href="#">Cookie Policy</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <span>&copy; 2026 Sugandh Ink. All Rights Reserved.</span>
+            <span>Paris | Grasse | Mysore</span>
+        </div>
+    </footer>
+
+    <!-- Shop Drawer -->
+    <div id="shop-drawer" class="shop-drawer">
+        <div class="drawer-inner">
+            <div class="drawer-header">
+                <h3>THE FRAGRANCE LIBRARY</h3>
+                <button id="close-drawer">×</button>
+            </div>
+            <div class="drawer-product-list" id="drawer-product-list">
+                <!-- Dynamic products injected from products.js -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script type="module" src="js/loader.js"></script>
+    <script type="module" src="js/mouse.js"></script>
+    <script type="module" src="js/ui.js"></script>
+    <script type="module" src="js/scrolly.js"></script>
+</body>
+</html>
