@@ -1,0 +1,415 @@
+/* =========================================================================
+   SUGANDH INK — Product Detail Page CSS
+   Clean Editorial Product Details Layout
+   ========================================================================= */
+
+.product-main {
+  padding-top: var(--nav-h);
+  padding-bottom: 80px;
+  background: var(--cream);
+}
+
+.product-details-grid {
+  display: grid;
+  grid-template-columns: 1.1fr 0.9fr;
+  gap: 60px;
+  margin-top: 24px;
+  margin-bottom: 60px;
+  align-items: start;
+}
+
+/* ── Left Side: Gallery ────────────────────────────────────────────────────── */
+.product-gallery {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.main-image-wrap {
+  aspect-ratio: 1 / 1.1;
+  background: var(--white);
+  border: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px;
+  overflow: hidden;
+}
+
+.main-image-wrap img {
+  max-height: 80%;
+  object-fit: contain;
+  transition: transform 0.4s var(--ease);
+}
+.main-image-wrap:hover img {
+  transform: scale(1.03);
+}
+
+.thumb-gallery {
+  display: flex;
+  gap: 12px;
+}
+
+.thumb {
+  width: 76px;
+  height: 76px;
+  border: 1px solid var(--border);
+  background: var(--white);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px;
+  transition: border-color 0.25s, transform 0.2s;
+}
+
+.thumb:hover, .thumb.active {
+  border-color: var(--gold);
+}
+
+.thumb img {
+  max-height: 85%;
+  object-fit: contain;
+}
+
+/* ── Right Side: Specs ────────────────────────────────────────────────────── */
+.product-specs {
+  display: flex;
+  flex-direction: column;
+}
+
+.specs-code {
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 8px;
+}
+
+.specs-title {
+  font-family: var(--serif);
+  font-size: clamp(2rem, 4vw, 3rem);
+  font-weight: 300;
+  line-height: 1.1;
+  color: var(--ink);
+  margin-bottom: 12px;
+}
+
+.rating-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.stars {
+  color: var(--gold);
+  letter-spacing: 2px;
+  font-size: 0.9rem;
+}
+
+.rating-num {
+  font-size: 0.8rem;
+  color: var(--ink-dim);
+  font-weight: 400;
+}
+
+.specs-price {
+  font-family: var(--sans);
+  font-size: 1.6rem;
+  font-weight: 500;
+  color: var(--ink);
+  margin-bottom: 24px;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 16px;
+}
+
+.specs-desc {
+  font-size: 0.95rem;
+  color: var(--ink-mid);
+  line-height: 1.8;
+  margin-bottom: 32px;
+}
+
+/* Size Selection */
+.selection-label {
+  display: block;
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ink-mid);
+  margin-bottom: 12px;
+}
+
+.specs-size-wrap {
+  margin-bottom: 36px;
+}
+
+.size-options {
+  display: flex;
+  gap: 12px;
+}
+
+.size-pill {
+  font-family: var(--sans);
+  font-size: 0.78rem;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  padding: 10px 20px;
+  border: 1px solid var(--border-strong);
+  color: var(--ink-mid);
+  background: transparent;
+  transition: all 0.25s;
+}
+
+.size-pill:hover {
+  border-color: var(--ink);
+  color: var(--ink);
+}
+
+.size-pill.active {
+  border-color: var(--ink);
+  background: var(--ink);
+  color: var(--cream);
+}
+
+.size-disclaimer {
+  font-family: var(--sans);
+  font-size: 0.72rem;
+  color: var(--ink-dim);
+  margin-top: 12px;
+  font-style: italic;
+  opacity: 0.8;
+  letter-spacing: 0.02em;
+  line-height: 1.4;
+}
+
+/* Stepper and Add to Cart */
+.purchase-wrap {
+  border-top: 1px solid var(--border);
+  padding-top: 28px;
+}
+
+.stepper-cart-row {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.stepper {
+  display: flex;
+  align-items: center;
+  border: 1px solid var(--border-strong);
+  height: 48px;
+  background: var(--white);
+}
+
+.stepper button {
+  width: 44px;
+  height: 100%;
+  display: grid;
+  place-content: center;
+  font-size: 1.1rem;
+  color: var(--ink-mid);
+  transition: background 0.2s, color 0.2s;
+}
+.stepper button:hover {
+  background: var(--cream-2);
+  color: var(--ink);
+}
+
+.stepper span {
+  width: 36px;
+  text-align: center;
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.add-to-cart-btn {
+  flex-grow: 1;
+  height: 48px;
+}
+
+.whatsapp-checkout-btn {
+  display: flex;
+  width: 100%;
+  height: 48px;
+  font-size: 0.72rem;
+  gap: 8px;
+}
+
+/* ── Tabs Section ─────────────────────────────────────────────────────────── */
+.product-tabs-section {
+  margin-bottom: 60px;
+  border-top: 1px solid var(--border);
+  padding-top: 48px;
+}
+
+.tabs-nav {
+  display: flex;
+  justify-content: center;
+  gap: 40px;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 16px;
+  margin-bottom: 32px;
+}
+
+.tab-link {
+  font-family: var(--sans);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ink-dim);
+  padding-bottom: 12px;
+  position: relative;
+  transition: color 0.3s;
+}
+
+.tab-link:hover {
+  color: var(--ink);
+}
+
+.tab-link::after {
+  content: "";
+  position: absolute;
+  bottom: -17px;
+  left: 0; right: 0;
+  height: 1px;
+  background: var(--ink);
+  transform: scaleX(0);
+  transition: transform 0.3s var(--ease);
+}
+
+.tab-link.active {
+  color: var(--ink);
+}
+.tab-link.active::after {
+  transform: scaleX(1);
+}
+
+.tab-pane {
+  display: none;
+  animation: fadeIn 0.5s var(--ease);
+}
+
+.tab-pane.active {
+  display: block;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Tab contents */
+.editorial-story {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 48px;
+  padding: 12px 0;
+}
+
+.story-col h5 {
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 16px;
+}
+
+.story-col p {
+  font-size: 0.95rem;
+  color: var(--ink-mid);
+  line-height: 1.85;
+}
+
+/* Pyramid Notes */
+.notes-pyramid-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 24px 0;
+}
+
+.pyramid-tier {
+  text-align: center;
+  padding: 16px 0;
+  width: 100%;
+}
+
+.tier-label {
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 8px;
+}
+
+.tier-ingredients {
+  font-family: var(--serif);
+  font-size: 1.6rem;
+  font-weight: 300;
+  color: var(--ink);
+  margin-bottom: 6px;
+  letter-spacing: 0.02em;
+}
+
+.tier-desc {
+  font-size: 0.78rem;
+  color: var(--ink-dim);
+  line-height: 1.4;
+}
+
+.pyramid-divider {
+  width: 80px;
+  height: 1px;
+  background: var(--border-strong);
+  margin: 8px 0;
+}
+
+/* Tab: Reviews styling */
+.product-reviews-layout {
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+}
+
+.reviews-list-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 24px;
+}
+
+.product-reviews-layout .review-card {
+  border: 1px solid var(--border);
+  background: var(--white);
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Related section */
+.related-products-section {
+  border-top: 1px solid var(--border);
+  padding-top: 60px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 991px) {
+  .product-details-grid {
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+
+  .editorial-story {
+    grid-template-columns: 1fr;
+    gap: 28px;
+  }
+}
