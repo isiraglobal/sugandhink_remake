@@ -1,49 +1,84 @@
-import { products } from './products.js';
+/**
+ * ui.js — Shared UI enhancements and cart badge synchronization
+ */
 
 document.addEventListener('DOMContentLoaded', () => {
-    const shopBtn = document.getElementById('toggle-shop');
-    const shopDrawer = document.getElementById('shop-drawer');
-    const closeDrawer = document.getElementById('close-drawer');
-    const productList = document.getElementById('drawer-product-list');
+    // Custom cursor (desktop only)
+    setupCursor();
+    
+    // Initial badge update
+    updateCartBadge();
+    window.addEventListener('cart:updated', updateCartBadge);
+});
 
-    // Populate Products
-    if (productList) {
-        products.forEach(product => {
-            const item = document.createElement('div');
-            item.className = 'drawer-product-item';
-            item.innerHTML = `
-                <div class="item-image-wrapper">
-                    <img src="${product.image}" alt="${product.name}" class="item-image">
-                </div>
-                <div class="item-details">
-                    <div class="item-code">${product.code}</div>
-                    <h4>${product.name}</h4>
-                    <p class="item-notes">${product.notes}</p>
-                    <p class="item-memory">"${product.memory}"</p>
-                </div>
-                <div class="item-price">${product.price}</div>
-                <button class="add-to-cart-btn">ADD</button>
-            `;
-            productList.appendChild(item);
-        });
-    }
+function setupCursor() {
+    const cursor = document.getElementById('cursor');
+    const cursorDot = document.querySelector('.cursor-dot');
+    const cursorRing = document.querySelector('.cursor-ring');
 
-    // Drawer Toggles
-    shopBtn.addEventListener('click', () => {
-        shopDrawer.classList.add('is-open');
-        document.body.style.overflow = 'hidden';
-    });
+    if (!cursor || window.matchMedia('(hover: none)').matches) return;
 
-    closeDrawer.addEventListener('click', () => {
-        shopDrawer.classList.remove('is-open');
-        document.body.style.overflow = 'auto';
-    });
+    cursor.style.display = 'block';
 
-    // Close on outside click
-    document.addEventListener('click', (e) => {
-        if (shopDrawer.classList.contains('is-open') && !shopDrawer.contains(e.target) && e.target !== shopBtn) {
-            shopDrawer.classList.remove('is-open');
-            document.body.style.overflow = 'auto';
+    let mouseX = 0, mouseY = 0;
+    let ringX = 0, ringY = 0;
+
+    document.addEventListener('mousemove', e => {
+        mouseX = e.clientX;
+        mouseY = e.clientY;
+        if (cursorDot) {
+            cursorDot.style.left = mouseX + 'px';
+            cursorDot.style.top = mouseY + 'px';
         }
     });
-});
+
+    function animateCursor() {
+        ringX += (mouseX - ringX) * 0.15;
+        ringY += (mouseY - ringY) * 0.15;
+        if (cursorRing) {
+            cursorRing.style.left = ringX + 'px';
+            cursorRing.style.top = ringY + 'px';
+        }
+        requestAnimationFrame(animateCursor);
+    }
+    animateCursor();
+
+    // Hover scale effects on interactive elements
+    const interactives = document.querySelectorAll('a, button, .pcard, .citem, .family-card, .review-card, input, textarea, select');
+    interactives.forEach(el => {
+        el.addEventListener('mouseenter', () => {
+            if (cursorRing) {
+                cursorRing.style.width = '64px';
+                cursorRing.style.height = '64px';
+                cursorRing.style.borderColor = 'var(--gold)';
+            }
+        });
+        el.addEventListener('mouseleave', () => {
+            if (cursorRing) {
+                cursorRing.style.width = '40px';
+                cursorRing.style.height = '40px';
+                cursorRing.style.borderColor = 'rgba(24,25,26,0.3)';
+            }
+        });
+    });
+}
+
+function updateCartBadge() {
+    const badge = document.getElementById('cart-badge');
+    if (!badge) return;
+
+    try {
+        const cart = JSON.parse(localStorage.getItem('si_cart')) || [];
+        let totalQty = 0;
+        cart.forEach(i => totalQty += i.qty);
+
+        if (totalQty > 0) {
+            badge.textContent = totalQty;
+            badge.style.display = 'grid';
+        } else {
+            badge.style.display = 'none';
+        }
+    } catch {
+        badge.style.display = 'none';
+    }
+}

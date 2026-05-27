@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sugandh Ink — Private Atelier Ledger (Admin)</title>
+    <link rel="stylesheet" href="admin.css">
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
+</head>
+<body class="admin-body">
+
+    <!-- ============================================================
+         1. LOGIN VIEW
+         ============================================================ -->
+    <div class="admin-login-overlay" id="admin-login-screen">
+        <div class="login-card">
+            <div class="login-logo">
+                <span>Sugandh</span>
+                <span class="italic"> Ink</span>
+            </div>
+            <p class="login-sub">Atelier Private Ledger Access</p>
+            <form id="login-form">
+                <div class="form-group" style="margin-bottom: 20px;">
+                    <label class="form-label" for="login-pass">Passcode</label>
+                    <input type="password" id="login-pass" class="form-input" placeholder="••••••••" required>
+                </div>
+                <button type="submit" class="btn btn-dark" style="width: 100%; height: 48px;">Authenticate</button>
+                <p class="login-error" id="login-error-msg" style="display: none; color: var(--error); font-size: 0.76rem; text-align: center; margin-top: 12px; font-weight: 500;">Incorrect passcode.</p>
+            </form>
+        </div>
+    </div>
+
+    <!-- ============================================================
+         2. MAIN DASHBOARD VIEW
+         ============================================================ -->
+    <div class="admin-container" id="admin-dashboard-screen" style="display: none;">
+        <!-- Left Sidebar Navigation -->
+        <aside class="admin-sidebar">
+            <div class="sidebar-brand">
+                <div class="brand-text">
+                    <span>Sugandh</span>
+                    <span class="italic"> Ink</span>
+                </div>
+                <span class="brand-badge">Ledger v1.0</span>
+            </div>
+            
+            <nav class="sidebar-nav">
+                <button class="nav-btn active" data-tab="tab-overview">Overview</button>
+                <button class="nav-btn" data-tab="tab-products">Compositions</button>
+                <button class="nav-btn" data-tab="tab-orders">Consultations &amp; Orders</button>
+                <button class="nav-btn" data-tab="tab-settings">System Settings</button>
+            </nav>
+
+            <button class="btn btn-outline logout-btn" id="logout-btn" style="margin-top: auto; border-color: rgba(247,244,239,0.1); color: var(--cream);">Logout</button>
+        </aside>
+
+        <!-- Right Main Workspace -->
+        <main class="admin-workspace">
+            <header class="workspace-header">
+                <h2>Private Atelier Ledger</h2>
+                <div class="header-user">
+                    <span>Atelier Administrator</span>
+                    <div class="user-avatar">A</div>
+                </div>
+            </header>
+
+            <!-- TAB: OVERVIEW -->
+            <section class="admin-tab-pane active" id="tab-overview">
+                <div class="stats-grid">
+                    <div class="stat-box">
+                        <span class="stat-lbl">Active Compositions</span>
+                        <h3 class="stat-val" id="stat-products-count">22</h3>
+                    </div>
+                    <div class="stat-box">
+                        <span class="stat-lbl">Simulated Volume</span>
+                        <h3 class="stat-val">₹4,82,500</h3>
+                    </div>
+                    <div class="stat-box">
+                        <span class="stat-lbl">Registered Collectors</span>
+                        <h3 class="stat-val" id="stat-users-count">48</h3>
+                    </div>
+                </div>
+
+                <div class="overview-grid">
+                    <div class="overview-card">
+                        <h4>Recent Private Enquiries</h4>
+                        <div class="orders-table-wrapper">
+                            <table class="admin-table">
+                                <thead>
+                                    <tr>
+                                        <th>Collector</th>
+                                        <th>Formulation</th>
+                                        <th>Date</th>
+                                        <th>Value</th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="overview-orders-list">
+                                    <!-- Dynamic rows -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- TAB: PRODUCTS MANAGER -->
+            <section class="admin-tab-pane" id="tab-products">
+                <div class="pane-head">
+                    <h3>Atelier Library Compositions</h3>
+                    <button class="btn btn-dark" id="add-product-trigger">+ Add Composition</button>
+                </div>
+
+                <div class="catalog-grid" id="admin-catalog-grid" style="display:grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap:24px;">
+                    <!-- Dynamic product cards -->
+                </div>
+            </section>
+
+            <!-- TAB: ORDERS & CONSULTATIONS -->
+            <section class="admin-tab-pane" id="tab-orders">
+                <div class="pane-head">
+                    <h3>Consultation Enquiries</h3>
+                </div>
+                <div class="orders-table-wrapper">
+                    <table class="admin-table">
+                        <thead>
+                            <tr>
+                                <th>Order ID</th>
+                                <th>Collector</th>
+                                <th>Contact</th>
+                                <th>Compositions</th>
+                                <th>Total</th>
+                                <th>Date</th>
+                                <th>Status</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="orders-full-list">
+                            <!-- Dynamic rows -->
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- TAB: SYSTEM SETTINGS -->
+            <section class="admin-tab-pane" id="tab-settings">
+                <div class="pane-head">
+                    <h3>Ledger Configuration</h3>
+                </div>
+                <div class="settings-form-container">
+                    <form id="settings-form">
+                        <div class="form-group mb-20">
+                            <label class="form-label" for="setting-wa">Primary WhatsApp Consultation Number (without +)</label>
+                            <input type="text" id="setting-wa" class="form-input" value="919769445567">
+                        </div>
+                        <div class="form-group mb-20">
+                            <label class="form-label" for="setting-pass">Update Admin Passcode</label>
+                            <input type="text" id="setting-pass" class="form-input" value="admin123">
+                        </div>
+                        <button type="submit" class="btn btn-gold">Save Ledger Configuration</button>
+                    </form>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- ============================================================
+         3. PRODUCT FORM SLIDING MODAL
+         ============================================================ -->
+    <div class="admin-modal-overlay" id="product-modal">
+        <div class="admin-modal">
+            <div class="modal-header">
+                <h3 id="modal-title">Add Fragrance Composition</h3>
+                <button class="modal-close" id="product-modal-close">✕</button>
+            </div>
+            <form id="product-form">
+                <input type="hidden" id="form-edit-code">
+                
+                <div class="form-group mb-12">
+                    <label class="form-label" for="form-code">Unique Code (e.g. OUD/22)</label>
+                    <input type="text" id="form-code" class="form-input" placeholder="OUD/22" required>
+                </div>
+                <div class="form-group mb-12">
+                    <label class="form-label" for="form-original-name">Fragrance Display Name</label>
+                    <input type="text" id="form-original-name" class="form-input" placeholder="Oud Majesty" required>
+                </div>
+                <div class="form-group mb-12">
+                    <label class="form-label" for="form-name">Name Code (e.g. Oud / 22)</label>
+                    <input type="text" id="form-name" class="form-input" placeholder="Oud / 22" required>
+                </div>
+                <div class="form-group mb-12">
+                    <label class="form-label" for="form-price">Base Price (e.g. ₹22,000)</label>
+                    <input type="text" id="form-price" class="form-input" placeholder="₹22,000" required>
+                </div>
+                <div class="form-group mb-12">
+                    <label class="form-label" for="form-notes">Full Notes (comma separated)</label>
+                    <input type="text" id="form-notes" class="form-input" placeholder="saffron, rose, oud, musk" required>
+                </div>
+                <div class="form-group mb-12">
+                    <label class="form-label" for="form-short-notes">Short Notes (middle dot separated)</label>
+                    <input type="text" id="form-short-notes" class="form-input" placeholder="oud · rose · saffron" required>
+                </div>
+                <div class="form-group mb-12">
+                    <label class="form-label" for="form-occasion">Occasions (comma separated)</label>
+                    <input type="text" id="form-occasion" class="form-input" placeholder="evening, luxury, winter" required>
+                </div>
+                <div class="form-group mb-12">
+                    <label class="form-label" for="form-description">Olfactive Narrative Description</label>
+                    <textarea id="form-description" class="form-input" placeholder="Describe the progression and depth..." required></textarea>
+                </div>
+                <div class="form-group mb-20">
+                    <label class="form-label" for="form-image">Product Bottle Image Frame</label>
+                    <select id="form-image" class="form-input">
+                        <option value="Products/OUD-09.png">Oud Royal Bottle Frame (Charcoal)</option>
+                        <option value="Products/VAN-01.png">Vanilla Luxe Bottle Frame (Gold Accent)</option>
+                        <option value="Products/FLR-07.png">Florals Bottle Frame (Clear Glass)</option>
+                        <option value="Products/WDS-02.png">Woods Bottle Frame (Dark Gold)</option>
+                        <option value="Products/AMB-12.png">Amber Bottle Frame (Deep Amber)</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-dark" style="width: 100%; height: 48px;">Publish to Ledger</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Toast container -->
+    <div id="toast-container"></div>
+
+    <!-- Scripts -->
+    <script type="module" src="admin.js"></script>
+</body>
+</html>

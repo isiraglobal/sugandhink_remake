@@ -1,4 +1,4 @@
-export const products = [
+const baseProducts = [
     { name: "Vanilla / 01", originalName: "Vanilla Luxe", code: "VAN/01", notes: "mandarin, citrus, soft florals, vanilla, amber, woods", shortNotes: "vanilla · amber · citrus", memory: "warm skin", description: "A smooth vanilla built around warmth and softness. Opens slightly fresh, settles into a creamy skin-like sweetness that stays close and addictive.", occasion: "daily wear, date night", price: "₹18,500", image: "Products/VAN-01.png" },
     { name: "Oud / 09", originalName: "Oud Royal", code: "OUD/09", notes: "saffron, spice, oud, incense, leather, resin", shortNotes: "oud · saffron · leather", memory: "dark room", description: "A dense oud profile with smoky depth and controlled projection. Rich without being loud, built for presence.", occasion: "evening, formal", price: "₹24,000", image: "Products/OUD-09.png" },
     { name: "Spice / 03", originalName: "Oriental Spice", code: "SPC/03", notes: "cardamom, cinnamon, sandalwood, amber", shortNotes: "cardamom · cinnamon · wood", memory: "warm air", description: "A warm spiced composition that feels textured and intimate. Designed to sit close and evolve slowly.", occasion: "evening, winter", price: "₹19,500", image: "Products/SPC-03.png" },
@@ -22,3 +22,17 @@ export const products = [
     { name: "Vanilla Sweet / 19", originalName: "Vanilla Rush", code: "VAN/19", notes: "vanilla, caramel, tonka", shortNotes: "vanilla · caramel · tonka", memory: "sweet comfort", description: "Rich sweet gourmand, comforting and addictive.", occasion: "casual", price: "₹18,500", image: "Products/VAN-19.png" },
     { name: "Rose Skin / 20", originalName: "Rose Desire", code: "RSE/20", notes: "rose, pepper, musk", shortNotes: "rose · pepper · musk", memory: "soft petals", description: "Soft rose with subtle spice and skin-like finish.", occasion: "date night", price: "₹20,500", image: "Products/RSE-20.png" }
 ];
+
+let loadedProducts = [];
+try {
+    loadedProducts = JSON.parse(localStorage.getItem('si_products'));
+} catch (e) {
+    loadedProducts = null;
+}
+
+if (!loadedProducts || loadedProducts.length === 0) {
+    loadedProducts = [...baseProducts];
+    localStorage.setItem('si_products', JSON.stringify(baseProducts));
+}
+
+export const products = loadedProducts;

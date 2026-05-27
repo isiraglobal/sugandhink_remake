@@ -1,130 +1,58 @@
-import { splitText, animateSplitText } from './utils.js';
+/**
+ * loader.js — Preloader animation for Sugandh Ink
+ * Animates a elegant progress bar and luxury wordmark reveals, no percentage text
+ */
 
 document.addEventListener('DOMContentLoaded', () => {
     const loader = document.getElementById('loader');
-    const counterText = document.getElementById('counter-text');
-    const loaderBg = document.querySelector('.loader-bg');
-    
-    // Animate loader elements in
-    gsap.to('.loader-title', { opacity: 1, y: 0, duration: 1, delay: 0.2, ease: "power3.out" });
-    gsap.to('.loader-tagline', { opacity: 1, y: 0, duration: 1, delay: 0.4, ease: "power3.out" });
-    gsap.to('.loader-ornament', { opacity: 1, scale: 1, rotation: 0, duration: 1.5, delay: 0.5, ease: "elastic.out(1, 0.5)" });
-    gsap.to(loaderBg, { scale: 1, duration: 2, ease: "power2.out" });
+    const bar = document.getElementById('loader-bar');
+    const lwWords = document.querySelectorAll('.lw');
+    const lwRule = document.querySelector('.lw-rule');
+    const tagline = document.querySelector('.loader-tagline');
 
-    // Counter animation
-    let progress = { val: 0 };
-    gsap.to(progress, {
-        val: 100,
-        duration: 1.8, // Snappy, creative loading
-        ease: "power2.inOut",
-        onUpdate: function() {
-            counterText.innerText = Math.floor(progress.val);
-        },
-        onComplete: completeLoading
-    });
+    if (!loader) return;
+
+    // 1. Reveal wordmark elements
+    setTimeout(() => {
+        lwWords.forEach(word => word.classList.add('in'));
+        if (lwRule) lwRule.classList.add('in');
+    }, 150);
+
+    // 2. Animate progress bar fill
+    let progress = 0;
+    const duration = 1800; // 1.8 seconds loading
+    const intervalTime = 16; // ~60fps
+    const step = 100 / (duration / intervalTime);
+
+    const timer = setInterval(() => {
+        progress += step;
+        if (progress >= 100) {
+            progress = 100;
+            clearInterval(timer);
+            completeLoading();
+        }
+        if (bar) {
+            bar.style.width = `${progress}%`;
+        }
+    }, intervalTime);
+
+    // Fade in tagline shortly after start
+    setTimeout(() => {
+        if (tagline) tagline.classList.add('in');
+    }, 600);
 
     function completeLoading() {
-        const tl = gsap.timeline({
-            onComplete: () => {
-                loader.style.display = 'none';
-                document.body.classList.remove('is-loading');
-                startHeroAnimation();
-            }
-        });
+        // Add hidden class to slide loader curtain up
+        loader.classList.add('hidden');
+        document.body.classList.remove('is-loading');
 
-        // Creative exit animation: shrink, fade and iris wipe
-        tl.to('.loader-content > *', {
-            y: -30,
-            opacity: 0,
-            duration: 0.6,
-            stagger: 0.05,
-            ease: "power3.in"
-        }, 0)
-        .to(loaderBg, {
-            scale: 2,
-            opacity: 0,
-            duration: 0.8,
-            ease: "power3.in"
-        }, 0.1)
-        .to(loader, {
-            clipPath: "circle(0% at 50% 50%)",
-            duration: 1.2,
-            ease: "power4.inOut"
-        }, 0.2);
-    }
-    
-    // Prepare split text
-    const heroTitle = document.querySelector('.hero-scene h1');
-    if (heroTitle && !document.body.classList.contains('coming-soon-mode')) {
-        splitText(heroTitle);
-    }
-
-    function startComingSoonAnimation() {
-        const tl = gsap.timeline({ delay: 0.2 });
-        
-        // Split text for coming soon heading if it exists
-        const csHeading = document.querySelector('.coming-soon-hero h1');
-        if (csHeading) {
-            splitText(csHeading);
-            animateSplitText(".coming-soon-hero h1", 0.3);
-        }
-
-        tl.from(".coming-soon-badge", {
-            y: -20,
-            opacity: 0,
-            duration: 1,
-            ease: "power3.out"
-        })
-        .from(".coming-soon-hero p", {
-            y: 20,
-            opacity: 0,
-            duration: 1,
-            ease: "power3.out"
-        }, "-=0.8")
-        .from(".coming-soon-card", {
-            y: 40,
-            opacity: 0,
-            duration: 1,
-            stagger: 0.15,
-            ease: "power3.out"
-        }, "-=0.6")
-        .from(".coming-soon-newsletter", {
-            y: 30,
-            opacity: 0,
-            duration: 1.2,
-            ease: "power3.out"
-        }, "-=0.8");
-    }
-
-    function startHeroAnimation() {
-        if (document.body.classList.contains('coming-soon-mode')) {
-            startComingSoonAnimation();
-            return;
-        }
-
-        animateSplitText(".hero-scene h1", 0.3);
-        
-        gsap.to(".hero-sub .line", {
-            scaleX: 1,
-            duration: 1.5,
-            ease: "power4.out",
-            delay: 0.4
-        });
-        
-        gsap.to(".hero-sub p", {
-            y: 0,
-            opacity: 1,
-            duration: 1.5,
-            ease: "power4.out",
-            delay: 0.6
-        });
-
-        gsap.to(".hero-desc", {
-            y: 0,
-            opacity: 1,
-            duration: 1.5,
-            ease: "power4.out",
-            delay: 0.8
-        });
+        // Let the reveal animations on home run
+        setTimeout(() => {
+            const reveals = document.querySelectorAll('[data-reveal]');
+            reveals.forEach((el, i) => {
+                const delay = parseInt(el.dataset.revealDelay || '0', 10);
+                setTimeout(() => el.classList.add('in'), delay + (i * 50));
+            });
+        }, 400);
     }
 });

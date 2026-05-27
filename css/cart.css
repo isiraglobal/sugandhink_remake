@@ -1,0 +1,292 @@
+/* =========================================================================
+   SUGANDH INK — Cart Page CSS
+   Clean Elegant Cart Layout (Items + Sticky Order Summary)
+   ========================================================================= */
+
+.cart-main {
+  padding-top: var(--nav-h);
+  padding-bottom: 80px;
+  background: var(--cream);
+  min-height: 100vh;
+}
+
+.cart-headline {
+  margin-top: 16px;
+  margin-bottom: 32px;
+}
+
+.cart-layout {
+  display: grid;
+  grid-template-columns: 1fr 440px;
+  gap: 40px;
+  align-items: start;
+}
+
+/* ── Left Side: Cart Items Panel ───────────────────────────────────────────── */
+.cart-items-panel {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--border);
+  background: var(--white);
+  padding: 12px 30px;
+}
+
+.cart-item {
+  display: flex;
+  gap: 20px;
+  padding: 24px 0;
+  border-bottom: 1px solid var(--border);
+  position: relative;
+  align-items: center;
+}
+.cart-item:last-child {
+  border-bottom: none;
+}
+
+.cart-item-img {
+  width: 100px;
+  height: 110px;
+  background: var(--cream);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px;
+  border: 1px solid var(--border);
+  flex-shrink: 0;
+}
+
+.cart-item-img img {
+  max-height: 90%;
+  object-fit: contain;
+}
+
+.cart-item-info {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+}
+
+.cart-item-code {
+  font-size: 0.62rem;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 4px;
+}
+
+.cart-item-name {
+  font-family: var(--serif);
+  font-size: 1.25rem;
+  font-weight: 400;
+  color: var(--ink);
+  margin-bottom: 4px;
+}
+
+.cart-item-size {
+  font-size: 0.74rem;
+  color: var(--ink-dim);
+  margin-bottom: 12px;
+}
+
+.cart-item-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.cart-item-price {
+  font-size: 1.05rem;
+  font-weight: 500;
+  color: var(--ink);
+}
+
+/* Stepper inside cart */
+.cart-item-footer .stepper {
+  height: 38px;
+}
+.cart-item-footer .stepper button {
+  width: 34px;
+}
+.cart-item-footer .stepper span {
+  width: 30px;
+  font-size: 0.8rem;
+}
+
+/* Delete Button */
+.cart-item-remove {
+  position: absolute;
+  top: 24px;
+  right: 0;
+  color: var(--ink-dim);
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  border-bottom: 1px solid transparent;
+  transition: all 0.25s;
+  padding: 2px 0;
+}
+
+.cart-item-remove:hover {
+  color: var(--error);
+  border-color: var(--error);
+}
+
+/* ── Right Side: Order Summary Panel ────────────────────────────────────────── */
+.order-summary-panel {
+  border: 1px solid var(--border);
+  background: var(--white);
+  padding: 30px;
+  position: sticky;
+  top: calc(var(--nav-h) + 20px);
+}
+
+.order-summary-panel h3 {
+  font-family: var(--serif);
+  font-size: 1.45rem;
+  font-weight: 400;
+  letter-spacing: 0.02em;
+  margin-bottom: 24px;
+  color: var(--ink);
+}
+
+.summary-rows {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-bottom: 28px;
+}
+
+.summary-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.9rem;
+  color: var(--ink-mid);
+}
+
+.summary-divider {
+  height: 1px;
+  background: var(--border);
+  margin: 4px 0;
+}
+
+.total-row {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.success-val {
+  color: var(--success);
+  font-weight: 500;
+}
+
+.discount-val {
+  color: var(--error);
+  font-weight: 500;
+}
+
+/* Promo Code Box */
+.promo-code-wrap {
+  border-top: 1px solid var(--border);
+  padding-top: 24px;
+  margin-bottom: 24px;
+}
+
+.promo-input-group {
+  display: flex;
+  gap: 10px;
+}
+
+.promo-input-group input {
+  flex-grow: 1;
+  padding: 12px 14px;
+  border: 1px solid var(--border-strong);
+  font-size: 0.8rem;
+  outline: none;
+  font-family: var(--sans);
+  background: transparent;
+  color: var(--ink);
+  text-transform: uppercase;
+}
+.promo-input-group input:focus {
+  border-color: var(--gold);
+}
+
+.promo-input-group button {
+  padding: 10px 18px;
+  font-size: 0.65rem;
+}
+
+.promo-feedback {
+  font-size: 0.74rem;
+  margin-top: 8px;
+  font-weight: 500;
+}
+.promo-feedback.success {
+  color: var(--success);
+}
+.promo-feedback.error {
+  color: var(--error);
+}
+
+/* Checkout Button */
+.checkout-wa-btn {
+  width: 100%;
+  height: 52px;
+  font-size: 0.72rem;
+}
+
+/* ── Empty Cart View ───────────────────────────────────────────────────────── */
+.empty-cart-view {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 80px 20px;
+  background: var(--white);
+  border: 1px solid var(--border);
+}
+
+.empty-cart-view svg {
+  stroke: var(--ink-dim);
+  margin-bottom: 24px;
+}
+
+.empty-cart-view h3 {
+  font-family: var(--serif);
+  font-size: 1.6rem;
+  font-weight: 300;
+  color: var(--ink);
+  margin-bottom: 12px;
+}
+
+.empty-cart-view p {
+  font-size: 0.9rem;
+  color: var(--ink-dim);
+  margin-bottom: 32px;
+}
+
+/* ── Responsive adjustments ────────────────────────────────────────────────── */
+@media (max-width: 991px) {
+  .cart-layout {
+    grid-template-columns: 1fr;
+    gap: 32px;
+  }
+}
+@media (max-width: 576px) {
+  .cart-item {
+    flex-direction: column;
+    align-items: flex-start;
+    padding-top: 40px;
+  }
+  .cart-item-img {
+    width: 100%;
+    height: 180px;
+  }
+  .cart-item-remove {
+    top: 10px;
+  }
+}
