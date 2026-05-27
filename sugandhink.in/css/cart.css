@@ -275,6 +275,9 @@
     grid-template-columns: 1fr;
     gap: 32px;
   }
+  .order-summary-panel {
+    position: static;
+  }
 }
 @media (max-width: 576px) {
   .cart-item {
@@ -288,5 +291,12 @@
   }
   .cart-item-remove {
     top: 10px;
+  }
+  .cart-item-info {
+    width: 100%;
+  }
+  .cart-item-footer {
+    width: 100%;
+    margin-top: 16px;
   }
 }

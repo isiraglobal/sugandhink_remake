@@ -222,20 +222,34 @@ function setupSorting() {
 function setupMobileFilters() {
     const trigger = document.getElementById('mobile-filter-trigger');
     const sidebar = document.getElementById('sidebar-filters');
+    const closeBtn = document.getElementById('close-filters');
 
     if (!trigger || !sidebar) return;
 
+    const open = () => {
+        sidebar.classList.add('mobile-open');
+        trigger.classList.add('active');
+    };
+    const close = () => {
+        sidebar.classList.remove('mobile-open');
+        trigger.classList.remove('active');
+    };
+
     trigger.addEventListener('click', (e) => {
         e.stopPropagation();
-        const isOpen = sidebar.classList.toggle('mobile-open');
-        trigger.classList.toggle('active', isOpen);
+        if (sidebar.classList.contains('mobile-open')) {
+            close();
+        } else {
+            open();
+        }
     });
+
+    closeBtn?.addEventListener('click', close);
 
     // Close when clicking outside on mobile
     document.addEventListener('click', (e) => {
         if (sidebar.classList.contains('mobile-open') && !sidebar.contains(e.target) && e.target !== trigger) {
-            sidebar.classList.remove('mobile-open');
-            trigger.classList.remove('active');
+            close();
         }
     });
 }

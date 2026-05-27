@@ -33,6 +33,26 @@
   margin-bottom: 32px;
 }
 
+.sidebar-actions {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.sidebar-close {
+  display: none;
+  font-size: 1.1rem;
+  color: var(--ink-3);
+  padding: 4px;
+  cursor: pointer;
+  transition: color 0.2s;
+  line-height: 1;
+}
+
+.sidebar-close:hover {
+  color: var(--gold);
+}
+
 .sidebar-header h3 {
   font-family: var(--serif);
   font-size: 1.5rem;
@@ -323,23 +343,31 @@
   }
 
   .collection-sidebar {
-    display: none; /* Mobile Drawer Logic or Collapsed */
+    display: block;
+    position: fixed;
+    top: var(--nav-h);
+    left: -100%;
+    width: 320px;
+    max-width: 85vw;
+    height: calc(100vh - var(--nav-h));
+    background: var(--cream);
+    z-index: 900;
+    padding: 30px;
+    overflow-y: auto;
+    border-right: 1px solid var(--border);
+    transition: left 0.4s var(--ease);
+    box-shadow: 10px 0 40px rgba(0,0,0,0.05);
   }
 
   .mobile-filter-btn {
     display: inline-flex;
   }
 
-  /* Overlay drawer style on mobile if toggled */
+  .sidebar-close {
+    display: inline-block;
+  }
+
   .collection-sidebar.mobile-open {
-    display: block;
-    position: fixed;
-    inset: 0;
-    top: var(--nav-h);
-    background: var(--cream);
-    z-index: 900;
-    padding: 30px;
-    overflow-y: auto;
-    border-right: none;
+    left: 0;
   }
 }

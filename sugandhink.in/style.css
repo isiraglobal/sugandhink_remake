@@ -769,7 +769,7 @@ body.cursor-click .cursor-ring { width:20px; height:20px; }
 .reviews-section { padding:100px 0 80px; }
 .reviews-header {
     max-width:var(--max); margin:0 auto 48px; padding:0 var(--gutter);
-    display:grid; grid-template-columns:auto 1fr auto; align-items:end; gap:24px;
+    display:flex; justify-content:space-between; align-items:end; gap:24px;
 }
 .reviews-nav { display:flex; gap:10px; }
 .reviews-nav button {
@@ -1058,6 +1058,10 @@ body.cursor-click .cursor-ring { width:20px; height:20px; }
 .ld-acquire.added { background:var(--gold); color:#fff; border-color:var(--gold); }
 
 /* ── Responsive ─────────────────────────────────────────────────────────────── */
+@media (max-width: 1300px) {
+    .hero-grid { grid-template-columns: 1fr 420px 1fr; gap: 32px; }
+}
+
 @media (max-width: 1100px) {
     .hero-grid { grid-template-columns:1fr 380px 1fr; gap:24px; }
     .family-grid { grid-template-columns:repeat(2,1fr); }

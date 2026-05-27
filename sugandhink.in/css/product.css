@@ -413,3 +413,24 @@
     gap: 28px;
   }
 }
+
+@media (max-width: 576px) {
+  .stepper-cart-row {
+    flex-direction: column;
+    width: 100%;
+    gap: 12px;
+  }
+  .stepper {
+    width: 100%;
+    justify-content: space-between;
+  }
+  .stepper button {
+    flex-grow: 1;
+  }
+  .stepper span {
+    flex-grow: 2;
+  }
+  .add-to-cart-btn {
+    width: 100%;
+  }
+}
