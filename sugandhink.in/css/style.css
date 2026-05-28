@@ -58,6 +58,11 @@ ul { list-style:none; }
 
 /* ── Typography helpers ─────────────────────────────────────────────────────── */
 .italic { font-style: italic; }
+.container {
+    max-width: var(--max);
+    margin: 0 auto;
+    padding: 0 var(--gutter);
+}
 
 /* ── Custom cursor ──────────────────────────────────────────────────────────── */
 .cursor {
@@ -155,18 +160,53 @@ body.cursor-click .cursor-ring { width:20px; height:20px; }
     -webkit-backdrop-filter: blur(24px);
     border-bottom: 1px solid var(--border);
     transition: box-shadow .4s, transform .45s var(--ease-out);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 .site-header.lifted { box-shadow: 0 4px 40px rgba(0,0,0,0.06); }
+
+/* Centered brand logo at the top */
+.header-logo-row {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 16px 0 8px;
+    width: 100%;
+    border-bottom: 1px solid rgba(24,25,26,0.04);
+    transition: padding 0.3s var(--ease);
+}
+.header-logo-img {
+    height: 48px;
+    width: auto;
+    object-fit: contain;
+    transition: height 0.3s var(--ease);
+    display: block;
+}
+.nav-logo-img-link {
+    display: block;
+    transition: opacity 0.2s;
+}
+.nav-logo-img-link:hover {
+    opacity: 0.8;
+}
+
+.site-header.lifted .header-logo-img {
+    height: 38px;
+}
+.site-header.lifted .header-logo-row {
+    padding: 8px 0 4px;
+}
 
 .main-nav {
     max-width: var(--max);
     margin: 0 auto;
+    width: 100%;
     padding: 0 var(--gutter);
-    height: var(--nav-h);
-    display: grid;
-    grid-template-columns: 1fr auto 1fr;
+    height: 46px; /* compact navbar for links */
+    display: flex;
+    justify-content: space-between;
     align-items: center;
-    gap: 16px;
 }
 
 /* Nav links — left */
@@ -196,29 +236,6 @@ body.cursor-click .cursor-ring { width:20px; height:20px; }
 }
 .nav-link:hover { color: var(--ink); }
 .nav-link:hover::after { width:100%; }
-
-/* Logo — centre */
-.nav-logo {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    font-family: var(--serif);
-    font-size: clamp(1.3rem,2.5vw,1.8rem);
-    font-weight: 400;
-    letter-spacing: 0.2em;
-    color: var(--ink);
-    text-align: center;
-    justify-content: center;
-    transition: opacity .25s;
-    white-space: nowrap;
-}
-.nav-logo:hover { opacity:.75; }
-.logo-divider {
-    color: var(--gold);
-    font-style: normal;
-    font-size: 0.9em;
-    margin: 0 2px;
-}
 
 /* Nav icon button */
 .nav-icon-btn {
@@ -251,12 +268,17 @@ body.cursor-click .cursor-ring { width:20px; height:20px; }
     gap: 6px;
     width: 32px; height:32px;
     padding:4px;
+    position: relative;
+    z-index: 99999; /* stays above mobile menu */
 }
 .hamburger span {
     display:block; width:100%; height:1px;
     background:var(--ink);
     transition: all .35s var(--ease-out);
     transform-origin: center;
+}
+.hamburger.open span {
+    background: var(--cream); /* white spans on dark background */
 }
 .hamburger.open span:nth-child(1) { transform: translateY(3.5px) rotate(45deg); }
 .hamburger.open span:nth-child(2) { transform: translateY(-3.5px) rotate(-45deg); }
@@ -1066,20 +1088,39 @@ body.cursor-click .cursor-ring { width:20px; height:20px; }
     .hero-grid { grid-template-columns:1fr 380px 1fr; gap:24px; }
     .family-grid { grid-template-columns:repeat(2,1fr); }
     .ingredients-grid { grid-template-columns:repeat(2,1fr); }
+    .catalog-grid { grid-template-columns:repeat(3,1fr); }
     .collection-grid { grid-template-columns:repeat(3,1fr); }
     .footer-top { grid-template-columns:1.5fr 1fr 1fr 1fr; gap:30px; }
     .footer-top .footer-col:last-child { grid-column: 2 / span 1; }
 }
 
 @media (max-width: 900px) {
-    :root { --nav-h: 60px; }
+    :root { --nav-h: 52px; }
 
-    .main-nav { grid-template-columns:auto 1fr auto; }
-    .nav-left, .nav-right, .nav-logo + .nav-right > .nav-link { display:none; }
-    .nav-logo { justify-content:flex-start; font-size:1.2rem; }
-    .hamburger { display:flex; }
-    .nav-right { display:flex; }
+    .header-logo-row {
+        padding: 10px 0 4px;
+    }
+    .header-logo-img {
+        height: 36px;
+    }
+
+    .main-nav {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        height: var(--nav-h);
+        padding: 0 var(--gutter);
+    }
+    .nav-left { display:none; }
+    .nav-right {
+        display: flex;
+        margin-left: auto;
+    }
     .nav-right .nav-link { display:none; }
+    .hamburger {
+        display: flex;
+        order: -1; /* aligns to the left of navbar! */
+    }
 
     .hero-grid {
         grid-template-columns:1fr;
@@ -1119,6 +1160,7 @@ body.cursor-click .cursor-ring { width:20px; height:20px; }
     .family-grid { grid-template-columns:1fr; gap:1px; }
     .family-card-img { aspect-ratio:16/9; }
     .ingredients-grid { grid-template-columns:1fr; }
+    .catalog-grid { grid-template-columns:repeat(2,1fr); }
     .collection-grid { grid-template-columns:repeat(2,1fr); }
     .reviews-header { grid-template-columns:1fr; }
     .reviews-nav { justify-self:start; }
@@ -1129,6 +1171,7 @@ body.cursor-click .cursor-ring { width:20px; height:20px; }
 }
 
 @media (max-width: 400px) {
+    .catalog-grid { grid-template-columns:1fr; }
     .collection-grid { grid-template-columns:1fr; }
     .footer-top { grid-template-columns:1fr; }
 }
@@ -1277,4 +1320,125 @@ body.cursor-click .cursor-ring { width:20px; height:20px; }
         pointer-events: none !important;
     }
 }
+
+/* =========================================================================
+   SUGANDH INK — Missing CSS & Redesign Upgrades
+   ========================================================================= */
+
+/* Spanning 2 columns for spotlight ingredient card on desktop */
+@media (min-width: 1101px) {
+    .ing-card-wide {
+        grid-column: span 2;
+    }
+}
+
+/* Footer WhatsApp notes alignment and styles */
+.footer-wa-note {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.72rem;
+    color: var(--ink-dim);
+}
+.footer-wa-note svg {
+    color: #25d366; /* WhatsApp Green */
+    fill: currentColor;
+}
+.footer-wa-note a {
+    color: var(--gold);
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.2s;
+}
+.footer-wa-note a:hover {
+    color: var(--ink);
+}
+
+/* WhatsApp button on product cards */
+.pcard-wa {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: #25d366; /* WhatsApp Green */
+    color: #white;
+    color: #ffffff !important;
+    font-size: 0.65rem;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    padding: 6px 12px;
+    border-radius: 20px;
+    text-decoration: none;
+    transition: background 0.3s, transform 0.2s;
+}
+.pcard-wa:hover {
+    background: #128c7e; /* Darker green */
+    transform: scale(1.02);
+}
+.pcard-wa svg {
+    fill: currentColor;
+}
+
+/* Catalog count */
+.catalog-count {
+    font-size: 0.76rem;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    color: var(--ink-dim);
+    text-transform: uppercase;
+}
+
+/* Reviews inputs, ratings and boxes */
+.rev-input {
+    width: 100%;
+    background: transparent;
+    border: 1px solid var(--border);
+    padding: 12px 16px;
+    font-family: var(--sans);
+    font-size: 0.85rem;
+    color: var(--ink);
+    outline: none;
+    transition: border-color 0.3s;
+}
+.rev-input:focus {
+    border-color: var(--gold);
+}
+.rev-textarea {
+    resize: vertical;
+    min-height: 80px;
+}
+.star-row {
+    display: flex;
+    gap: 6px;
+    margin: 12px 0;
+}
+.star-btn {
+    background: transparent;
+    border: none;
+    font-size: 1.25rem;
+    color: var(--border-strong);
+    cursor: pointer;
+    transition: color 0.2s;
+}
+.star-btn.filled {
+    color: var(--gold);
+}
+.reviews-empty {
+    width: 100%;
+    padding: 48px 24px;
+    text-align: center;
+    color: var(--ink-dim);
+    font-size: 0.88rem;
+    border: 1px dashed var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.review-login-prompt {
+    padding: 24px;
+    border: 1px solid var(--border);
+    background: var(--cream-dark);
+    text-align: center;
+}
+
 

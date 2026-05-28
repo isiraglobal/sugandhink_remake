@@ -149,6 +149,7 @@
 .size-options {
   display: flex;
   gap: 12px;
+  flex-wrap: wrap;
 }
 
 .size-pill {

@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FAQ — Sugandh Ink</title>
+    <meta name="description" content="Frequently asked questions about Sugandh Ink fragrances — ordering, shipping, ingredients, and care.">
+    <link rel="icon" href="../assets/logo.png" type="image/png">
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/base.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <style>
+        .inner-hero { padding: 140px 0 80px; text-align: center; border-bottom: 1px solid var(--border); }
+        .inner-hero .overline { font-family: var(--font-body); font-size: 0.7rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--gold); margin-bottom: 24px; }
+        .inner-hero h1 { font-family: var(--font-display); font-size: clamp(3rem, 7vw, 6rem); font-weight: 300; line-height: 1.1; color: var(--ink); margin-bottom: 24px; }
+        .inner-hero h1 em { font-style: italic; color: var(--gold); }
+        .inner-hero .lead { font-family: var(--font-body); font-size: 1.05rem; color: var(--ink-mid); max-width: 580px; margin: 0 auto; line-height: 1.8; }
+        .inner-page { padding: 80px 0; }
+        .inner-section { margin-bottom: 80px; }
+        .inner-section h2 { font-family: var(--font-display); font-size: clamp(1.8rem, 3vw, 2.8rem); font-weight: 300; color: var(--ink); margin-bottom: 24px; }
+        .inner-section h2 em { font-style: italic; }
+        .inner-section h3 { font-family: var(--font-display); font-size: 1.5rem; font-weight: 300; color: var(--ink); margin: 40px 0 16px; }
+        .inner-section p { font-family: var(--font-body); font-size: 0.9rem; color: var(--ink-mid); line-height: 1.9; margin-bottom: 16px; }
+        .inner-section ul, .inner-section ol { padding-left: 24px; }
+        .inner-section li { font-family: var(--font-body); font-size: 0.9rem; color: var(--ink-mid); line-height: 1.9; margin-bottom: 8px; }
+        .prose-divider { border: none; border-top: 1px solid var(--border); margin: 60px 0; }
+        .last-updated { font-family: var(--font-body); font-size: 0.72rem; color: var(--ink-dim); letter-spacing: 0.08em; margin-bottom: 60px; }
+        .faq-list { max-width: 760px; margin: 0 auto; }
+        .faq-item { border-bottom: 1px solid var(--border); }
+        .faq-q { display: flex; justify-content: space-between; align-items: center; padding: 28px 0; cursor: pointer; gap: 24px; }
+        .faq-q h3 { font-family: var(--font-display); font-size: 1.25rem; font-weight: 300; color: var(--ink); margin: 0; }
+        .faq-icon { flex-shrink: 0; width: 20px; height: 20px; position: relative; }
+        .faq-icon::before, .faq-icon::after { content: ''; position: absolute; background: var(--gold); transition: transform 0.3s; }
+        .faq-icon::before { width: 12px; height: 1px; top: 50%; left: 50%; transform: translate(-50%,-50%); }
+        .faq-icon::after { width: 1px; height: 12px; top: 50%; left: 50%; transform: translate(-50%,-50%); }
+        .faq-item.open .faq-icon::after { transform: translate(-50%,-50%) rotate(90deg); }
+        .faq-a { max-height: 0; overflow: hidden; transition: max-height 0.4s ease; }
+        .faq-item.open .faq-a { max-height: 400px; }
+        .faq-a-inner { padding-bottom: 28px; }
+        .faq-a-inner p { font-family: var(--font-body); font-size: 0.88rem; color: var(--ink-mid); line-height: 1.9; margin-bottom: 12px; }
+        .faq-a-inner p:last-child { margin-bottom: 0; }
+        .faq-category { font-family: var(--font-body); font-size: 0.65rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--gold); margin: 60px 0 20px; }
+    </style>
+</head>
+<body>
+    <div class="cursor" id="cursor"><div class="cursor-ring"></div><div class="cursor-dot"></div></div>
+    <div class="cursor" id="cursor"><div class="cursor-ring"></div><div class="cursor-dot"></div></div>
+
+    <div class="announcement-banner" id="announcement-banner">
+        <span>Complimentary Shipping on orders above ₹5,000 — <a href="../collection.html">Explore the Library</a></span>
+        <button class="banner-close" id="banner-close" aria-label="Close">✕</button>
+    </div>
+    <header class="site-header" id="site-header">
+        <div class="header-logo-row">
+            <a href="../index.html" class="nav-logo-img-link" aria-label="Sugandh Ink Home">
+                <img src="../assets/logo.png" alt="Sugandh Ink Logo" class="header-logo-img">
+            </a>
+        </div>
+        <nav class="main-nav" id="main-nav">
+            <div class="nav-left">
+                <a href="../collection.html" class="nav-link">Collection</a>
+                <a href="../index.html#new-arrivals" class="nav-link">New Arrivals</a>
+                <a href="heritage.html" class="nav-link">Our Heritage</a>
+            </div>
+            <div class="nav-right">
+                <a href="ingredients.html" class="nav-link">Ingredients</a>
+                <a href="contact.html" class="nav-link">Contact</a>
+                <button class="nav-icon-btn" id="toggle-shop" aria-label="Open fragrance library">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
+                    <span class="cart-count" id="cart-badge"></span>
+                </button>
+            </div>
+            <button class="hamburger" id="hamburger" aria-label="Menu" aria-expanded="false"><span></span><span></span></button>
+        </nav>
+        <div class="mobile-menu" id="mobile-menu" aria-hidden="true">
+            <nav class="mobile-menu-nav">
+                <a href="../collection.html" class="mm-link">Collection</a>
+                <a href="heritage.html" class="mm-link">Our Heritage</a>
+                <a href="ingredients.html" class="mm-link">Ingredients</a>
+                <a href="contact.html" class="mm-link">Contact</a>
+            </nav>
+            <div class="mm-footer">
+                <a href="mailto:hello@sugandhink.in">hello@sugandhink.in</a>
+                <a href="tel:+919769445567">+91 97694 45567</a>
+            </div>
+        </div>
+    </header>
+    <main>
+        <div class="container">
+            <div class="inner-hero" data-reveal>
+                <p class="overline">ANSWERS</p>
+                <h1>Frequently<br><em>Asked</em></h1>
+                <p class="lead">Everything you need to know about Sugandh Ink fragrances, ordering, care, and the art of attar.</p>
+            </div>
+        </div>
+        <div class="container">
+            <div class="inner-page">
+                <div class="faq-list" data-reveal>
+                    <p class="faq-category">Ordering &amp; Payment</p>
+                    <div class="faq-item"><div class="faq-q"><h3>How do I place an order?</h3><div class="faq-icon"></div></div><div class="faq-a"><div class="faq-a-inner"><p>All orders are placed via WhatsApp at +91 97694 45567. Browse the collection, click "Order" on any product, and you'll be connected directly to us. We confirm availability, share payment details, and dispatch within 2–3 working days.</p></div></div></div>
+                    <div class="faq-item"><div class="faq-q"><h3>What payment methods do you accept?</h3><div class="faq-icon"></div></div><div class="faq-a"><div class="faq-a-inner"><p>We accept UPI (GPay, PhonePe, Paytm), bank transfer (NEFT/IMPS), and cash on delivery for Mumbai orders. International orders are via wire transfer or Wise.</p></div></div></div>
+                    <div class="faq-item"><div class="faq-q"><h3>Do you offer cash on delivery?</h3><div class="faq-icon"></div></div><div class="faq-a"><div class="faq-a-inner"><p>Cash on delivery is available for orders within Mumbai only. For all other locations, prepayment is required via UPI or bank transfer.</p></div></div></div>
+
+                    <p class="faq-category">Shipping &amp; Delivery</p>
+                    <div class="faq-item"><div class="faq-q"><h3>How long does delivery take?</h3><div class="faq-icon"></div></div><div class="faq-a"><div class="faq-a-inner"><p>Orders are dispatched within 2–3 working days of payment confirmation. Standard delivery within India takes 4–7 days. Mumbai local delivery is 1–2 days. We ship internationally to UAE, UK, USA, Canada, and Singapore — international orders take 10–14 days.</p></div></div></div>
+                    <div class="faq-item"><div class="faq-q"><h3>Is shipping free?</h3><div class="faq-icon"></div></div><div class="faq-a"><div class="faq-a-inner"><p>Complimentary shipping on all orders above ₹5,000 within India. Orders below ₹5,000 are charged ₹150 flat. International shipping is charged at cost — typically ₹1,800–₹3,500 depending on destination and weight.</p></div></div></div>
+                    <div class="faq-item"><div class="faq-q"><h3>How is the fragrance packaged?</h3><div class="faq-icon"></div></div><div class="faq-a"><div class="faq-a-inner"><p>Each order is packed in recyclable kraft boxes with foam inserts to protect the glass. Fragile items are double-boxed for courier transit. Gift packaging (premium rigid box with tissue, ribbon, and a handwritten note) is available for ₹250 per order.</p></div></div></div>
+
+                    <p class="faq-category">The Fragrances</p>
+                    <div class="faq-item"><div class="faq-q"><h3>What is the difference between an attar and an eau de parfum?</h3><div class="faq-icon"></div></div><div class="faq-a"><div class="faq-a-inner"><p>Attars (or ittar) are alcohol-free, oil-based fragrances created by traditional Deg-Bhapka hydro-distillation. They sit close to the skin, project softly, and evolve over hours. Eau de parfums (EDP) use alcohol as a carrier, project more immediately, and typically last 6–10 hours on skin. Our attar line (Oud Royal, White Bloom, Vanilla Luxe, etc.) differs from our EDP-inspired contemporary compositions in both character and application.</p></div></div></div>
+                    <div class="faq-item"><div class="faq-q"><h3>How long do your fragrances last?</h3><div class="faq-icon"></div></div><div class="faq-a"><div class="faq-a-inner"><p>Our contemporary compositions at ₹799 are formulated at EDP concentration and typically last 6–8 hours. Our premium attar line (₹18,500 and above) is far more concentrated — a single drop applied to a pulse point will last 12–24 hours and leave a trail on fabric for days.</p></div></div></div>
+                    <div class="faq-item"><div class="faq-q"><h3>Do you offer samples?</h3><div class="faq-icon"></div></div><div class="faq-a"><div class="faq-a-inner"><p>Yes — 30ml sample sizes are available for select compositions (shown on each product page). We also offer bespoke sample kits via our Fragrance Consultation service. Contact us on WhatsApp for a curated sample set based on your preferences.</p></div></div></div>
+                    <div class="faq-item"><div class="faq-q"><h3>Are your fragrances suitable for sensitive skin?</h3><div class="faq-icon"></div></div><div class="faq-a"><div class="faq-a-inner"><p>Our attars contain no alcohol and are generally very well-tolerated by sensitive skin. All compositions in our contemporary line comply with IFRA standards. If you have known sensitivities to specific materials (e.g. oakmoss, certain musks), please check the full notes list on each product page and consult us via WhatsApp before purchasing.</p></div></div></div>
+
+                    <p class="faq-category">Returns &amp; Other</p>
+                    <div class="faq-item"><div class="faq-q"><h3>Can I return a fragrance if I don't like it?</h3><div class="faq-icon"></div></div><div class="faq-a"><div class="faq-a-inner"><p>Due to the nature of fragrance, we are unable to accept returns for opened bottles. Sealed, unopened bottles may be returned within 7 days of delivery for a full refund. We strongly encourage ordering a sample before committing to a full bottle — and our free consultation service exists precisely to prevent mismatches.</p></div></div></div>
+                    <div class="faq-item"><div class="faq-q"><h3>Do you do wholesale or retail partnerships?</h3><div class="faq-icon"></div></div><div class="faq-a"><div class="faq-a-inner"><p>Yes — we work with select boutiques, hotels, and concept stores. Please contact us at hello@sugandhink.in with your business details and we'll respond within 5 working days.</p></div></div></div>
+                </div>
+            </div>
+        </div>
+        <script>
+        document.querySelectorAll('.faq-q').forEach(q => {
+            q.addEventListener('click', () => {
+                const item = q.parentElement;
+                const wasOpen = item.classList.contains('open');
+                document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('open'));
+                if (!wasOpen) item.classList.add('open');
+            });
+        });
+        </script>
+    </main>
+
+    <footer class="site-footer" id="footer">
+        <div class="footer-top">
+            <div class="footer-brand">
+                <div class="footer-logo"><span>Sugandh</span><span class="italic"> Ink</span></div>
+                <p>Artisanal fragrances crafted with unyielding precision and historical reverence. Malad (West), Mumbai.</p>
+                <div class="footer-socials">
+                    <a href="https://instagram.com" class="fsocial" target="_blank" rel="noopener" aria-label="Instagram"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="5"/><circle cx="17.5" cy="6.5" r="1.5" fill="currentColor" stroke="none"/></svg></a>
+                </div>
+            </div>
+            <div class="footer-col"><h5>The Maison</h5><ul>
+                <li><a href="heritage.html">Our Heritage</a></li>
+                <li><a href="ingredients.html">The Ingredients</a></li>
+                <li><a href="../collection.html">The Library</a></li>
+                <li><a href="bespoke.html">Bespoke Enquiry</a></li>
+            </ul></div>
+            <div class="footer-col"><h5>Shop</h5><ul>
+                <li><a href="../collection.html">New Arrivals</a></li>
+                <li><a href="../collection.html">Best Sellers</a></li>
+                <li><a href="../collection.html">By Scent Family</a></li>
+                <li><a href="../collection.html">Full Collection</a></li>
+            </ul></div>
+            <div class="footer-col"><h5>Client Care</h5><ul>
+                <li><a href="contact.html">Contact Us</a></li>
+                <li><a href="consultation.html">Fragrance Consultation</a></li>
+                <li><a href="newsletter.html">Newsletter</a></li>
+                <li><a href="faq.html">FAQ</a></li>
+            </ul></div>
+            <div class="footer-col"><h5>Legal</h5><ul>
+                <li><a href="terms.html">Terms of Service</a></li>
+                <li><a href="privacy.html">Privacy Policy</a></li>
+                <li><a href="cookies.html">Cookie Policy</a></li>
+                <li><a href="returns.html">Returns &amp; Shipping</a></li>
+            </ul></div>
+        </div>
+        <div class="footer-bottom">
+            <span>© 2026 Sugandh Ink — All Rights Reserved</span>
+            <span class="footer-wa-note"><svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12.8 12.8 0 00-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg> Orders via WhatsApp: <a href="https://wa.me/919769445567" target="_blank">+91 97694 45567</a></span>
+        </div>
+    </footer>
+    <script type="module" src="../js/ui.js"></script>
+    <script type="module" src="../js/main.js"></script>
+</body>
+</html>

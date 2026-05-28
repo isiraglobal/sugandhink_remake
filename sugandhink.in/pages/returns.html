@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Returns & Shipping — Sugandh Ink</title>
+    <meta name="description" content="Sugandh Ink returns, refunds, and shipping policy — everything you need to know before ordering.">
+    <link rel="icon" href="../assets/logo.png" type="image/png">
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/base.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <style>
+        .inner-hero { padding: 140px 0 80px; text-align: center; border-bottom: 1px solid var(--border); }
+        .inner-hero .overline { font-family: var(--font-body); font-size: 0.7rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--gold); margin-bottom: 24px; }
+        .inner-hero h1 { font-family: var(--font-display); font-size: clamp(3rem, 7vw, 6rem); font-weight: 300; line-height: 1.1; color: var(--ink); margin-bottom: 24px; }
+        .inner-hero h1 em { font-style: italic; color: var(--gold); }
+        .inner-hero .lead { font-family: var(--font-body); font-size: 1.05rem; color: var(--ink-mid); max-width: 580px; margin: 0 auto; line-height: 1.8; }
+        .inner-page { padding: 80px 0; }
+        .inner-section { margin-bottom: 80px; }
+        .inner-section h2 { font-family: var(--font-display); font-size: clamp(1.8rem, 3vw, 2.8rem); font-weight: 300; color: var(--ink); margin-bottom: 24px; }
+        .inner-section h2 em { font-style: italic; }
+        .inner-section h3 { font-family: var(--font-display); font-size: 1.5rem; font-weight: 300; color: var(--ink); margin: 40px 0 16px; }
+        .inner-section p { font-family: var(--font-body); font-size: 0.9rem; color: var(--ink-mid); line-height: 1.9; margin-bottom: 16px; }
+        .inner-section ul, .inner-section ol { padding-left: 24px; }
+        .inner-section li { font-family: var(--font-body); font-size: 0.9rem; color: var(--ink-mid); line-height: 1.9; margin-bottom: 8px; }
+        .prose-divider { border: none; border-top: 1px solid var(--border); margin: 60px 0; }
+        .last-updated { font-family: var(--font-body); font-size: 0.72rem; color: var(--ink-dim); letter-spacing: 0.08em; margin-bottom: 60px; }
+        .prose { max-width: 760px; margin: 0 auto; }
+        .returns-highlight { background: var(--cream-deep); border-left: 3px solid var(--gold); padding: 24px 32px; margin: 32px 0; }
+        .returns-highlight p { font-family: var(--font-body); font-size: 0.88rem; color: var(--ink-mid); line-height: 1.8; margin: 0; }
+        .shipping-table { width: 100%; border-collapse: collapse; margin: 24px 0; }
+        .shipping-table th { font-family: var(--font-body); font-size: 0.65rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-mid); text-align: left; padding: 12px 16px; border-bottom: 2px solid var(--border); }
+        .shipping-table td { font-family: var(--font-body); font-size: 0.85rem; color: var(--ink-mid); padding: 14px 16px; border-bottom: 1px solid var(--border); }
+    </style>
+</head>
+<body>
+    <div class="cursor" id="cursor"><div class="cursor-ring"></div><div class="cursor-dot"></div></div>
+    <div class="cursor" id="cursor"><div class="cursor-ring"></div><div class="cursor-dot"></div></div>
+
+    <div class="announcement-banner" id="announcement-banner">
+        <span>Complimentary Shipping on orders above ₹5,000 — <a href="../collection.html">Explore the Library</a></span>
+        <button class="banner-close" id="banner-close" aria-label="Close">✕</button>
+    </div>
+    <header class="site-header" id="site-header">
+        <div class="header-logo-row">
+            <a href="../index.html" class="nav-logo-img-link" aria-label="Sugandh Ink Home">
+                <img src="../assets/logo.png" alt="Sugandh Ink Logo" class="header-logo-img">
+            </a>
+        </div>
+        <nav class="main-nav" id="main-nav">
+            <div class="nav-left">
+                <a href="../collection.html" class="nav-link">Collection</a>
+                <a href="../index.html#new-arrivals" class="nav-link">New Arrivals</a>
+                <a href="heritage.html" class="nav-link">Our Heritage</a>
+            </div>
+            <div class="nav-right">
+                <a href="ingredients.html" class="nav-link">Ingredients</a>
+                <a href="contact.html" class="nav-link">Contact</a>
+                <button class="nav-icon-btn" id="toggle-shop" aria-label="Open fragrance library">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
+                    <span class="cart-count" id="cart-badge"></span>
+                </button>
+            </div>
+            <button class="hamburger" id="hamburger" aria-label="Menu" aria-expanded="false"><span></span><span></span></button>
+        </nav>
+        <div class="mobile-menu" id="mobile-menu" aria-hidden="true">
+            <nav class="mobile-menu-nav">
+                <a href="../collection.html" class="mm-link">Collection</a>
+                <a href="heritage.html" class="mm-link">Our Heritage</a>
+                <a href="ingredients.html" class="mm-link">Ingredients</a>
+                <a href="contact.html" class="mm-link">Contact</a>
+            </nav>
+            <div class="mm-footer">
+                <a href="mailto:hello@sugandhink.in">hello@sugandhink.in</a>
+                <a href="tel:+919769445567">+91 97694 45567</a>
+            </div>
+        </div>
+    </header>
+    <main>
+        <div class="container">
+            <div class="inner-hero" data-reveal>
+                <p class="overline">CLIENT CARE</p>
+                <h1>Returns &amp;<br><em>Shipping</em></h1>
+                <p class="lead">Our complete policy on shipping timelines, rates, returns, and refunds — written in plain language.</p>
+            </div>
+        </div>
+        <div class="container">
+            <div class="inner-page">
+                <div class="prose" data-reveal>
+                    <div class="inner-section">
+                        <h2>Shipping <em>Within India</em></h2>
+                        <table class="shipping-table">
+                            <thead><tr><th>Zone</th><th>Order Value</th><th>Shipping Cost</th><th>Estimated Days</th></tr></thead>
+                            <tbody>
+                                <tr><td>Mumbai Local</td><td>Any</td><td>Free</td><td>1–2 days</td></tr>
+                                <tr><td>All India</td><td>Above ₹5,000</td><td>Free</td><td>4–7 days</td></tr>
+                                <tr><td>All India</td><td>Below ₹5,000</td><td>₹150 flat</td><td>4–7 days</td></tr>
+                                <tr><td>Remote Areas</td><td>Any</td><td>₹250 flat</td><td>7–12 days</td></tr>
+                            </tbody>
+                        </table>
+                        <p>We ship via Delhivery, BlueDart, and Ekart depending on your location. A tracking link is shared via WhatsApp once the order is dispatched.</p>
+                    </div>
+                    <hr class="prose-divider">
+                    <div class="inner-section">
+                        <h2>International <em>Shipping</em></h2>
+                        <p>We currently ship internationally to: UAE, United Kingdom, United States, Canada, Singapore, and Australia.</p>
+                        <table class="shipping-table">
+                            <thead><tr><th>Destination</th><th>Shipping Cost</th><th>Estimated Days</th></tr></thead>
+                            <tbody>
+                                <tr><td>UAE</td><td>₹1,800</td><td>7–10 days</td></tr>
+                                <tr><td>UK / Europe</td><td>₹2,800</td><td>10–14 days</td></tr>
+                                <tr><td>USA / Canada</td><td>₹3,200</td><td>12–16 days</td></tr>
+                                <tr><td>Singapore / Australia</td><td>₹2,400</td><td>10–14 days</td></tr>
+                            </tbody>
+                        </table>
+                        <p>International customers are responsible for any import duties or customs fees levied by their country. We declare the correct value on all customs forms.</p>
+                    </div>
+                    <hr class="prose-divider">
+                    <div class="inner-section">
+                        <h2>Returns <em>Policy</em></h2>
+                        <div class="returns-highlight">
+                            <p><strong>Opened fragrance products are non-returnable.</strong> This is standard practice in the fragrance industry due to hygiene and the subjective nature of scent. We strongly encourage using our free consultation service and ordering samples before purchasing a full bottle.</p>
+                        </div>
+                        <h3>Sealed / Unopened Products</h3>
+                        <p>Sealed, unopened products may be returned within 7 days of delivery for a full refund. The product must be in original, undamaged packaging. Return shipping costs are borne by the customer unless the item is damaged or incorrect.</p>
+                        <h3>Damaged or Incorrect Items</h3>
+                        <p>If your order arrives damaged or incorrect, please photograph the packaging and product and contact us via WhatsApp within 24 hours of delivery. We will arrange a full replacement or refund at no cost to you.</p>
+                    </div>
+                    <hr class="prose-divider">
+                    <div class="inner-section">
+                        <h2>Refunds <em>Process</em></h2>
+                        <p>Approved refunds are processed within 5–7 working days via the original payment method (UPI, bank transfer). We will send confirmation via WhatsApp once the refund is initiated.</p>
+                        <p>For questions about your order or return, contact us at <a href="mailto:hello@sugandhink.in">hello@sugandhink.in</a> or WhatsApp us at +91 97694 45567.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="site-footer" id="footer">
+        <div class="footer-top">
+            <div class="footer-brand">
+                <div class="footer-logo"><span>Sugandh</span><span class="italic"> Ink</span></div>
+                <p>Artisanal fragrances crafted with unyielding precision and historical reverence. Malad (West), Mumbai.</p>
+                <div class="footer-socials">
+                    <a href="https://instagram.com" class="fsocial" target="_blank" rel="noopener" aria-label="Instagram"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="5"/><circle cx="17.5" cy="6.5" r="1.5" fill="currentColor" stroke="none"/></svg></a>
+                </div>
+            </div>
+            <div class="footer-col"><h5>The Maison</h5><ul>
+                <li><a href="heritage.html">Our Heritage</a></li>
+                <li><a href="ingredients.html">The Ingredients</a></li>
+                <li><a href="../collection.html">The Library</a></li>
+                <li><a href="bespoke.html">Bespoke Enquiry</a></li>
+            </ul></div>
+            <div class="footer-col"><h5>Shop</h5><ul>
+                <li><a href="../collection.html">New Arrivals</a></li>
+                <li><a href="../collection.html">Best Sellers</a></li>
+                <li><a href="../collection.html">By Scent Family</a></li>
+                <li><a href="../collection.html">Full Collection</a></li>
+            </ul></div>
+            <div class="footer-col"><h5>Client Care</h5><ul>
+                <li><a href="contact.html">Contact Us</a></li>
+                <li><a href="consultation.html">Fragrance Consultation</a></li>
+                <li><a href="newsletter.html">Newsletter</a></li>
+                <li><a href="faq.html">FAQ</a></li>
+            </ul></div>
+            <div class="footer-col"><h5>Legal</h5><ul>
+                <li><a href="terms.html">Terms of Service</a></li>
+                <li><a href="privacy.html">Privacy Policy</a></li>
+                <li><a href="cookies.html">Cookie Policy</a></li>
+                <li><a href="returns.html">Returns &amp; Shipping</a></li>
+            </ul></div>
+        </div>
+        <div class="footer-bottom">
+            <span>© 2026 Sugandh Ink — All Rights Reserved</span>
+            <span class="footer-wa-note"><svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12.8 12.8 0 00-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg> Orders via WhatsApp: <a href="https://wa.me/919769445567" target="_blank">+91 97694 45567</a></span>
+        </div>
+    </footer>
+    <script type="module" src="../js/ui.js"></script>
+    <script type="module" src="../js/main.js"></script>
+</body>
+</html>

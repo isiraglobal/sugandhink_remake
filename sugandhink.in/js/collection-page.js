@@ -9,7 +9,7 @@ const WA_NUMBER = '919769445567';
 // ── Helpers ──────────────────────────────────────────────────────────────────
 function waLink(product) {
     const msg = encodeURIComponent(
-        `Hello Sugandh Ink 🌿\n\nI would like to place an order for:\n\n*${product.originalName}* (${product.code})\nNotes: ${product.shortNotes}\nPrice: ${product.price}\n\nPlease share availability and payment details. Thank you.`
+        `Hello Sugandh Ink 🌿\n\nI would like to place an order for:\n\n*${product.name}* (${product.code})\nNotes: ${product.shortNotes}\nPrice: ${product.price}\n\nPlease share availability and payment details. Thank you.`
     );
     return `https://wa.me/${WA_NUMBER}?text=${msg}`;
 }
@@ -94,7 +94,7 @@ function applyFiltersAndSort() {
     } else if (sortBy === 'price-high') {
         filtered.sort((a, b) => parsePrice(b.price) - parsePrice(a.price));
     } else if (sortBy === 'name') {
-        filtered.sort((a, b) => a.originalName.localeCompare(b.originalName));
+        filtered.sort((a, b) => a.name.localeCompare(b.name));
     }
 
     activeProducts = filtered;
@@ -137,10 +137,10 @@ function renderCatalog() {
         el.setAttribute('data-id', product.code);
         el.innerHTML = `
             <div class="citem-img">
-                <img src="${product.image}" alt="${product.originalName}" loading="lazy">
+                <img src="${product.image}" alt="${product.name}" loading="lazy">
             </div>
             <div class="citem-code">${product.code}</div>
-            <div class="citem-name">${product.originalName}</div>
+            <div class="citem-name">${product.name}</div>
             <div class="citem-notes">${product.shortNotes}</div>
             <div class="citem-footer">
                 <span class="citem-price">${product.price}</span>

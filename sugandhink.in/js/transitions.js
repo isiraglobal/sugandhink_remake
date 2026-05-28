@@ -1,27 +1,18 @@
 /**
- * transitions.js — Curtain page transition system for Sugandh Ink
+ * transitions.js — Lightweight GSAP page transitions for a luxury editorial feel
  */
 
 document.addEventListener('DOMContentLoaded', () => {
-    // Inject the curtain element if not present
-    let curtain = document.getElementById('curtain');
-    if (!curtain) {
-        curtain = document.createElement('div');
-        curtain.id = 'curtain';
-        // Add a slide-in state by default so it covers screen if we are navigating
-        curtain.className = 'slide-in';
-        document.body.appendChild(curtain);
-    }
+    // 1. Smoothly fade in the page on load
+    gsap.fromTo(document.body,
+        { opacity: 0 },
+        { opacity: 1, duration: 0.6, ease: 'power2.out', clearProps: 'opacity' }
+    );
+    
+    // Clean up loading state
+    document.body.classList.remove('is-loading');
 
-    // Trigger page reveal (curtain slides up)
-    requestAnimationFrame(() => {
-        setTimeout(() => {
-            curtain.classList.remove('slide-in');
-            curtain.classList.add('slide-out');
-        }, 100);
-    });
-
-    // Intercept internal links
+    // 2. Intercept internal links and fade out smoothly before navigating
     document.body.addEventListener('click', (e) => {
         const link = e.target.closest('a');
         if (!link) return;
@@ -45,14 +36,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
             e.preventDefault();
 
-            // Slide curtain down
-            curtain.classList.remove('slide-out');
-            curtain.classList.add('slide-in');
-
-            // Wait for animation duration and redirect
-            setTimeout(() => {
-                window.location.href = href;
-            }, 600); // matches --curtain-dur (600ms) in base.css / loader.css
+            // Animate fade-out before redirecting
+            gsap.to(document.body, {
+                opacity: 0,
+                duration: 0.4,
+                ease: 'power2.inOut',
+                onComplete: () => {
+                    window.location.href = href;
+                }
+            });
         }
     });
 });

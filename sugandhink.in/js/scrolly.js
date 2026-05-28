@@ -124,9 +124,9 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // ── 7. Scent Family Staggered Slide Reveals ──────────────────────────────
-    const familyHeader = document.querySelector('.family-header');
-    if (familyHeader) {
-        const cards = familyHeader.querySelectorAll('.family-card');
+    const familyGrid = document.querySelector('.family-grid');
+    if (familyGrid) {
+        const cards = familyGrid.querySelectorAll('.family-card');
         if (cards.length) {
             gsap.fromTo(cards, 
                 { opacity: 0, y: 40, scale: 0.96 },
@@ -138,7 +138,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     stagger: 0.15,
                     ease: 'power3.out',
                     scrollTrigger: {
-                        trigger: familyHeader,
+                        trigger: familyGrid,
                         start: 'top 85%'
                     }
                 }

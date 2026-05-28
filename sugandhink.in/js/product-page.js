@@ -52,19 +52,19 @@ function renderProductDetails() {
     if (!product) return;
 
     // Head metadata title
-    document.title = `${product.originalName} — Sugandh Ink`;
+    document.title = `${product.name} — Sugandh Ink`;
 
     // Breadcrumb & specs
-    document.getElementById('breadcrumb-product-name').textContent = product.originalName;
+    document.getElementById('breadcrumb-product-name').textContent = product.name;
     document.getElementById('product-code').textContent = product.code;
-    document.getElementById('product-title').textContent = product.originalName;
+    document.getElementById('product-title').textContent = product.name;
     document.getElementById('product-desc').textContent = product.description;
     
     // Main image
     const mainImg = document.getElementById('product-main-img');
     if (mainImg) {
         mainImg.src = product.image;
-        mainImg.alt = product.originalName;
+        mainImg.alt = product.name;
     }
 
     // Story narrative
@@ -173,7 +173,7 @@ function updatePurchaseDetails() {
     const total = finalPrice * selectedQty;
     const formattedTotal = '₹' + total.toLocaleString('en-IN');
     const msg = encodeURIComponent(
-        `Hello Sugandh Ink 🌿\n\nI would like to place an order for:\n\n*${product.originalName}* (${product.code})\nSize: *${selectedSize}*\nQuantity: *${selectedQty}*\nPrice: ${formattedPrice} each\nTotal: ${formattedTotal}\n\nPlease share availability and payment details. Thank you.`
+        `Hello Sugandh Ink 🌿\n\nI would like to place an order for:\n\n*${product.name}* (${product.code})\nSize: *${selectedSize}*\nQuantity: *${selectedQty}*\nPrice: ${formattedPrice} each\nTotal: ${formattedTotal}\n\nPlease share availability and payment details. Thank you.`
     );
     const waBtn = document.getElementById('whatsapp-checkout-btn');
     if (waBtn) {
@@ -188,7 +188,7 @@ function updatePurchaseDetails() {
                 collector: user.name,
                 email: user.email,
                 wa: waNum,
-                items: `${product.originalName} (${selectedSize}) × ${selectedQty}`,
+                items: `${product.name} (${selectedSize}) × ${selectedQty}`,
                 value: formattedTotal,
                 date: new Date().toLocaleDateString('en-IN', { day: '2-digit', month: '2-digit', year: 'numeric' }),
                 status: 'pending'
@@ -223,7 +223,7 @@ function updatePurchaseDetails() {
         newCartBtn.addEventListener('click', () => {
             addToCart({
                 code: product.code,
-                name: product.originalName,
+                name: product.name,
                 size: selectedSize,
                 qty: selectedQty,
                 price: finalPrice,
@@ -311,100 +311,36 @@ function saveProductReviews(reviews) {
 function setupReviews() {
     const list = document.getElementById('product-reviews-list');
     const empty = document.getElementById('product-reviews-empty');
-    const loginBox = document.getElementById('product-review-login');
-    const writeBox = document.getElementById('product-write-box');
-
     if (!list) return;
 
-    function renderReviewsList() {
-        const reviews = getProductReviews();
-        const user = getUser();
+    const reviews = getProductReviews();
 
-        // Clear dynamic entries
-        list.querySelectorAll('.review-card').forEach(c => c.remove());
-
-        // Update counts
-        const reviewCountText = document.getElementById('product-rating-count');
-        if (reviewCountText) {
-            reviewCountText.textContent = `(${reviews.length} client review${reviews.length !== 1 ? 's' : ''})`;
-        }
-
-        if (reviews.length === 0) {
-            if (empty) empty.style.display = 'block';
-        } else {
-            if (empty) empty.style.display = 'none';
-            reviews.slice().reverse().forEach(rv => {
-                const card = document.createElement('div');
-                card.className = 'review-card';
-                card.innerHTML = `
-                    <div class="stars">${'★'.repeat(rv.rating)}${'☆'.repeat(5 - rv.rating)}</div>
-                    <p style="font-size:0.86rem; color:var(--ink-mid); margin:12px 0; line-height:1.6;">"${escHtml(rv.text)}"</p>
-                    <div style="display:flex; justify-content:space-between; font-size:0.75rem; border-top:1px solid var(--border); padding-top:10px; margin-top:auto;">
-                        <strong>${escHtml(rv.name)}</strong>
-                        <span style="color:var(--ink-dim);">${rv.date}</span>
-                    </div>
-                `;
-                list.appendChild(card);
-            });
-        }
-
-        // Show write or login prompts
-        if (writeBox) writeBox.style.display = user ? 'block' : 'none';
-        if (loginBox) loginBox.style.display = user ? 'none' : 'block';
+    // Update count badge
+    const reviewCountText = document.getElementById('product-rating-count');
+    if (reviewCountText) {
+        reviewCountText.textContent = `(${reviews.length} client review${reviews.length !== 1 ? 's' : ''})`;
     }
 
-    // Register form (username + email)
-    const regForm = document.getElementById('product-register-form');
-    if (regForm) {
-        regForm.addEventListener('submit', e => {
-            e.preventDefault();
-            const name = regForm.querySelector('[name=rname]')?.value.trim();
-            const email = regForm.querySelector('[name=remail]')?.value.trim();
-            if (!name || !email) return;
-            localStorage.setItem(USER_KEY, JSON.stringify({ name, email }));
-            renderReviewsList();
-        });
+    if (reviews.length === 0) {
+        if (empty) empty.style.display = 'block';
+        return;
     }
 
-    // Write review form
-    const writeForm = document.getElementById('product-write-form');
-    if (writeForm) {
-        // Star buttons selection
-        writeForm.querySelectorAll('.star-btn').forEach(btn => {
-            btn.addEventListener('click', () => {
-                const val = btn.dataset.val;
-                writeForm.querySelectorAll('.star-btn').forEach((b, i) => {
-                    b.textContent = i < val ? '★' : '☆';
-                    b.classList.toggle('filled', i < val);
-                });
-                writeForm.querySelector('[name=wrating]').value = val;
-            });
-        });
+    if (empty) empty.style.display = 'none';
 
-        writeForm.addEventListener('submit', e => {
-            e.preventDefault();
-            const user = getUser();
-            if (!user) return;
-            const text = writeForm.querySelector('[name=wtext]')?.value.trim();
-            const rating = parseInt(writeForm.querySelector('[name=wrating]')?.value || '5', 10);
-            if (!text) return;
-
-            const reviews = getProductReviews();
-            reviews.push({
-                name: user.name,
-                text,
-                rating,
-                date: new Date().toLocaleDateString('en-IN', { month: 'long', year: 'numeric' })
-            });
-            saveProductReviews(reviews);
-            writeForm.reset();
-            writeForm.querySelectorAll('.star-btn').forEach(b => b.textContent = '☆');
-            writeForm.querySelector('[name=wrating]').value = '5';
-            renderReviewsList();
-        });
-    }
-
-    renderReviewsList();
+    reviews.slice().reverse().forEach(rv => {
+        const card = document.createElement('div');
+        card.className = 'review-card';
+        card.innerHTML = `
+            <div class="stars">${'\u2605'.repeat(rv.rating)}${'\u2606'.repeat(5 - rv.rating)}</div>
+            <p style="font-size:0.86rem; color:var(--ink-mid); margin:12px 0; line-height:1.6;">"${escHtml(rv.text)}"</p>
+            <div style="display:flex; justify-content:space-between; font-size:0.75rem; border-top:1px solid var(--border); padding-top:10px; margin-top:auto;">
+                <strong>${escHtml(rv.name)}</strong>
+                <span style="color:var(--ink-dim);">${rv.date}</span>
+            </div>
+        `;
+        list.appendChild(card);
+    });
 }
 
 function escHtml(str) {
@@ -427,10 +363,10 @@ function renderRelatedProducts() {
         card.className = 'pcard';
         card.innerHTML = `
             <div class="pcard-img">
-                <img src="${p.image}" alt="${p.originalName}" loading="lazy">
+                <img src="${p.image}" alt="${p.name}" loading="lazy">
             </div>
             <div class="pcard-code">${p.code}</div>
-            <div class="pcard-name">${p.originalName}</div>
+            <div class="pcard-name">${p.name}</div>
             <div class="pcard-notes">${p.shortNotes}</div>
             <div class="pcard-footer">
                 <span class="pcard-price">${p.price}</span>

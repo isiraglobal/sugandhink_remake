@@ -5,7 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>The Library — Sugandh Ink</title>
     <meta name="description" content="Explore the full collection of Sugandh Ink. Artisanal Indian fragrances extracted using traditional methods.">
-    <link rel="stylesheet" href="style.css">
+    <link rel="icon" href="assets/logo.png" type="image/png">
+    <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/loader.css">
     <link rel="stylesheet" href="css/collection.css">
 
@@ -25,20 +26,7 @@
         <div class="cursor-dot"></div>
     </div>
 
-    <!-- Preloader -->
-    <div id="loader">
-        <div class="loader-wordmark">
-            <span class="lw">Sugandh</span>
-            <span class="lw-rule"></span>
-            <span class="lw italic">Ink</span>
-        </div>
-        <div class="loader-progress">
-            <div class="loader-bar-track">
-                <div class="loader-bar-fill" id="loader-bar"></div>
-            </div>
-            <div class="loader-tagline">Artisanal Indian Fragrances</div>
-        </div>
-    </div>
+    <!-- Preloader removed toSnappy Curtain transition -->
 
     <!-- Announcement Banner -->
     <div class="announcement-banner" id="announcement-banner">
@@ -46,8 +34,13 @@
         <button class="banner-close" id="banner-close" aria-label="Close">✕</button>
     </div>
 
-    <!-- NAVIGATION — Logo centred, links split left / right -->
+    <!-- NAVIGATION — Center logo on top, navigation below -->
     <header class="site-header site-header-solid" id="site-header">
+        <div class="header-logo-row">
+            <a href="index.html" class="nav-logo-img-link" aria-label="Sugandh Ink Home">
+                <img src="assets/logo.png" alt="Sugandh Ink Logo" class="header-logo-img">
+            </a>
+        </div>
         <nav class="main-nav" id="main-nav">
             <!-- Left links -->
             <div class="nav-left">
@@ -55,13 +48,6 @@
                 <a href="index.html#new-arrivals" class="nav-link">New Arrivals</a>
                 <a href="index.html#about" class="nav-link">Our Story</a>
             </div>
-
-            <!-- Centre logo -->
-            <a href="index.html" class="nav-logo" id="nav-logo" aria-label="Sugandh Ink Home">
-                <span class="logo-word">Sugandh</span>
-                <span class="logo-divider">—</span>
-                <span class="logo-word italic">Ink</span>
-            </a>
 
             <!-- Right links + icons -->
             <div class="nav-right">
@@ -252,10 +238,10 @@
             <div class="footer-col">
                 <h5>The Maison</h5>
                 <ul>
-                    <li><a href="index.html#about">Our Heritage</a></li>
-                    <li><a href="index.html#ingredients">The Ingredients</a></li>
+                    <li><a href="pages/heritage.html">Our Heritage</a></li>
+                    <li><a href="pages/ingredients.html">The Ingredients</a></li>
                     <li><a href="collection.html">The Library</a></li>
-                    <li><a href="index.html#contact">Bespoke Enquiry</a></li>
+                    <li><a href="pages/bespoke.html">Bespoke Enquiry</a></li>
                 </ul>
             </div>
 
@@ -272,20 +258,20 @@
             <div class="footer-col">
                 <h5>Client Care</h5>
                 <ul>
-                    <li><a href="mailto:hello@sugandhink.in">Contact Us</a></li>
-                    <li><a href="index.html#contact">Fragrance Consultation</a></li>
-                    <li><a href="index.html#newsletter">Newsletter</a></li>
-                    <li><a href="#footer">FAQ</a></li>
+                    <li><a href="pages/contact.html">Contact Us</a></li>
+                    <li><a href="pages/consultation.html">Fragrance Consultation</a></li>
+                    <li><a href="pages/newsletter.html">Newsletter</a></li>
+                    <li><a href="pages/faq.html">FAQ</a></li>
                 </ul>
             </div>
 
             <div class="footer-col">
                 <h5>Legal</h5>
                 <ul>
-                    <li><a href="#footer">Terms of Service</a></li>
-                    <li><a href="#footer">Privacy Policy</a></li>
-                    <li><a href="#footer">Cookie Policy</a></li>
-                    <li><a href="#footer">Returns &amp; Shipping</a></li>
+                    <li><a href="pages/terms.html">Terms of Service</a></li>
+                    <li><a href="pages/privacy.html">Privacy Policy</a></li>
+                    <li><a href="pages/cookies.html">Cookie Policy</a></li>
+                    <li><a href="pages/returns.html">Returns &amp; Shipping</a></li>
                 </ul>
             </div>
         </div>

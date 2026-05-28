@@ -504,3 +504,228 @@ textarea.form-input { resize:vertical; min-height:100px; }
     gap: 16px;
   }
 }
+
+/* =========================================================================
+   SUGANDH INK — Billing & Communication Modals Styling
+   ========================================================================= */
+.modal-wide {
+  max-width: 1100px !important;
+}
+.modal-split-layout {
+  display: grid;
+  grid-template-columns: 380px 1fr;
+  gap: 32px;
+  height: calc(100vh - 120px);
+}
+.modal-form-side {
+  overflow-y: auto;
+  padding-right: 12px;
+  border-right: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+.modal-preview-side {
+  overflow-y: auto;
+  background: var(--cream-dark);
+  padding: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+/* Luxury Invoice Design */
+.invoice-paper {
+  width: 100%;
+  max-width: 680px;
+  background: var(--white);
+  border: 1px solid var(--border-strong);
+  padding: 50px 60px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.04);
+  font-family: var(--sans);
+  color: var(--ink);
+}
+.invoice-logo {
+  font-family: var(--serif);
+  font-size: 2.2rem;
+  letter-spacing: 0.15em;
+  text-align: center;
+  margin-bottom: 8px;
+}
+.invoice-logo .italic {
+  font-style: italic;
+}
+.invoice-sub {
+  text-align: center;
+  font-size: 0.62rem;
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 30px;
+}
+.invoice-meta-row {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 40px;
+  font-size: 0.8rem;
+  line-height: 1.6;
+}
+.invoice-meta-col strong {
+  font-size: 0.65rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-dim);
+  display: block;
+  margin-bottom: 6px;
+}
+.invoice-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 40px;
+}
+.invoice-table th, .invoice-table td {
+  padding: 14px 10px;
+  font-size: 0.8rem;
+  border-bottom: 1px solid var(--border);
+}
+.invoice-table th {
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--ink-mid);
+  text-align: left;
+  border-top: 1px solid var(--border);
+}
+.invoice-table td.num, .invoice-table th.num {
+  text-align: right;
+}
+.invoice-summary-block {
+  margin-left: auto;
+  width: 280px;
+  margin-bottom: 40px;
+}
+.invoice-sum-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.82rem;
+  margin-bottom: 10px;
+}
+.invoice-sum-row.total {
+  font-size: 1.05rem;
+  font-weight: 600;
+  border-top: 1px solid var(--border);
+  padding-top: 12px;
+  margin-top: 10px;
+}
+.invoice-notes {
+  font-size: 0.72rem;
+  color: var(--ink-dim);
+  line-height: 1.5;
+  border-top: 1px solid var(--border);
+  padding-top: 20px;
+}
+
+/* Luxury Email Design */
+.email-paper {
+  width: 100%;
+  max-width: 600px;
+  background: var(--white);
+  border: 1px solid var(--border);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.04);
+}
+.email-header {
+  background: var(--ink);
+  color: var(--cream);
+  padding: 30px;
+  text-align: center;
+}
+.email-logo {
+  font-family: var(--serif);
+  font-size: 1.8rem;
+  letter-spacing: 0.18em;
+  margin-bottom: 4px;
+}
+.email-logo .italic {
+  font-style: italic;
+}
+.email-sub {
+  font-size: 0.58rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--gold-light);
+}
+.email-body {
+  padding: 50px 48px;
+  font-size: 0.92rem;
+  line-height: 1.8;
+  color: var(--ink-mid);
+}
+.email-body p {
+  margin-bottom: 24px;
+}
+.email-body p:last-child {
+  margin-bottom: 0;
+}
+.email-greeting {
+  font-family: var(--serif);
+  font-size: 1.5rem;
+  font-weight: 300;
+  color: var(--ink);
+  margin-bottom: 28px;
+  font-style: italic;
+}
+.email-signature {
+  margin-top: 40px;
+  font-family: var(--serif);
+  font-size: 1.05rem;
+  color: var(--gold);
+}
+.email-footer {
+  background: var(--cream-dark);
+  padding: 30px 48px;
+  font-size: 0.72rem;
+  color: var(--ink-dim);
+  text-align: center;
+  border-top: 1px solid var(--border);
+}
+.email-footer p {
+  margin-bottom: 8px;
+}
+.email-footer p:last-child {
+  margin-bottom: 0;
+}
+
+@media (max-width: 991px) {
+  .modal-wide {
+    max-width: 100% !important;
+  }
+  .modal-split-layout {
+    grid-template-columns: 1fr;
+    height: auto;
+  }
+  .modal-form-side {
+    border-right: none;
+    padding-right: 0;
+    margin-bottom: 30px;
+  }
+}
+
+@media print {
+  body * {
+    visibility: hidden;
+  }
+  #invoice-preview-area, #invoice-preview-area * {
+    visibility: visible;
+  }
+  #invoice-preview-area {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    border: none !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+}

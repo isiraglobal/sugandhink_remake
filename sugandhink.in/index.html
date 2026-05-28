@@ -5,7 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sugandh Ink — Artisanal Indian Fragrances</title>
     <meta name="description" content="Sugandh Ink crafts rare attars and perfumes using centuries-old Indian Deg-Bhapka distillation. A singular olfactory experience rooted in botanical truth.">
-    <link rel="stylesheet" href="style.css">
+    <link rel="icon" href="assets/logo.png" type="image/png">
+    <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/loader.css">
 
     <!-- Fonts -->
@@ -26,20 +27,7 @@
         <div class="cursor-dot"></div>
     </div>
 
-    <!-- Preloader -->
-    <div id="loader">
-        <div class="loader-wordmark">
-            <span class="lw">Sugandh</span>
-            <span class="lw-rule"></span>
-            <span class="lw italic">Ink</span>
-        </div>
-        <div class="loader-progress">
-            <div class="loader-bar-track">
-                <div class="loader-bar-fill" id="loader-bar"></div>
-            </div>
-            <div class="loader-tagline">Artisanal Indian Fragrances</div>
-        </div>
-    </div>
+    <!-- Preloader removed toSnappy Curtain transition -->
 
     <!-- ============================================================
          ANNOUNCEMENT BANNER
@@ -50,9 +38,14 @@
     </div>
 
     <!-- ============================================================
-         NAVIGATION — Logo centred, links split left / right
+         NAVIGATION — Center logo on top, navigation below
     ============================================================ -->
     <header class="site-header" id="site-header">
+        <div class="header-logo-row">
+            <a href="index.html" class="nav-logo-img-link" aria-label="Sugandh Ink Home">
+                <img src="assets/logo.png" alt="Sugandh Ink Logo" class="header-logo-img">
+            </a>
+        </div>
         <nav class="main-nav" id="main-nav">
 
             <!-- Left links -->
@@ -61,13 +54,6 @@
                 <a href="#new-arrivals" class="nav-link" id="nl-new">New Arrivals</a>
                 <a href="#about" class="nav-link" id="nl-story">Our Story</a>
             </div>
-
-            <!-- Centre logo -->
-            <a href="/" class="nav-logo" id="nav-logo" aria-label="Sugandh Ink Home">
-                <span class="logo-word">Sugandh</span>
-                <span class="logo-divider">—</span>
-                <span class="logo-word italic">Ink</span>
-            </a>
 
             <!-- Right links + icons -->
             <div class="nav-right">
@@ -125,7 +111,7 @@
             <!-- Centre bottle visual -->
             <div class="hero-visual" id="hero-visual">
                 <div class="hero-img-frame">
-                    <img src="Products/OUD-09.png" alt="Oud Royal — Sugandh Ink" class="hero-bottle" id="hero-bottle">
+                    <img src="assets/images/products/OUD-09.png" alt="Oud Royal — Sugandh Ink" class="hero-bottle" id="hero-bottle">
                     <div class="hero-img-label">
                         <span class="label-code">OUD / 09</span>
                         <span class="label-name">Oud Royal</span>
@@ -220,7 +206,7 @@
         <div class="family-grid">
             <a href="collection.html?family=oud" class="family-card" data-family="oud" data-reveal>
                 <div class="family-card-img">
-                    <img src="Products/OUD-09.png" alt="Oud & Resins">
+                    <img src="assets/images/products/OUD-09.png" alt="Oud & Resins">
                 </div>
                 <div class="family-card-body">
                     <span class="family-num">01</span>
@@ -230,7 +216,7 @@
             </a>
             <a href="collection.html?family=floral" class="family-card" data-family="floral" data-reveal>
                 <div class="family-card-img">
-                    <img src="Products/FLR-07.png" alt="Florals">
+                    <img src="assets/images/products/FLR-07.png" alt="Florals">
                 </div>
                 <div class="family-card-body">
                     <span class="family-num">02</span>
@@ -240,7 +226,7 @@
             </a>
             <a href="collection.html?family=wood" class="family-card" data-family="wood" data-reveal>
                 <div class="family-card-img">
-                    <img src="Products/WDS-02.png" alt="Woods">
+                    <img src="assets/images/products/WDS-02.png" alt="Woods">
                 </div>
                 <div class="family-card-body">
                     <span class="family-num">03</span>
@@ -250,7 +236,7 @@
             </a>
             <a href="collection.html?family=vanilla" class="family-card" data-family="gourmand" data-reveal>
                 <div class="family-card-img">
-                    <img src="Products/VAN-01.png" alt="Musks">
+                    <img src="assets/images/products/VAN-01.png" alt="Musks">
                 </div>
                 <div class="family-card-body">
                     <span class="family-num">04</span>
@@ -267,7 +253,7 @@
     <section class="story-section" id="about">
         <div class="story-inner">
             <div class="story-image" data-reveal>
-                <img src="Products/VAN-01.png" alt="Sugandh Ink Heritage">
+                <img src="assets/images/products/VAN-01.png" alt="Sugandh Ink Heritage">
                 <div class="story-image-caption">Vanilla Luxe · VAN/01 · ₹18,500</div>
             </div>
             <div class="story-text">
@@ -293,7 +279,7 @@
         <div class="ingredients-grid">
             <div class="ing-card" data-reveal>
                 <div class="ing-card-img">
-                    <img src="Products/AMB-12.png" alt="Dark Amber">
+                    <img src="assets/images/products/AMB-12.png" alt="Dark Amber">
                 </div>
                 <div class="ing-meta">AMB / 12 · Evening, Winter</div>
                 <h3 class="ing-name">Dark Amber</h3>
@@ -302,7 +288,7 @@
             </div>
             <div class="ing-card ing-card-wide" data-reveal>
                 <div class="ing-card-img">
-                    <img src="Products/OUD-15.png" alt="Oud Intense">
+                    <img src="assets/images/products/OUD-15.png" alt="Oud Intense">
                 </div>
                 <div class="ing-meta">OUD / 15 · Luxury, Evening</div>
                 <h3 class="ing-name">Oud Intense</h3>
@@ -311,7 +297,7 @@
             </div>
             <div class="ing-card" data-reveal>
                 <div class="ing-card-img">
-                    <img src="Products/FLR-07.png" alt="White Bloom">
+                    <img src="assets/images/products/FLR-07.png" alt="White Bloom">
                 </div>
                 <div class="ing-meta">FLR / 07 · Day, Signature</div>
                 <h3 class="ing-name">White Bloom</h3>
@@ -320,7 +306,7 @@
             </div>
             <div class="ing-card" data-reveal>
                 <div class="ing-card-img">
-                    <img src="Products/VAN-01.png" alt="Vanilla Luxe">
+                    <img src="assets/images/products/VAN-01.png" alt="Vanilla Luxe">
                 </div>
                 <div class="ing-meta">VAN / 01 · Daily Wear</div>
                 <h3 class="ing-name">Vanilla Luxe</h3>
@@ -367,37 +353,6 @@
             </div>
         </div>
 
-        <!-- Review interaction (login or write) -->
-        <div class="review-interaction">
-
-            <!-- Shown when NOT logged in -->
-            <div class="review-login-prompt" id="review-login-prompt">
-                <p>Register to share your experience with our fragrances.</p>
-                <form class="review-register" id="review-register-form">
-                    <input type="text"  name="rname"  placeholder="Your name"  required class="rev-input">
-                    <input type="email" name="remail" placeholder="Email address" required class="rev-input">
-                    <button type="submit" class="btn btn-dark">Join & Write a Review</button>
-                </form>
-            </div>
-
-            <!-- Shown when logged in -->
-            <div class="review-write-box" id="review-write-box" style="display:none">
-                <p class="review-write-title">Share your experience</p>
-                <form class="review-write-form" id="review-write-form">
-                    <div class="star-row" aria-label="Select rating">
-                        <button type="button" class="star-btn" data-val="1">☆</button>
-                        <button type="button" class="star-btn" data-val="2">☆</button>
-                        <button type="button" class="star-btn" data-val="3">☆</button>
-                        <button type="button" class="star-btn" data-val="4">☆</button>
-                        <button type="button" class="star-btn" data-val="5">★</button>
-                    </div>
-                    <input type="hidden" name="wrating" value="5">
-                    <textarea name="wtext" rows="3" placeholder="Your honest impressions…" required class="rev-input rev-textarea"></textarea>
-                    <button type="submit" class="btn btn-dark">Publish Review</button>
-                </form>
-            </div>
-
-        </div>
     </section>
 
     <!-- ============================================================
@@ -424,7 +379,7 @@
             </div>
             <div class="spotlight-visual" data-reveal data-reveal-delay="200">
                 <div class="spotlight-image-wrap">
-                    <img src="Products/OUD-09.png" alt="Oud Royal — Sugandh Ink">
+                    <img src="assets/images/products/OUD-09.png" alt="Oud Royal — Sugandh Ink">
                 </div>
             </div>
         </div>
@@ -524,19 +479,19 @@
             <div class="footer-col">
                 <h5>The Maison</h5>
                 <ul>
-                    <li><a href="#about">Our Heritage</a></li>
-                    <li><a href="#ingredients">The Ingredients</a></li>
+                    <li><a href="pages/heritage.html">Our Heritage</a></li>
+                    <li><a href="pages/ingredients.html">The Ingredients</a></li>
                     <li><a href="collection.html">The Library</a></li>
-                    <li><a href="#contact">Bespoke Enquiry</a></li>
+                    <li><a href="pages/bespoke.html">Bespoke Enquiry</a></li>
                 </ul>
             </div>
 
             <div class="footer-col">
                 <h5>Shop</h5>
                 <ul>
-                    <li><a href="#new-arrivals">New Arrivals</a></li>
-                    <li><a href="#top-selling">Best Sellers</a></li>
-                    <li><a href="#families">By Scent Family</a></li>
+                    <li><a href="collection.html?sort=new">New Arrivals</a></li>
+                    <li><a href="collection.html?sort=best">Best Sellers</a></li>
+                    <li><a href="collection.html">By Scent Family</a></li>
                     <li><a href="collection.html">Full Collection</a></li>
                 </ul>
             </div>
@@ -544,20 +499,20 @@
             <div class="footer-col">
                 <h5>Client Care</h5>
                 <ul>
-                    <li><a href="mailto:hello@sugandhink.in">Contact Us</a></li>
-                    <li><a href="#contact">Fragrance Consultation</a></li>
-                    <li><a href="#newsletter">Newsletter</a></li>
-                    <li><a href="#footer">FAQ</a></li>
+                    <li><a href="pages/contact.html">Contact Us</a></li>
+                    <li><a href="pages/consultation.html">Fragrance Consultation</a></li>
+                    <li><a href="pages/newsletter.html">Newsletter</a></li>
+                    <li><a href="pages/faq.html">FAQ</a></li>
                 </ul>
             </div>
 
             <div class="footer-col">
                 <h5>Legal</h5>
                 <ul>
-                    <li><a href="#footer">Terms of Service</a></li>
-                    <li><a href="#footer">Privacy Policy</a></li>
-                    <li><a href="#footer">Cookie Policy</a></li>
-                    <li><a href="#footer">Returns &amp; Shipping</a></li>
+                    <li><a href="pages/terms.html">Terms of Service</a></li>
+                    <li><a href="pages/privacy.html">Privacy Policy</a></li>
+                    <li><a href="pages/cookies.html">Cookie Policy</a></li>
+                    <li><a href="pages/returns.html">Returns &amp; Shipping</a></li>
                 </ul>
             </div>
         </div>
@@ -593,6 +548,7 @@
     <script type="module" src="js/transitions.js"></script>
     <script type="module" src="js/ui.js"></script>
     <script type="module" src="js/scrolly.js"></script>
+    <script type="module" src="js/animations.js"></script>
     <script type="module" src="js/main.js"></script>
 </body>
 </html>

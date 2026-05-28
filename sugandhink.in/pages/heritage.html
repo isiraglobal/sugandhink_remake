@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Our Heritage — Sugandh Ink</title>
+    <meta name="description" content="Discover the heritage of Sugandh Ink — rooted in centuries-old Indian Deg-Bhapka distillation and the sacred tradition of attar-making.">
+    <link rel="icon" href="../assets/logo.png" type="image/png">
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/base.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <style>
+        .inner-hero { padding: 140px 0 80px; text-align: center; border-bottom: 1px solid var(--border); }
+        .inner-hero .overline { font-family: var(--font-body); font-size: 0.7rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--gold); margin-bottom: 24px; }
+        .inner-hero h1 { font-family: var(--font-display); font-size: clamp(3rem, 7vw, 6rem); font-weight: 300; line-height: 1.1; color: var(--ink); margin-bottom: 24px; }
+        .inner-hero h1 em { font-style: italic; color: var(--gold); }
+        .inner-hero .lead { font-family: var(--font-body); font-size: 1.05rem; color: var(--ink-mid); max-width: 580px; margin: 0 auto; line-height: 1.8; }
+        .heritage-section { padding: 100px 0; }
+        .heritage-section + .heritage-section { border-top: 1px solid var(--border); }
+        .heritage-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: center; }
+        .heritage-grid.reverse { direction: rtl; }
+        .heritage-grid.reverse > * { direction: ltr; }
+        .heritage-img { aspect-ratio: 3/4; background: var(--cream-deep); position: relative; overflow: hidden; }
+        .heritage-img img { width: 100%; height: 100%; object-fit: cover; }
+        .heritage-img-label { position: absolute; bottom: 24px; left: 24px; font-family: var(--font-body); font-size: 0.65rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--gold); }
+        .heritage-text { padding: 20px 0; }
+        .heritage-text .section-num { font-family: var(--font-body); font-size: 0.65rem; letter-spacing: 0.2em; color: var(--gold); margin-bottom: 20px; display: block; }
+        .heritage-text h2 { font-family: var(--font-display); font-size: clamp(2rem, 4vw, 3.2rem); font-weight: 300; line-height: 1.2; color: var(--ink); margin-bottom: 28px; }
+        .heritage-text h2 em { font-style: italic; }
+        .heritage-text p { font-family: var(--font-body); font-size: 0.9rem; color: var(--ink-mid); line-height: 1.9; margin-bottom: 20px; }
+        .heritage-text p:last-child { margin-bottom: 0; }
+        .timeline { padding: 100px 0; background: var(--ink); }
+        .timeline-inner { max-width: 800px; margin: 0 auto; }
+        .timeline-head { text-align: center; margin-bottom: 80px; }
+        .timeline-head h2 { font-family: var(--font-display); font-size: clamp(2rem, 4vw, 3.5rem); font-weight: 300; color: var(--cream); margin-bottom: 16px; }
+        .timeline-head h2 em { font-style: italic; color: var(--gold); }
+        .timeline-head p { font-family: var(--font-body); font-size: 0.85rem; color: rgba(245,240,230,0.6); }
+        .tl-item { display: grid; grid-template-columns: 100px 1fr; gap: 40px; margin-bottom: 60px; }
+        .tl-year { font-family: var(--font-display); font-size: 2rem; font-weight: 300; color: var(--gold); padding-top: 4px; }
+        .tl-content h3 { font-family: var(--font-display); font-size: 1.4rem; font-weight: 300; color: var(--cream); margin-bottom: 10px; }
+        .tl-content h3 em { font-style: italic; }
+        .tl-content p { font-family: var(--font-body); font-size: 0.85rem; color: rgba(245,240,230,0.65); line-height: 1.8; }
+        .heritage-quote { padding: 100px 0; text-align: center; }
+        .heritage-quote blockquote { font-family: var(--font-display); font-size: clamp(1.8rem, 4vw, 3rem); font-style: italic; font-weight: 300; color: var(--ink); max-width: 760px; margin: 0 auto 24px; line-height: 1.4; }
+        .heritage-quote cite { font-family: var(--font-body); font-size: 0.7rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--gold); }
+        @media (max-width: 768px) {
+            .heritage-grid, .heritage-grid.reverse { grid-template-columns: 1fr; gap: 40px; direction: ltr; }
+            .tl-item { grid-template-columns: 70px 1fr; gap: 20px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="cursor" id="cursor"><div class="cursor-ring"></div><div class="cursor-dot"></div></div>
+
+    <div class="announcement-banner" id="announcement-banner">
+        <span>Complimentary Shipping on orders above ₹5,000 — <a href="../collection.html">Explore the Library</a></span>
+        <button class="banner-close" id="banner-close" aria-label="Close">✕</button>
+    </div>
+
+    <header class="site-header" id="site-header">
+        <div class="header-logo-row">
+            <a href="../index.html" class="nav-logo-img-link" aria-label="Sugandh Ink Home">
+                <img src="../assets/logo.png" alt="Sugandh Ink Logo" class="header-logo-img">
+            </a>
+        </div>
+        <nav class="main-nav" id="main-nav">
+            <div class="nav-left">
+                <a href="../collection.html" class="nav-link">Collection</a>
+                <a href="../index.html#new-arrivals" class="nav-link">New Arrivals</a>
+                <a href="heritage.html" class="nav-link" style="color:var(--gold);">Our Heritage</a>
+            </div>
+            <div class="nav-right">
+                <a href="ingredients.html" class="nav-link">Ingredients</a>
+                <a href="contact.html" class="nav-link">Contact</a>
+                <button class="nav-icon-btn" id="toggle-shop" aria-label="Open fragrance library">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
+                    <span class="cart-count" id="cart-badge"></span>
+                </button>
+            </div>
+            <button class="hamburger" id="hamburger" aria-label="Menu" aria-expanded="false"><span></span><span></span></button>
+        </nav>
+        <div class="mobile-menu" id="mobile-menu" aria-hidden="true">
+            <nav class="mobile-menu-nav">
+                <a href="../collection.html" class="mm-link">Collection</a>
+                <a href="heritage.html" class="mm-link">Our Heritage</a>
+                <a href="ingredients.html" class="mm-link">Ingredients</a>
+                <a href="contact.html" class="mm-link">Contact</a>
+            </nav>
+            <div class="mm-footer">
+                <a href="mailto:hello@sugandhink.in">hello@sugandhink.in</a>
+                <a href="tel:+919769445567">+91 97694 45567</a>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            <div class="inner-hero" data-reveal>
+                <p class="overline">EST. 2026 · MUMBAI · INDIA</p>
+                <h1>The Maison's<br><em>Heritage</em></h1>
+                <p class="lead">Born from a reverence for the ancient art of Indian perfumery, Sugandh Ink is a living homage to the Kannauj artisans who first distilled the soul of the earth into glass.</p>
+            </div>
+        </div>
+
+        <div class="container">
+            <section class="heritage-section">
+                <div class="heritage-grid" data-reveal>
+                    <div class="heritage-img">
+                        <img src="../assets/images/products/OUD-09.png" alt="Deg-Bhapka Distillation">
+                        <span class="heritage-img-label">Kannauj · Uttar Pradesh</span>
+                    </div>
+                    <div class="heritage-text">
+                        <span class="section-num">01 / 04</span>
+                        <h2>The <em>Deg-Bhapka</em><br>Method</h2>
+                        <p>For over five centuries, the artisans of Kannauj have practised Deg-Bhapka hydro-distillation — a copper still, a fire of sandalwood, and an open sky. Petals are packed into the Deg, water is added, and the sealed vessel rests over a slow flame.</p>
+                        <p>Steam carrying the botanical essence travels through a bamboo pipe into the receiver — the Bhapka — submerged in cool water. Here, the vapour condenses into attar. The process demands twelve to sixteen hours of uninterrupted attention for a single harvest.</p>
+                        <p>At Sugandh Ink, we source exclusively from these ateliers, refusing the shortcut of synthetic aroma chemicals. Each composition begins with this truth.</p>
+                    </div>
+                </div>
+            </section>
+
+            <section class="heritage-section">
+                <div class="heritage-grid reverse" data-reveal>
+                    <div class="heritage-img">
+                        <img src="../assets/images/products/VAN-01.png" alt="Sandalwood base aging">
+                        <span class="heritage-img-label">Base Wood Aging · 12 Months</span>
+                    </div>
+                    <div class="heritage-text">
+                        <span class="section-num">02 / 04</span>
+                        <h2>The <em>Sandalwood</em><br>Foundation</h2>
+                        <p>All traditional attars are received into old sandalwood oil — a living base that absorbs and integrates the distilled essence over months. The sandalwood acts not merely as a carrier but as a collaborator, deepening and rounding the botanical character.</p>
+                        <p>Our Oud Royal rests in Mysore sandalwood for twelve full months before being sealed. No synthetic fixatives, no alcohol. Only time and wood.</p>
+                    </div>
+                </div>
+            </section>
+
+            <section class="heritage-section">
+                <div class="heritage-grid" data-reveal>
+                    <div class="heritage-img">
+                        <img src="../assets/images/products/AMB-12.png" alt="Mumbai atelier">
+                        <span class="heritage-img-label">Malad West · Mumbai</span>
+                    </div>
+                    <div class="heritage-text">
+                        <span class="section-num">03 / 04</span>
+                        <h2>Founded in<br><em>Mumbai</em></h2>
+                        <p>Sugandh Ink was established in 2026 in Malad West, Mumbai — a city of layered sensory experience. The maison bridges the ancient knowledge of Kannauj with a contemporary sensibility shaped by the diversity and energy of India's commercial capital.</p>
+                        <p>Each fragrance in our library is a dialogue between heritage and modernity: the botanical truth of the attar tradition expressed through compositions designed for the contemporary Indian life — office mornings, monsoon evenings, and quiet midnight hours.</p>
+                    </div>
+                </div>
+            </section>
+
+            <section class="heritage-section">
+                <div class="heritage-grid reverse" data-reveal>
+                    <div class="heritage-img">
+                        <img src="../assets/images/products/OUD-15.png" alt="Botanical sourcing">
+                        <span class="heritage-img-label">Ethical Sourcing · Wild-Harvested</span>
+                    </div>
+                    <div class="heritage-text">
+                        <span class="section-num">04 / 04</span>
+                        <h2>Botanical<br><em>Integrity</em></h2>
+                        <p>We maintain direct relationships with growers across Rajasthan (rose and jasmine), Kerala (vetiver and pepper), Assam (agarwood), and the Nilgiris (cardamom and eucalyptus). Every harvest is traceable. Every relationship is long-term.</p>
+                        <p>We categorically refuse the use of synthetic aroma chemicals in our core attar line. For our contemporary perfume compositions, we work only with IFRA-approved naturals and the minimum necessary of safe synthetic musks — disclosed fully on every product page.</p>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <section class="timeline">
+            <div class="container">
+                <div class="timeline-inner">
+                    <div class="timeline-head" data-reveal>
+                        <h2>A <em>Chronology</em></h2>
+                        <p>The milestones that shaped the Maison.</p>
+                    </div>
+                    <div class="tl-item" data-reveal>
+                        <div class="tl-year">500 BCE</div>
+                        <div class="tl-content">
+                            <h3>The <em>First Distillation</em></h3>
+                            <p>Ancient texts describe the preparation of Sura and Asava through distillation in Kannauj — the original perfume city of India, then known as Kanyakubja.</p>
+                        </div>
+                    </div>
+                    <div class="tl-item" data-reveal>
+                        <div class="tl-year">1600s</div>
+                        <div class="tl-content">
+                            <h3>The <em>Mughal Patronage</em></h3>
+                            <p>Empress Noor Jahan is credited with discovering the process of extracting Rose attar. The Mughal court elevated Kannauj perfumers to royal status, cementing the Deg-Bhapka tradition.</p>
+                        </div>
+                    </div>
+                    <div class="tl-item" data-reveal>
+                        <div class="tl-year">2025</div>
+                        <div class="tl-content">
+                            <h3>The <em>First Composition</em></h3>
+                            <p>Sugandh Ink's founding nose travels to Kannauj for six months, studying under third-generation attar makers. Oud Royal — the first original composition — takes form.</p>
+                        </div>
+                    </div>
+                    <div class="tl-item" data-reveal>
+                        <div class="tl-year">2026</div>
+                        <div class="tl-content">
+                            <h3>The <em>Maison Opens</em></h3>
+                            <p>Sugandh Ink launches in Mumbai with a library of twenty-nine compositions spanning attars, contemporary perfumes, and one-of-a-kind bespoke creations.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <div class="container">
+            <div class="heritage-quote" data-reveal>
+                <blockquote>"Perfume is the most intense form of memory."</blockquote>
+                <cite>— Patrick Süskind, foundational reading at the Sugandh Ink atelier</cite>
+            </div>
+        </div>
+    </main>
+
+    <footer class="site-footer" id="footer">
+        <div class="footer-top">
+            <div class="footer-brand">
+                <div class="footer-logo"><span>Sugandh</span><span class="italic"> Ink</span></div>
+                <p>Artisanal fragrances crafted with unyielding precision and historical reverence. Malad (West), Mumbai.</p>
+                <div class="footer-socials">
+                    <a href="https://instagram.com" class="fsocial" target="_blank" rel="noopener" aria-label="Instagram"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="5"/><circle cx="17.5" cy="6.5" r="1.5" fill="currentColor" stroke="none"/></svg></a>
+                    <a href="https://twitter.com" class="fsocial" target="_blank" rel="noopener" aria-label="Twitter"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg></a>
+                </div>
+            </div>
+            <div class="footer-col"><h5>The Maison</h5><ul>
+                <li><a href="heritage.html">Our Heritage</a></li>
+                <li><a href="ingredients.html">The Ingredients</a></li>
+                <li><a href="../collection.html">The Library</a></li>
+                <li><a href="bespoke.html">Bespoke Enquiry</a></li>
+            </ul></div>
+            <div class="footer-col"><h5>Shop</h5><ul>
+                <li><a href="../collection.html?sort=new">New Arrivals</a></li>
+                <li><a href="../collection.html?sort=best">Best Sellers</a></li>
+                <li><a href="../collection.html">By Scent Family</a></li>
+                <li><a href="../collection.html">Full Collection</a></li>
+            </ul></div>
+            <div class="footer-col"><h5>Client Care</h5><ul>
+                <li><a href="contact.html">Contact Us</a></li>
+                <li><a href="consultation.html">Fragrance Consultation</a></li>
+                <li><a href="newsletter.html">Newsletter</a></li>
+                <li><a href="faq.html">FAQ</a></li>
+            </ul></div>
+            <div class="footer-col"><h5>Legal</h5><ul>
+                <li><a href="terms.html">Terms of Service</a></li>
+                <li><a href="privacy.html">Privacy Policy</a></li>
+                <li><a href="cookies.html">Cookie Policy</a></li>
+                <li><a href="returns.html">Returns &amp; Shipping</a></li>
+            </ul></div>
+        </div>
+        <div class="footer-bottom">
+            <span>© 2026 Sugandh Ink — All Rights Reserved</span>
+            <span class="footer-wa-note">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12.8 12.8 0 00-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+                Orders via WhatsApp: <a href="https://wa.me/919769445567" target="_blank">+91 97694 45567</a>
+            </span>
+        </div>
+    </footer>
+
+    <script type="module" src="../js/ui.js"></script>
+    <script type="module" src="../js/main.js"></script>
+</body>
+</html>
