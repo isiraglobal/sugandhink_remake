@@ -3,13 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sugandh Ink — Private Atelier Ledger (Admin)</title>
+    <title>Sugandh Ink - Private Atelier Ledger (Admin)</title>
+    <link rel="icon" href="../sugandhink.in/logo.png" type="image/png">
     <link rel="stylesheet" href="admin.css">
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
+    
+    <!-- Supabase Client Library -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body class="admin-body">
 
@@ -23,12 +27,12 @@
                 <span class="italic"> Ink</span>
             </div>
             <p class="login-sub">Atelier Private Ledger Access</p>
-            <form id="login-form">
+            <form id="login-form" style="margin-top: 24px;">
                 <div class="form-group" style="margin-bottom: 20px;">
                     <label class="form-label" for="login-pass">Passcode</label>
                     <input type="password" id="login-pass" class="form-input" placeholder="••••••••" required>
                 </div>
-                <button type="submit" class="btn btn-dark" style="width: 100%; height: 48px;">Authenticate</button>
+                <button type="submit" class="btn btn-outline" style="width: 100%; height: 48px;">Authenticate Passcode</button>
                 <p class="login-error" id="login-error-msg" style="display: none; color: var(--error); font-size: 0.76rem; text-align: center; margin-top: 12px; font-weight: 500;">Incorrect passcode.</p>
             </form>
         </div>
@@ -52,6 +56,10 @@
                 <button class="nav-btn active" data-tab="tab-overview">Overview</button>
                 <button class="nav-btn" data-tab="tab-products">Compositions</button>
                 <button class="nav-btn" data-tab="tab-orders">Consultations &amp; Orders</button>
+                <button class="nav-btn" data-tab="tab-customers">Customer Records</button>
+                <button class="nav-btn" data-tab="tab-invoices">Invoicing</button>
+                <button class="nav-btn" data-tab="tab-announcements">Announcements</button>
+                <button class="nav-btn" data-tab="tab-reviews">Client Reviews</button>
                 <button class="nav-btn" data-tab="tab-settings">System Settings</button>
             </nav>
 
@@ -124,6 +132,7 @@
             <section class="admin-tab-pane" id="tab-orders">
                 <div class="pane-head">
                     <h3>Consultation Enquiries</h3>
+                    <button class="btn btn-dark" id="add-order-trigger">+ Create Order</button>
                 </div>
                 <div class="orders-table-wrapper">
                     <table class="admin-table">
@@ -143,6 +152,209 @@
                             <!-- Dynamic rows -->
                         </tbody>
                     </table>
+                </div>
+            </section>
+
+            <!-- TAB: CUSTOMER RECORDS -->
+            <section class="admin-tab-pane" id="tab-customers">
+                <div class="pane-head">
+                    <h3>Customer Records &amp; CRM</h3>
+                    <button class="btn btn-dark" id="add-customer-trigger">+ Add Customer</button>
+                </div>
+                <div class="orders-table-wrapper">
+                    <table class="admin-table">
+                        <thead>
+                            <tr>
+                                <th>Customer Name</th>
+                                <th>Email</th>
+                                <th>Phone</th>
+                                <th>Total Orders</th>
+                                <th>Total Spent</th>
+                                <th>Joined</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="customers-list">
+                            <tr><td colspan="7" style="text-align:center;padding:40px;color:var(--ink-dim)">No customers in ledger yet.</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- TAB: INVOICING -->
+            <section class="admin-tab-pane" id="tab-invoices">
+                <div class="pane-head">
+                    <h3>Atelier Invoice Management</h3>
+                    <button class="btn btn-dark" id="create-invoice-trigger">+ Create Invoice</button>
+                </div>
+                
+                <div class="orders-table-wrapper">
+                    <table class="admin-table">
+                        <thead>
+                            <tr>
+                                <th>Invoice #</th>
+                                <th>Customer</th>
+                                <th>Amount</th>
+                                <th>Date</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="invoices-list">
+                            <tr><td colspan="6" style="text-align:center;padding:40px;color:var(--ink-dim)">No invoices generated yet.</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- TAB: ANNOUNCEMENTS -->
+            <section class="admin-tab-pane" id="tab-announcements">
+                <div class="pane-head">
+                    <h3>Atelier Announcements &amp; Updates</h3>
+                    <button class="btn btn-dark" id="create-announcement-trigger">+ Create Announcement</button>
+                </div>
+
+                <div class="overview-grid">
+                    <div class="overview-card">
+                        <h4>Recent Announcements</h4>
+                        <div class="orders-table-wrapper">
+                            <table class="admin-table">
+                                <thead>
+                                    <tr>
+                                        <th>Title</th>
+                                        <th>Message</th>
+                                        <th>Type</th>
+                                        <th>Recipients Sent</th>
+                                        <th>Date</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="announcements-list">
+                                    <tr><td colspan="6" style="text-align:center;padding:40px;color:var(--ink-dim)">No announcements yet.</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- TAB: CLIENT REVIEWS -->
+            <section class="admin-tab-pane" id="tab-reviews">
+                <div class="pane-head">
+                    <h3>Atelier Client Reviews</h3>
+                    <button class="btn btn-dark" id="add-review-trigger">+ Add Review</button>
+                </div>
+
+                <div class="stats-grid" style="margin-bottom: 32px;">
+                    <div class="stat-box">
+                        <span class="stat-lbl">Published Reviews</span>
+                        <h3 class="stat-val" id="stat-published-reviews">0</h3>
+                    </div>
+                    <div class="stat-box">
+                        <span class="stat-lbl">Pending Approval</span>
+                        <h3 class="stat-val" id="stat-pending-reviews" style="color: var(--gold);">0</h3>
+                    </div>
+                    <div class="stat-box">
+                        <span class="stat-lbl">Average Rating</span>
+                        <h3 class="stat-val" id="stat-reviews-avg">-</h3>
+                    </div>
+                </div>
+
+                <div class="overview-grid" style="display: flex; flex-direction: column; gap: 40px;">
+                    <!-- Pending Queue -->
+                    <div class="overview-card">
+                        <h4>Pending Approval Queue</h4>
+                        <div class="orders-table-wrapper">
+                            <table class="admin-table">
+                                <thead>
+                                    <tr>
+                                        <th>Product</th>
+                                        <th>Collector</th>
+                                        <th>Rating</th>
+                                        <th>Impressions / Review</th>
+                                        <th>Date</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="reviews-pending-list">
+                                    <tr><td colspan="6" style="text-align:center;padding:40px;color:var(--ink-dim)">No pending reviews in ledger.</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- All Reviews & Google Import split -->
+                    <div style="display: grid; grid-template-columns: 1.55fr 1fr; gap: 32px;">
+                        <!-- Left: All Reviews Table -->
+                        <div class="overview-card">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                                <h4>All Ledger Reviews</h4>
+                                <div style="display: flex; gap: 12px;">
+                                    <select id="filter-review-product" class="form-input" style="padding: 8px 12px; font-size: 0.8rem; height: 36px; min-width: 140px;">
+                                        <option value="">All Products</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="orders-table-wrapper">
+                                <table class="admin-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Product</th>
+                                            <th>Collector</th>
+                                            <th>Rating</th>
+                                            <th>Impressions</th>
+                                            <th>Status</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="reviews-full-list">
+                                        <!-- Dynamic list -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <!-- Right: Import from Google Card -->
+                        <div class="overview-card" style="height: fit-content;">
+                            <h4 style="margin-bottom: 8px;">Google Maps Import</h4>
+                            <p style="font-size:0.78rem; color:var(--ink-mid); line-height:1.6; margin-bottom:20px;">
+                                Import reviews from your Google Business Profile page (<a href="https://share.google/ziUUSy6X0HcLXcQ3h" target="_blank" style="color:var(--gold); font-weight:500;">this link</a>). Paste the content below to format and approve.
+                            </p>
+                            <form id="google-import-form">
+                                <div class="form-group mb-12">
+                                    <label class="form-label" for="imp-prod-code">Target Scent Composition</label>
+                                    <select id="imp-prod-code" class="form-input" required></select>
+                                </div>
+                                <div class="form-group mb-12">
+                                    <label class="form-label" for="imp-client-name">Collector Name (from Google)</label>
+                                    <input type="text" id="imp-client-name" class="form-input" placeholder="e.g. Meera S." required>
+                                </div>
+                                <div class="form-group mb-12">
+                                    <label class="form-label">Review Rating</label>
+                                    <div class="star-row" id="imp-star-selector" style="margin: 4px 0 8px;">
+                                        <button type="button" class="star-btn filled" data-val="1">★</button>
+                                        <button type="button" class="star-btn filled" data-val="2">★</button>
+                                        <button type="button" class="star-btn filled" data-val="3">★</button>
+                                        <button type="button" class="star-btn filled" data-val="4">★</button>
+                                        <button type="button" class="star-btn filled" data-val="5">★</button>
+                                    </div>
+                                    <input type="hidden" id="imp-star-value" value="5">
+                                </div>
+                                <div class="form-group mb-12">
+                                    <label class="form-label" for="imp-review-text">Review impressions</label>
+                                    <textarea id="imp-review-text" class="form-input" style="min-height: 80px;" placeholder="Paste review text from Google..." required></textarea>
+                                </div>
+                                <div class="form-group mb-20">
+                                    <label class="form-label" for="imp-review-date">Review Date</label>
+                                    <input type="text" id="imp-review-date" class="form-input" placeholder="e.g. May 2026" required>
+                                </div>
+                                <div style="display: flex; gap: 12px; flex-direction: column;">
+                                    <button type="submit" class="btn btn-dark" style="width: 100%; height: 40px; font-size: 0.65rem;">Import as Pending</button>
+                                    <button type="button" class="btn btn-outline" id="btn-load-google-mock" style="width: 100%; height: 40px; font-size: 0.65rem; color: var(--gold); border-color: rgba(155,122,66,0.25);">Load Google Profile Reviews</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
                 </div>
             </section>
 
@@ -185,16 +397,16 @@
                     <input type="text" id="form-code" class="form-input" placeholder="OUD/22" required>
                 </div>
                 <div class="form-group mb-12">
-                    <label class="form-label" for="form-original-name">Fragrance Display Name</label>
-                    <input type="text" id="form-original-name" class="form-input" placeholder="Oud Majesty" required>
-                </div>
-                <div class="form-group mb-12">
-                    <label class="form-label" for="form-name">Name Code (e.g. Oud / 22)</label>
-                    <input type="text" id="form-name" class="form-input" placeholder="Oud / 22" required>
+                    <label class="form-label" for="form-name">Fragrance Display Name (e.g. Wild Blue / 01)</label>
+                    <input type="text" id="form-name" class="form-input" placeholder="Wild Blue / 01" required>
                 </div>
                 <div class="form-group mb-12">
                     <label class="form-label" for="form-price">Base Price (e.g. ₹22,000)</label>
                     <input type="text" id="form-price" class="form-input" placeholder="₹22,000" required>
+                </div>
+                <div class="form-group mb-12">
+                    <label class="form-label" for="form-stock">Stock Quantity</label>
+                    <input type="number" id="form-stock" class="form-input" placeholder="50" min="0" required>
                 </div>
                 <div class="form-group mb-12">
                     <label class="form-label" for="form-notes">Full Notes (comma separated)</label>
@@ -224,6 +436,345 @@
                 </div>
                 <button type="submit" class="btn btn-dark" style="width: 100%; height: 48px;">Publish to Ledger</button>
             </form>
+        </div>
+    </div>
+
+    <!-- ============================================================
+         3b. CLIENT REVIEW FORM MODAL
+         ============================================================ -->
+    <div class="admin-modal-overlay" id="review-modal">
+        <div class="admin-modal">
+            <div class="modal-header">
+                <h3 id="review-modal-title">Add Client Review</h3>
+                <button class="modal-close" id="review-modal-close">✕</button>
+            </div>
+            <form id="review-form">
+                <input type="hidden" id="form-review-id">
+                
+                <div class="form-group mb-12">
+                    <label class="form-label" for="form-rev-prod">Scent Composition</label>
+                    <select id="form-rev-prod" class="form-input" required></select>
+                </div>
+                <div class="form-group mb-12">
+                    <label class="form-label" for="form-rev-name">Client Name</label>
+                    <input type="text" id="form-rev-name" class="form-input" placeholder="e.g. Meera S." required>
+                </div>
+                <div class="form-group mb-12">
+                    <label class="form-label">Review Rating</label>
+                    <div class="star-row" id="form-star-selector" style="margin: 4px 0 8px;">
+                        <button type="button" class="star-btn filled" data-val="1">★</button>
+                        <button type="button" class="star-btn filled" data-val="2">★</button>
+                        <button type="button" class="star-btn filled" data-val="3">★</button>
+                        <button type="button" class="star-btn filled" data-val="4">★</button>
+                        <button type="button" class="star-btn filled" data-val="5">★</button>
+                    </div>
+                    <input type="hidden" id="form-star-value" value="5">
+                </div>
+                <div class="form-group mb-12">
+                    <label class="form-label" for="form-rev-text">Impressions / Review text</label>
+                    <textarea id="form-rev-text" class="form-input" style="min-height: 100px;" placeholder="Describe customer's impressions..." required></textarea>
+                </div>
+                <div class="form-group mb-20">
+                    <label class="form-label" for="form-rev-date">Review Date</label>
+                    <input type="text" id="form-rev-date" class="form-input" placeholder="e.g. May 2026" required>
+                </div>
+                <button type="submit" class="btn btn-dark" style="width: 100%; height: 48px;">Publish to Ledger</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- ============================================================
+         3c. ORDER CREATION FORM MODAL
+         ============================================================ -->
+    <div class="admin-modal-overlay" id="order-modal">
+        <div class="admin-modal" style="max-width: 600px;">
+            <div class="modal-header">
+                <h3 id="order-modal-title">Create Scent Order</h3>
+                <button class="modal-close" id="order-modal-close">✕</button>
+            </div>
+            <form id="order-form">
+                <div class="form-group mb-12">
+                    <label class="form-label" for="form-ord-collector">Collector / Client Name</label>
+                    <input type="text" id="form-ord-collector" class="form-input" placeholder="e.g. Aarav Mehta" required>
+                </div>
+                <div class="form-group mb-12">
+                    <label class="form-label" for="form-ord-email">Client Email Address</label>
+                    <input type="email" id="form-ord-email" class="form-input" placeholder="e.g. aarav.mehta@gmail.com" required>
+                </div>
+                <div class="form-group mb-12">
+                    <label class="form-label" for="form-ord-wa">WhatsApp / Phone Number</label>
+                    <input type="text" id="form-ord-wa" class="form-input" placeholder="e.g. +91 98200 12345" required>
+                </div>
+                
+                <div class="form-group mb-12">
+                    <label class="form-label">Order Items</label>
+                    <div id="order-items-container" style="display:flex; flex-direction:column; gap:8px;">
+                        <!-- Dynamic item rows will go here -->
+                    </div>
+                    <button type="button" class="btn btn-outline" id="btn-add-order-item" style="margin-top:8px; padding:8px 16px; font-size:0.65rem;">+ Add Composition Row</button>
+                </div>
+
+                <div class="form-group mb-12">
+                    <label class="form-label" for="form-ord-value">Total Order Value (₹)</label>
+                    <input type="text" id="form-ord-value" class="form-input" placeholder="₹1,598" required>
+                </div>
+                
+                <div class="form-group mb-12">
+                    <label class="form-label" for="form-ord-date">Order Date</label>
+                    <input type="text" id="form-ord-date" class="form-input" placeholder="28/05/2026" required>
+                </div>
+
+                <div class="form-group mb-20">
+                    <label class="form-label" for="form-ord-status">Consultation/Maturation Status</label>
+                    <select id="form-ord-status" class="form-input">
+                        <option value="pending">Pending Consultation</option>
+                        <option value="fulfilled">Fulfilled</option>
+                    </select>
+                </div>
+
+                <button type="submit" class="btn btn-dark" style="width: 100%; height: 48px;">Commit Order to Ledger</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- ============================================================
+         3d. CUSTOMER FORM MODAL
+         ============================================================ -->
+    <div class="admin-modal-overlay" id="customer-modal">
+        <div class="admin-modal" style="max-width: 600px;">
+            <div class="modal-header">
+                <h3>Add Customer Record</h3>
+                <button class="modal-close" id="customer-modal-close">✕</button>
+            </div>
+            <form id="customer-form">
+                <div class="form-group mb-12">
+                    <label class="form-label" for="cust-name">Customer Name</label>
+                    <input type="text" id="cust-name" class="form-input" placeholder="Full Name" required>
+                </div>
+                <div class="form-group mb-12">
+                    <label class="form-label" for="cust-email">Email Address</label>
+                    <input type="email" id="cust-email" class="form-input" placeholder="customer@example.com" required>
+                </div>
+                <div class="form-group mb-12">
+                    <label class="form-label" for="cust-phone">Phone Number</label>
+                    <input type="text" id="cust-phone" class="form-input" placeholder="+91 XXXXX XXXXX">
+                </div>
+                <div class="form-group mb-20">
+                    <label class="form-label" for="cust-address">Address (Optional)</label>
+                    <textarea id="cust-address" class="form-input" placeholder="Full address..."></textarea>
+                </div>
+                <button type="submit" class="btn btn-dark" style="width: 100%; height: 48px;">Add to Records</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- ============================================================
+         3e. ANNOUNCEMENT FORM MODAL
+         ============================================================ -->
+    <div class="admin-modal-overlay" id="announcement-modal">
+        <div class="admin-modal" style="max-width: 700px;">
+            <div class="modal-header">
+                <h3>Create Announcement</h3>
+                <button class="modal-close" id="announcement-modal-close">✕</button>
+            </div>
+            <form id="announcement-form">
+                <div class="form-group mb-12">
+                    <label class="form-label" for="ann-title">Announcement Title</label>
+                    <input type="text" id="ann-title" class="form-input" placeholder="e.g. New Collection Launch" required>
+                </div>
+                <div class="form-group mb-12">
+                    <label class="form-label" for="ann-message">Message Content</label>
+                    <textarea id="ann-message" class="form-input" style="min-height: 150px;" placeholder="Write your announcement..." required></textarea>
+                </div>
+                <div class="form-group mb-12">
+                    <label class="form-label" for="ann-type">Announcement Type</label>
+                    <select id="ann-type" class="form-input">
+                        <option value="info">Information</option>
+                        <option value="success">Success / Achievement</option>
+                        <option value="warning">Warning / Important</option>
+                    </select>
+                </div>
+                <div class="form-group mb-20">
+                    <label class="form-label">Send To:</label>
+                    <div style="display: flex; gap: 12px; align-items: center;">
+                        <input type="radio" id="ann-send-all" name="ann-recipients" value="all" checked>
+                        <label for="ann-send-all" style="margin: 0;">All Customers</label>
+                    </div>
+                </div>
+                <div style="display: flex; gap: 12px;">
+                    <button type="submit" class="btn btn-dark" style="flex: 1;">Create & Send Announcement</button>
+                    <button type="button" class="btn btn-outline" id="btn-save-announcement" style="flex: 1;">Save as Draft</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- ============================================================
+         3f. INVOICE CREATION MODAL
+         ============================================================ -->
+    <div class="admin-modal-overlay" id="invoice-creation-modal">
+        <div class="admin-modal modal-wide">
+            <div class="modal-header">
+                <h3>Create New Invoice</h3>
+                <button class="modal-close" id="invoice-creation-close">✕</button>
+            </div>
+            <div class="modal-split-layout">
+                <div class="modal-form-side">
+                    <input type="hidden" id="inv-customer-id">
+                    <div class="form-group">
+                        <label class="form-label" for="inv-cust-name">Customer Name</label>
+                        <input type="text" id="inv-cust-name" class="form-input" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="inv-cust-email">Customer Email</label>
+                        <input type="email" id="inv-cust-email" class="form-input" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="inv-cust-phone">Customer Phone</label>
+                        <input type="text" id="inv-cust-phone" class="form-input">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="inv-cust-address">Customer Address</label>
+                        <textarea id="inv-cust-address" class="form-input" style="min-height: 80px;"></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Invoice Items</label>
+                        <div id="inv-items-container" style="display:flex; flex-direction:column; gap:8px; max-height: 200px; overflow-y: auto;">
+                        </div>
+                        <button type="button" class="btn btn-outline" id="btn-add-inv-item" style="margin-top:8px; padding:8px 16px; font-size:0.65rem;">+ Add Item</button>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="inv-subtotal">Subtotal</label>
+                        <input type="text" id="inv-subtotal" class="form-input" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="inv-tax">Tax (%)</label>
+                        <input type="number" id="inv-tax" class="form-input" value="0" placeholder="0">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="inv-discount">Discount (₹)</label>
+                        <input type="number" id="inv-discount-amt" class="form-input" value="0" placeholder="0">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="inv-total">Total</label>
+                        <input type="text" id="inv-total" class="form-input" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="inv-notes">Notes</label>
+                        <textarea id="inv-notes" class="form-input" placeholder="Thank you for your order..."></textarea>
+                    </div>
+                    <div style="display: flex; gap: 12px; margin-top: auto; padding-top: 20px;">
+                        <button type="button" class="btn btn-dark" id="btn-generate-pdf" style="flex: 1;">Generate & Download PDF</button>
+                        <button type="button" class="btn btn-outline" id="btn-send-invoice-email" style="flex: 1;">Send via Email</button>
+                    </div>
+                </div>
+
+                <div class="modal-preview-side">
+                    <div class="invoice-paper" id="invoice-preview">
+                        <!-- Invoice preview -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============================================================
+         4. INVOICE GENERATOR MODAL (Sliding modal drawer)
+         ============================================================ -->
+    <div class="admin-modal-overlay" id="invoice-modal">
+        <div class="admin-modal modal-wide">
+            <div class="modal-header">
+                <h3>Atelier Order Billing &amp; Invoice</h3>
+                <button class="modal-close" id="invoice-modal-close">✕</button>
+            </div>
+            <div class="modal-split-layout">
+                <!-- Left: Form Customisation -->
+                <div class="modal-form-side">
+                    <input type="hidden" id="invoice-order-index">
+                    <div class="form-group">
+                        <label class="form-label" for="inv-number">Invoice Number</label>
+                        <input type="text" id="inv-number" class="form-input" value="INV-9824">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="inv-date">Invoice Date</label>
+                        <input type="text" id="inv-date" class="form-input" value="28/05/2026">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="inv-discount">Atelier Custom Discount (₹)</label>
+                        <input type="number" id="inv-discount" class="form-input" value="0" placeholder="e.g. 500">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="inv-notes">Collector Note / Payment Terms</label>
+                        <textarea id="inv-notes" class="form-input" placeholder="e.g. Complimentary sample included. Hand-delivered via private courier. Payment details below."></textarea>
+                    </div>
+                    <div style="display: flex; gap: 12px; margin-top: auto; padding-top: 20px;">
+                        <button class="btn btn-dark" id="btn-print-invoice" style="flex: 1;">Print / Save PDF</button>
+                        <button class="btn btn-outline" id="btn-copy-invoice-html">Copy HTML</button>
+                    </div>
+                </div>
+
+                <!-- Right: Live Luxury Preview -->
+                <div class="modal-preview-side">
+                    <div class="invoice-paper" id="invoice-preview-area">
+                        <!-- Invoice content generated dynamically -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============================================================
+         5. EMAIL COMPOSER MODAL (Sliding modal drawer)
+         ============================================================ -->
+    <div class="admin-modal-overlay" id="email-modal">
+        <div class="admin-modal modal-wide">
+            <div class="modal-header">
+                <h3>Atelier Communications &amp; Dispatch</h3>
+                <button class="modal-close" id="email-modal-close">✕</button>
+            </div>
+            <div class="modal-split-layout">
+                <!-- Left: Form Customisation -->
+                <div class="modal-form-side">
+                    <input type="hidden" id="email-order-index">
+                    <div class="form-group">
+                        <label class="form-label" for="email-template-select">Email Template</label>
+                        <select id="email-template-select" class="form-input" style="height:40px; font-family:'Jost';">
+                            <option value="dispatch">Maturation Complete & Dispatch Details</option>
+                            <option value="consultation">Bespoke Consultation Summary</option>
+                            <option value="welcome">Welcome to the Private Ledger</option>
+                            <option value="custom">Blank / Custom Message</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="mail-subject">Email Subject</label>
+                        <input type="text" id="mail-subject" class="form-input" value="Bespoke Scent Formulation Dispatch - Sugandh Ink">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="mail-preheader">Pre-header Text (Snippet)</label>
+                        <input type="text" id="mail-preheader" class="form-input" value="Your signature fragrance is ready for maturation.">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="mail-body">Custom Email Body Content (Paragraphs)</label>
+                        <textarea id="mail-body" class="form-input" style="min-height: 180px;" placeholder="Write your custom letter paragraphs here..."></textarea>
+                    </div>
+                    <div style="font-size: 0.7rem; color: var(--ink-dim); margin-top: 10px; line-height: 1.5; background: rgba(24,25,26,0.03); padding: 8px 12px; border-radius: 4px; font-family: 'Jost';">
+                        <strong>Preloaded Variables:</strong> Use <code>{{customerName}}</code>, <code>{{orderId}}</code>, <code>{{orderTotal}}</code>, <code>{{orderItems}}</code>, <code>{{promoCode}}</code>, <code>{{discount}}</code> to inject user information dynamically.
+                    </div>
+                    <div style="display: flex; gap: 12px; margin-top: auto; padding-top: 20px;">
+                        <button class="btn btn-dark" id="btn-send-email" style="flex: 1;">Simulate Dispatch</button>
+                        <button class="btn btn-outline" id="btn-copy-email-html">Copy HTML</button>
+                    </div>
+                </div>
+
+                <!-- Right: Live Luxury Preview -->
+                <div class="modal-preview-side">
+                    <div class="email-paper" id="email-preview-area">
+                        <!-- Email content generated dynamically -->
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 

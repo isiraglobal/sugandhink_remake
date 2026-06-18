@@ -3,9 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sugandh Ink — Artisanal Indian Fragrances</title>
+    <title>Sugandh Ink - Artisanal Indian Fragrances</title>
     <meta name="description" content="Sugandh Ink crafts rare attars and perfumes using centuries-old Indian Deg-Bhapka distillation. A singular olfactory experience rooted in botanical truth.">
-    <link rel="stylesheet" href="style.css">
+    <meta property="og:title" content="Sugandh Ink - Artisanal Indian Fragrances">
+    <meta property="og:description" content="Rare botanicals extracted through centuries-old Deg-Bhapka distillation. Each vial, a meditation in patience.">
+    <meta property="og:image" content="assets/logo.png">
+    <meta property="og:type" content="website">
+    <meta name="twitter:card" content="summary_large_image">
+    <link rel="icon" href="assets/logo.png" type="image/png">
+    <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/loader.css">
 
     <!-- Fonts -->
@@ -13,12 +19,18 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
 
+    <!-- Supabase JS Client -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
     <!-- Libraries -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
-    <!-- Lenis removed — was causing scroll lag -->
+    <!-- Lenis removed - was causing scroll lag -->
 </head>
 <body class="is-loading">
+
+    <!-- Curtain Transition Overlay -->
+    <div class="page-curtain" id="curtain"></div>
 
     <!-- Custom Cursor -->
     <div class="cursor" id="cursor">
@@ -26,33 +38,23 @@
         <div class="cursor-dot"></div>
     </div>
 
-    <!-- Preloader -->
-    <div id="loader">
-        <div class="loader-wordmark">
-            <span class="lw">Sugandh</span>
-            <span class="lw-rule"></span>
-            <span class="lw italic">Ink</span>
-        </div>
-        <div class="loader-progress">
-            <div class="loader-bar-track">
-                <div class="loader-bar-fill" id="loader-bar"></div>
-            </div>
-            <div class="loader-tagline">Artisanal Indian Fragrances</div>
-        </div>
-    </div>
-
     <!-- ============================================================
          ANNOUNCEMENT BANNER
     ============================================================ -->
     <div class="announcement-banner" id="announcement-banner">
-        <span>Complimentary Shipping on orders above ₹5,000 — <a href="collection.html">Explore the Library</a></span>
+        <span>Complimentary Shipping on orders above ₹5,000 - <a href="collection.html">Explore the Library</a></span>
         <button class="banner-close" id="banner-close" aria-label="Close">✕</button>
     </div>
 
     <!-- ============================================================
-         NAVIGATION — Logo centred, links split left / right
+         NAVIGATION - Center logo on top, navigation below
     ============================================================ -->
     <header class="site-header" id="site-header">
+        <div class="header-logo-row">
+            <a href="index.html" class="nav-logo-img-link" aria-label="Sugandh Ink Home">
+                <img src="assets/logo.png" alt="Sugandh Ink Logo" class="header-logo-img">
+            </a>
+        </div>
         <nav class="main-nav" id="main-nav">
 
             <!-- Left links -->
@@ -62,17 +64,20 @@
                 <a href="#about" class="nav-link" id="nl-story">Our Story</a>
             </div>
 
-            <!-- Centre logo -->
-            <a href="/" class="nav-logo" id="nav-logo" aria-label="Sugandh Ink Home">
-                <span class="logo-word">Sugandh</span>
-                <span class="logo-divider">—</span>
-                <span class="logo-word italic">Ink</span>
-            </a>
-
             <!-- Right links + icons -->
             <div class="nav-right">
                 <a href="#ingredients" class="nav-link" id="nl-ingr">Ingredients</a>
                 <a href="#contact" class="nav-link" id="nl-contact">Contact</a>
+                
+                <!-- Collector Auth status icon/button -->
+                <button class="nav-icon-btn" id="btn-user-auth" aria-label="Sign In" style="display: inline-flex; align-items: center; justify-content: center; position: relative;">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" id="auth-icon-svg">
+                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                        <circle cx="12" cy="7" r="4"></circle>
+                    </svg>
+                    <span id="user-initials" style="display: none; font-size: 0.65rem; font-weight: 500; background: var(--gold); color: #000; width: 20px; height: 20px; border-radius: 50%; align-items: center; justify-content: center; text-transform: uppercase;"></span>
+                </button>
+
                 <!-- Cart -->
                 <button class="nav-icon-btn" id="toggle-shop" aria-label="Open fragrance library">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
@@ -94,6 +99,7 @@
                 <a href="#about"        class="mm-link" data-close>Our Story</a>
                 <a href="#ingredients"  class="mm-link" data-close>Ingredients</a>
                 <a href="#contact"      class="mm-link" data-close>Contact</a>
+                <a href="#"             class="mm-link" id="mm-auth-btn">Sign In</a>
             </nav>
             <div class="mm-footer">
                 <a href="mailto:hello@sugandhink.in">hello@sugandhink.in</a>
@@ -125,11 +131,10 @@
             <!-- Centre bottle visual -->
             <div class="hero-visual" id="hero-visual">
                 <div class="hero-img-frame">
-                    <img src="Products/OUD-09.png" alt="Oud Royal — Sugandh Ink" class="hero-bottle" id="hero-bottle">
+                    <img src="assets/images/products/OUD-09.png" alt="Oud Royal - Sugandh Ink" class="hero-bottle" id="hero-bottle">
                     <div class="hero-img-label">
                         <span class="label-code">OUD / 09</span>
                         <span class="label-name">Oud Royal</span>
-                        <span class="label-price">₹24,000</span>
                     </div>
                 </div>
             </div>
@@ -185,7 +190,7 @@
     ============================================================ -->
     <section class="product-section" id="new-arrivals">
         <div class="section-head" data-reveal>
-            <span class="section-eyebrow">— New Arrivals</span>
+            <span class="section-eyebrow">- New Arrivals</span>
             <h2 class="section-title">Fresh Distillations</h2>
             <a href="collection.html" class="section-link">View All →</a>
         </div>
@@ -200,7 +205,7 @@
     ============================================================ -->
     <section class="product-section" id="top-selling">
         <div class="section-head" data-reveal>
-            <span class="section-eyebrow">— Top Selling</span>
+            <span class="section-eyebrow">- Top Selling</span>
             <h2 class="section-title">House Signatures</h2>
             <a href="collection.html" class="section-link">View All →</a>
         </div>
@@ -208,19 +213,19 @@
     </section>
 
     <!-- ============================================================
-         BROWSE BY FAMILY — editorial card grid
+         BROWSE BY FAMILY - editorial card grid
     ============================================================ -->
     <section class="family-section" id="families">
         <div class="family-header" data-reveal>
             <div>
-                <span class="section-eyebrow">— Scent Families</span>
+                <span class="section-eyebrow">- Scent Families</span>
                 <h2 class="section-title">Browse the Library</h2>
             </div>
         </div>
         <div class="family-grid">
             <a href="collection.html?family=oud" class="family-card" data-family="oud" data-reveal>
                 <div class="family-card-img">
-                    <img src="Products/OUD-09.png" alt="Oud & Resins">
+                    <img src="assets/images/products/OUD-09.png" alt="Oud & Resins">
                 </div>
                 <div class="family-card-body">
                     <span class="family-num">01</span>
@@ -230,17 +235,17 @@
             </a>
             <a href="collection.html?family=floral" class="family-card" data-family="floral" data-reveal>
                 <div class="family-card-img">
-                    <img src="Products/FLR-07.png" alt="Florals">
+                    <img src="assets/images/products/FLR-07.png" alt="Florals">
                 </div>
                 <div class="family-card-body">
                     <span class="family-num">02</span>
                     <h3>Florals</h3>
-                    <p>Natural bloom — tuberose, rose, jasmine — full and uncompromising.</p>
+                    <p>Natural bloom - tuberose, rose, jasmine - full and uncompromising.</p>
                 </div>
             </a>
             <a href="collection.html?family=wood" class="family-card" data-family="wood" data-reveal>
                 <div class="family-card-img">
-                    <img src="Products/WDS-02.png" alt="Woods">
+                    <img src="assets/images/products/WDS-02.png" alt="Woods">
                 </div>
                 <div class="family-card-body">
                     <span class="family-num">03</span>
@@ -250,12 +255,12 @@
             </a>
             <a href="collection.html?family=vanilla" class="family-card" data-family="gourmand" data-reveal>
                 <div class="family-card-img">
-                    <img src="Products/VAN-01.png" alt="Musks">
+                    <img src="assets/images/products/VAN-01.png" alt="Musks">
                 </div>
                 <div class="family-card-body">
                     <span class="family-num">04</span>
                     <h3>Musks &amp; Gourmands</h3>
-                    <p>Warm skin, vanilla, amber — soft, intimate, addictive.</p>
+                    <p>Warm skin, vanilla, amber - soft, intimate, addictive.</p>
                 </div>
             </a>
         </div>
@@ -267,15 +272,15 @@
     <section class="story-section" id="about">
         <div class="story-inner">
             <div class="story-image" data-reveal>
-                <img src="Products/VAN-01.png" alt="Sugandh Ink Heritage">
-                <div class="story-image-caption">Vanilla Luxe · VAN/01 · ₹18,500</div>
+                <img src="assets/images/products/VAN-01.png" alt="Sugandh Ink Heritage">
+                <div class="story-image-caption">Vanilla Luxe · VAN/01</div>
             </div>
             <div class="story-text">
-                <span class="section-eyebrow" data-reveal>— Our Story</span>
+                <span class="section-eyebrow" data-reveal>- Our Story</span>
                 <h2 class="section-title" data-reveal>A Monastic Devotion<br><em>to Scent</em></h2>
                 <p data-reveal>True luxury is born in silence. Away from the noise of the modern world, we cultivate rare botanicals, extracting their absolute truth through methods unchanged since the 18th century.</p>
                 <p data-reveal>Our philosophy is rooted in the absence of compromise. Each vial represents years of patient maturation, endless trials of molecular balancing, and an unwavering commitment to the olfactory arts.</p>
-                <p data-reveal>From the high-altitude lavender fields of Kashmir to the deeply shadowed sandalwood groves of Mysore — our raw materials are selected with an unforgiving standard.</p>
+                <p data-reveal>From the high-altitude lavender fields of Kashmir to the deeply shadowed sandalwood groves of Mysore - our raw materials are selected with an unforgiving standard.</p>
                 <a href="#ingredients" class="btn btn-primary" data-reveal>The Ingredients</a>
             </div>
         </div>
@@ -286,46 +291,42 @@
     ============================================================ -->
     <section class="ingredients-section" id="ingredients">
         <div class="ingredients-header" data-reveal>
-            <span class="section-eyebrow">— Raw Materials</span>
+            <span class="section-eyebrow">- Raw Materials</span>
             <h2 class="section-title">The Elements of Prestige</h2>
             <p class="ingredients-sub">We source only what meets an absolute standard. No compromises. No synthetics masquerading as truth.</p>
         </div>
         <div class="ingredients-grid">
             <div class="ing-card" data-reveal>
                 <div class="ing-card-img">
-                    <img src="Products/AMB-12.png" alt="Dark Amber">
+                    <img src="assets/images/products/AMB-12.png" alt="Dark Amber">
                 </div>
                 <div class="ing-meta">AMB / 12 · Evening, Winter</div>
                 <h3 class="ing-name">Dark Amber</h3>
                 <p class="ing-desc">Dark, smoky, and deep. Built for strong presence and long-lasting trail.</p>
-                <span class="ing-price">₹26,500</span>
             </div>
-            <div class="ing-card ing-card-wide" data-reveal>
+            <div class="ing-card" data-reveal>
                 <div class="ing-card-img">
-                    <img src="Products/OUD-15.png" alt="Oud Intense">
+                    <img src="assets/images/products/OUD-15.png" alt="Oud Intense">
                 </div>
                 <div class="ing-meta">OUD / 15 · Luxury, Evening</div>
                 <h3 class="ing-name">Oud Intense</h3>
                 <p class="ing-desc">Strong oud composition with spicy lift and smooth base. Power held back, quiet dominance.</p>
-                <span class="ing-price">₹28,000</span>
             </div>
             <div class="ing-card" data-reveal>
                 <div class="ing-card-img">
-                    <img src="Products/FLR-07.png" alt="White Bloom">
+                    <img src="assets/images/products/FLR-07.png" alt="White Bloom">
                 </div>
                 <div class="ing-meta">FLR / 07 · Day, Signature</div>
                 <h3 class="ing-name">White Bloom</h3>
-                <p class="ing-desc">Dense white florals — natural and full. Rich bloom without sharp edges.</p>
-                <span class="ing-price">₹21,000</span>
+                <p class="ing-desc">Dense white florals - natural and full. Rich bloom without sharp edges.</p>
             </div>
             <div class="ing-card" data-reveal>
                 <div class="ing-card-img">
-                    <img src="Products/VAN-01.png" alt="Vanilla Luxe">
+                    <img src="assets/images/products/VAN-01.png" alt="Vanilla Luxe">
                 </div>
                 <div class="ing-meta">VAN / 01 · Daily Wear</div>
                 <h3 class="ing-name">Vanilla Luxe</h3>
                 <p class="ing-desc">A smooth vanilla built around warmth and softness. Skin-close and addictive.</p>
-                <span class="ing-price">₹18,500</span>
             </div>
         </div>
     </section>
@@ -336,7 +337,7 @@
     <section class="quote-section">
         <blockquote class="pull-quote" data-reveal>
             <span class="quote-mark">"</span>
-            A perfume is not smelled — it is remembered.<br>
+            A perfume is not smelled - it is remembered.<br>
             <em>It is the invisible architecture of a moment.</em>
             <span class="quote-mark">"</span>
         </blockquote>
@@ -348,7 +349,7 @@
     <section class="reviews-section" id="reviews">
         <div class="reviews-header" data-reveal>
             <div>
-                <span class="section-eyebrow">— Client Reviews</span>
+                <span class="section-eyebrow">- Client Reviews</span>
                 <h2 class="section-title">What Our Clients Say</h2>
             </div>
             <div class="reviews-nav">
@@ -367,37 +368,6 @@
             </div>
         </div>
 
-        <!-- Review interaction (login or write) -->
-        <div class="review-interaction">
-
-            <!-- Shown when NOT logged in -->
-            <div class="review-login-prompt" id="review-login-prompt">
-                <p>Register to share your experience with our fragrances.</p>
-                <form class="review-register" id="review-register-form">
-                    <input type="text"  name="rname"  placeholder="Your name"  required class="rev-input">
-                    <input type="email" name="remail" placeholder="Email address" required class="rev-input">
-                    <button type="submit" class="btn btn-dark">Join & Write a Review</button>
-                </form>
-            </div>
-
-            <!-- Shown when logged in -->
-            <div class="review-write-box" id="review-write-box" style="display:none">
-                <p class="review-write-title">Share your experience</p>
-                <form class="review-write-form" id="review-write-form">
-                    <div class="star-row" aria-label="Select rating">
-                        <button type="button" class="star-btn" data-val="1">☆</button>
-                        <button type="button" class="star-btn" data-val="2">☆</button>
-                        <button type="button" class="star-btn" data-val="3">☆</button>
-                        <button type="button" class="star-btn" data-val="4">☆</button>
-                        <button type="button" class="star-btn" data-val="5">★</button>
-                    </div>
-                    <input type="hidden" name="wrating" value="5">
-                    <textarea name="wtext" rows="3" placeholder="Your honest impressions…" required class="rev-input rev-textarea"></textarea>
-                    <button type="submit" class="btn btn-dark">Publish Review</button>
-                </form>
-            </div>
-
-        </div>
     </section>
 
     <!-- ============================================================
@@ -406,7 +376,7 @@
     <section class="spotlight-section" id="spotlight">
         <div class="spotlight-inner">
             <div class="spotlight-content" data-reveal>
-                <span class="section-eyebrow">— Formulation Spotlight</span>
+                <span class="section-eyebrow">- Formulation Spotlight</span>
                 <h2 class="spotlight-title">Oud Royal</h2>
                 <span class="spotlight-code">OUD / 09 · Signature</span>
                 <p class="spotlight-desc">A deep, sovereign essence constructed around pure Indonesian Oud wood. Maturing in silence for twelve months, it is lifted with Kashmir Saffron, peppered with warm spices, and wrapped in rich, masculine leather and dark resin.</p>
@@ -424,7 +394,7 @@
             </div>
             <div class="spotlight-visual" data-reveal data-reveal-delay="200">
                 <div class="spotlight-image-wrap">
-                    <img src="Products/OUD-09.png" alt="Oud Royal — Sugandh Ink">
+                    <img src="assets/images/products/OUD-09.png" alt="Oud Royal - Sugandh Ink">
                 </div>
             </div>
         </div>
@@ -448,7 +418,7 @@
     <section class="contact-section" id="contact">
         <div class="contact-inner">
             <div class="contact-text" data-reveal>
-                <span class="section-eyebrow">— Contact</span>
+                <span class="section-eyebrow">- Contact</span>
                 <h2 class="section-title">Reach the Atelier</h2>
                 <p>Our scent architects are available for private consultations, bespoke creations, and gifting enquiries.</p>
             </div>
@@ -485,7 +455,7 @@
         <div class="newsletter-inner">
             <div class="nl-text" data-reveal>
                 <h2>Stay in the<br><em>Private Ledger</em></h2>
-                <p>Receive early invitations to new releases, private events, and bespoke consultations. No noise — only signal.</p>
+                <p>Receive early invitations to new releases, private events, and bespoke consultations. No noise - only signal.</p>
             </div>
             <form class="nl-form" onsubmit="event.preventDefault();document.querySelector('.nl-success').style.opacity='1';" data-reveal>
                 <div class="nl-input-wrap">
@@ -524,19 +494,19 @@
             <div class="footer-col">
                 <h5>The Maison</h5>
                 <ul>
-                    <li><a href="#about">Our Heritage</a></li>
-                    <li><a href="#ingredients">The Ingredients</a></li>
+                    <li><a href="pages/heritage.html">Our Heritage</a></li>
+                    <li><a href="pages/ingredients.html">The Ingredients</a></li>
                     <li><a href="collection.html">The Library</a></li>
-                    <li><a href="#contact">Bespoke Enquiry</a></li>
+                    <li><a href="pages/bespoke.html">Bespoke Enquiry</a></li>
                 </ul>
             </div>
 
             <div class="footer-col">
                 <h5>Shop</h5>
                 <ul>
-                    <li><a href="#new-arrivals">New Arrivals</a></li>
-                    <li><a href="#top-selling">Best Sellers</a></li>
-                    <li><a href="#families">By Scent Family</a></li>
+                    <li><a href="collection.html?sort=new">New Arrivals</a></li>
+                    <li><a href="collection.html?sort=best">Best Sellers</a></li>
+                    <li><a href="collection.html">By Scent Family</a></li>
                     <li><a href="collection.html">Full Collection</a></li>
                 </ul>
             </div>
@@ -544,26 +514,26 @@
             <div class="footer-col">
                 <h5>Client Care</h5>
                 <ul>
-                    <li><a href="mailto:hello@sugandhink.in">Contact Us</a></li>
-                    <li><a href="#contact">Fragrance Consultation</a></li>
-                    <li><a href="#newsletter">Newsletter</a></li>
-                    <li><a href="#footer">FAQ</a></li>
+                    <li><a href="pages/contact.html">Contact Us</a></li>
+                    <li><a href="pages/consultation.html">Fragrance Consultation</a></li>
+                    <li><a href="pages/newsletter.html">Newsletter</a></li>
+                    <li><a href="pages/faq.html">FAQ</a></li>
                 </ul>
             </div>
 
             <div class="footer-col">
                 <h5>Legal</h5>
                 <ul>
-                    <li><a href="#footer">Terms of Service</a></li>
-                    <li><a href="#footer">Privacy Policy</a></li>
-                    <li><a href="#footer">Cookie Policy</a></li>
-                    <li><a href="#footer">Returns &amp; Shipping</a></li>
+                    <li><a href="pages/terms.html">Terms of Service</a></li>
+                    <li><a href="pages/privacy.html">Privacy Policy</a></li>
+                    <li><a href="pages/cookies.html">Cookie Policy</a></li>
+                    <li><a href="pages/returns.html">Returns &amp; Shipping</a></li>
                 </ul>
             </div>
         </div>
 
         <div class="footer-bottom">
-            <span>© 2026 Sugandh Ink — All Rights Reserved</span>
+            <span>© 2026 Sugandh Ink - All Rights Reserved</span>
             <span class="footer-wa-note">
                 <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12.8 12.8 0 00-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
                 Orders via WhatsApp: <a href="https://wa.me/919769445567" target="_blank">+91 97694 45567</a>
@@ -585,7 +555,8 @@
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M18 6L6 18M6 6l12 12"/></svg>
             </button>
         </div>
-        <div class="ld-list" id="drawer-product-list"></div>
+        <div class="ld-list" id="drawer-product-list" style="display:none"></div>
+        <div id="drawer-unified-content" style="flex: 1; display: flex; flex-direction: column; overflow-y: auto; padding: 0 32px 32px;"></div>
     </aside>
 
     <!-- Scripts -->
@@ -593,6 +564,7 @@
     <script type="module" src="js/transitions.js"></script>
     <script type="module" src="js/ui.js"></script>
     <script type="module" src="js/scrolly.js"></script>
+    <script type="module" src="js/animations.js"></script>
     <script type="module" src="js/main.js"></script>
 </body>
 </html>

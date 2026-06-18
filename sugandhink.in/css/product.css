@@ -1,5 +1,5 @@
 /* =========================================================================
-   SUGANDH INK — Product Detail Page CSS
+   SUGANDH INK - Product Detail Page CSS
    Clean Editorial Product Details Layout
    ========================================================================= */
 
@@ -149,6 +149,7 @@
 .size-options {
   display: flex;
   gap: 12px;
+  flex-wrap: wrap;
 }
 
 .size-pill {

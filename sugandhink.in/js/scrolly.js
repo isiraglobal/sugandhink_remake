@@ -1,5 +1,5 @@
 /**
- * scrolly.js — High-end scroll reveals, parallax and animations
+ * scrolly.js - High-end scroll reveals, parallax and animations
  * Powered by GSAP ScrollTrigger for premium performance and micro-animations.
  */
 
@@ -80,27 +80,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // ── 5. Simple reveal on scroll ────────────────────────────────────────────
-    const revealEls = document.querySelectorAll('[data-reveal]');
-    if (revealEls.length) {
-        revealEls.forEach(el => {
-            gsap.fromTo(el, 
-                { opacity: 0, y: 36 },
-                { 
-                    opacity: 1, 
-                    y: 0,
-                    duration: 1.1,
-                    ease: 'power3.out',
-                    scrollTrigger: {
-                        trigger: el,
-                        start: 'top 88%',
-                        toggleActions: 'play none none none'
-                    }
-                }
-            );
-        });
-    }
-
     // ── 6. Staggered Product Card Reveals ─────────────────────────────────────
     const rails = document.querySelectorAll('.product-rail');
     rails.forEach(rail => {
@@ -124,9 +103,9 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // ── 7. Scent Family Staggered Slide Reveals ──────────────────────────────
-    const familyHeader = document.querySelector('.family-header');
-    if (familyHeader) {
-        const cards = familyHeader.querySelectorAll('.family-card');
+    const familyGrid = document.querySelector('.family-grid');
+    if (familyGrid) {
+        const cards = familyGrid.querySelectorAll('.family-card');
         if (cards.length) {
             gsap.fromTo(cards, 
                 { opacity: 0, y: 40, scale: 0.96 },
@@ -138,7 +117,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     stagger: 0.15,
                     ease: 'power3.out',
                     scrollTrigger: {
-                        trigger: familyHeader,
+                        trigger: familyGrid,
                         start: 'top 85%'
                     }
                 }

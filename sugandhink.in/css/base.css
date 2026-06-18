@@ -1,5 +1,5 @@
 /* =========================================================================
-   SUGANDH INK — Base Design System
+   SUGANDH INK - Base Design System
    Shared tokens, reset, typography, utilities
    ========================================================================= */
 
@@ -267,3 +267,54 @@ textarea.form-input { resize:vertical; min-height:120px; }
 @media (max-width: 768px) {
   :root { --nav-h:58px; --px:18px; }
 }
+
+/* Base button aliases */
+.btn-primary {
+  background: var(--ink);
+  color: var(--cream);
+  border: 1px solid var(--ink);
+}
+.btn-primary:hover {
+  background: var(--gold);
+  border-color: var(--gold);
+}
+
+.btn-ghost {
+  background: transparent;
+  color: var(--ink);
+  border: 1px solid transparent;
+}
+.btn-ghost:hover {
+  background: var(--cream-2);
+  color: var(--ink);
+}
+
+/* Margin bottom utility class */
+.mb-16 {
+  margin-bottom: 16px !important;
+}
+
+/* Library Drawer WhatsApp button */
+.ld-wa-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  background: #25d366; /* WhatsApp Green */
+  color: #ffffff !important;
+  font-size: 0.62rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  padding: 6px 12px;
+  border-radius: 4px;
+  text-decoration: none;
+  transition: background 0.3s;
+}
+.ld-wa-btn:hover {
+  background: #128c7e;
+}
+.ld-wa-btn svg {
+  fill: currentColor;
+}
+

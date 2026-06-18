@@ -5,6 +5,8 @@ import { Provider } from "react-redux";
 import { makeStore } from "../lib/store";
 import { PersistGate } from "redux-persist/integration/react";
 import SpinnerbLoader from "@/components/ui/SpinnerbLoader";
+import { MagneticCursor } from "@/components/ui/MagneticCursor";
+import { ScrollProgress } from "@/components/ui/ScrollProgress";
 
 type Props = {
   children: React.ReactNode;
@@ -23,6 +25,9 @@ const Providers = ({ children }: Props) => {
         }
         persistor={persistor}
       >
+        {/* Global Animations */}
+        <MagneticCursor />
+        <ScrollProgress />
         {children}
       </PersistGate>
     </Provider>

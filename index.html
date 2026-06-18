@@ -3,7 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sugandh Ink — Local Development Hub</title>
+    <title>Sugandh Ink - Local Development Hub</title>
+    
+    <!-- Production Hostname Redirection -->
+    <script>
+        if (window.location.hostname === 'sugandhink.in' || window.location.hostname === 'www.sugandhink.in') {
+            window.location.replace('/sugandhink.in/index.html');
+        }
+    </script>
     
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -260,7 +267,7 @@
         </div>
 
         <div class="footer">
-            <span>Sugandh Ink — Malad (West), Mumbai. Served at <a href="http://localhost:3456" target="_blank">localhost:3456</a></span>
+            <span>Sugandh Ink - Malad (West), Mumbai. Served at <a href="http://localhost:3456" target="_blank">localhost:3456</a></span>
         </div>
     </div>
 

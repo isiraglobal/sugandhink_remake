@@ -1,3 +1,27 @@
+/** Resolve API URLs against the current origin (works on any dev port). */
+export function getApiUrl(endpoint) {
+    const path = endpoint.startsWith('/') ? endpoint : `/${endpoint}`;
+    return `${window.location.origin}${path}`;
+}
+
+/** Reveal [data-reveal] elements — required on every page that loads ui.js. */
+export function initReveals() {
+    document.body.classList.remove('is-loading');
+
+    const loader = document.getElementById('loader');
+    if (loader) {
+        loader.style.display = 'none';
+        loader.remove();
+    }
+
+    document.querySelectorAll('[data-reveal]').forEach((el, i) => {
+        const delay = parseInt(el.dataset.revealDelay || '0', 10);
+        setTimeout(() => {
+            el.classList.add('in', 'revealed');
+        }, delay + (i * 30));
+    });
+}
+
 export function splitText(element) {
     const text = element.innerText;
     element.innerHTML = "";

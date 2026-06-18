@@ -1,6 +1,8 @@
 /**
- * cart.js — Handles the shopping cart state, stepper increments, promo codes, summaries and WhatsApp order generation
+ * cart.js - Handles the shopping cart state, stepper increments, promo codes, summaries and WhatsApp order generation
  */
+
+import { getApiUrl } from './utils.js';
 
 const WA_NUMBER = '919769445567';
 
@@ -43,6 +45,9 @@ function renderCart() {
 
     if (layout) layout.style.display = 'grid';
     if (emptyView) emptyView.style.display = 'none';
+
+    // Load active promo code state
+    loadPromoCode();
 
     listContainer.innerHTML = '';
 
@@ -139,6 +144,33 @@ function calculateSummary() {
     updateWhatsAppCheckout(subtotal, discountAmount, total);
 }
 
+function loadPromoCode() {
+    const activePromo = localStorage.getItem('si_promo_applied');
+    const promoInput = document.getElementById('promo-input');
+    const feedback = document.getElementById('promo-feedback');
+    
+    if (activePromo) {
+        promoApplied = true;
+        if (activePromo === 'SUGANDH10') {
+            appliedDiscountPercent = 10;
+        } else if (activePromo === 'WELCOME5') {
+            appliedDiscountPercent = 5;
+        } else if (activePromo === 'ROYAL20') {
+            appliedDiscountPercent = 20;
+        }
+        if (promoInput) promoInput.value = activePromo;
+        if (feedback) {
+            feedback.textContent = `Promo code ${activePromo} applied successfully! (${appliedDiscountPercent}% Discount)`;
+            feedback.className = 'promo-feedback success';
+        }
+    } else {
+        appliedDiscountPercent = 0;
+        promoApplied = false;
+        if (promoInput) promoInput.value = '';
+        if (feedback) feedback.textContent = '';
+    }
+}
+
 // ── Promo Code System ────────────────────────────────────────────────────────
 function setupPromoCode() {
     const applyBtn = document.getElementById('promo-apply-btn');
@@ -149,24 +181,19 @@ function setupPromoCode() {
 
     applyBtn.addEventListener('click', () => {
         const code = promoInput.value.trim().toUpperCase();
-        if (code === 'SUGANDH10') {
-            appliedDiscountPercent = 10;
-            promoApplied = true;
-            if (feedback) {
-                feedback.textContent = 'Promo code SUGANDH10 applied successfully! (10% Discount)';
-                feedback.className = 'promo-feedback success';
-            }
+        if (code === 'SUGANDH10' || code === 'WELCOME5' || code === 'ROYAL20') {
+            localStorage.setItem('si_promo_applied', code);
+            loadPromoCode();
             calculateSummary();
         } else if (code === '') {
-            appliedDiscountPercent = 0;
-            promoApplied = false;
-            if (feedback) feedback.textContent = '';
+            localStorage.removeItem('si_promo_applied');
+            loadPromoCode();
             calculateSummary();
         } else {
-            appliedDiscountPercent = 0;
-            promoApplied = false;
+            localStorage.removeItem('si_promo_applied');
+            loadPromoCode();
             if (feedback) {
-                feedback.textContent = 'Invalid promo code. Try SUGANDH10';
+                feedback.textContent = 'Invalid promo code. Try SUGANDH10, WELCOME5, or ROYAL20';
                 feedback.className = 'promo-feedback error';
             }
             calculateSummary();
@@ -216,24 +243,96 @@ function updateWhatsAppCheckout(subtotal, discount, total) {
     const waBtn = document.getElementById('checkout-wa-btn');
     if (!waBtn) return;
 
-    let itemsListStr = '';
-    cartItems.forEach((item, idx) => {
-        itemsListStr += `${idx + 1}. *${item.name}* (${item.code}) - ${item.size} - Qty: ${item.qty} - Price: ₹${item.price.toLocaleString('en-IN')} each\n`;
-    });
+    const user = JSON.parse(localStorage.getItem('si_user'));
+    const warningId = 'cart-page-auth-warning';
+    let warningEl = document.getElementById(warningId);
 
-    let summaryStr = `*Subtotal:* ₹${subtotal.toLocaleString('en-IN')}\n`;
-    if (appliedDiscountPercent > 0) {
-        summaryStr += `*Promo Applied:* SUGANDH10 (-${appliedDiscountPercent}%)\n*Discount:* -₹${discount.toLocaleString('en-IN')}\n`;
+    if (!user || !user.name || !user.email || (user.id && user.id.startsWith('guest-'))) {
+        if (!warningEl) {
+            warningEl = document.createElement('div');
+            warningEl.id = warningId;
+            warningEl.style.cssText = 'background: rgba(192, 57, 43, 0.05); border: 1px solid rgba(192, 57, 43, 0.15); border-radius: 4px; padding: 12px; font-size: 0.76rem; color: #c0392b; margin: 16px 0; text-align: center; line-height: 1.4; font-family: \'Jost\', sans-serif;';
+            warningEl.innerHTML = `<strong>Details Required:</strong> Please click the profile icon <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align: middle; margin: 0 2px;"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg> on the top right to sign in, register, or provide guest checkout details before completing your order.`;
+            waBtn.parentNode.insertBefore(warningEl, waBtn);
+        }
+        waBtn.style.pointerEvents = 'none';
+        waBtn.style.opacity = '0.5';
+        waBtn.onclick = (e) => {
+            e.preventDefault();
+        };
+    } else {
+        if (warningEl) {
+            warningEl.remove();
+        }
+        waBtn.style.pointerEvents = 'auto';
+        waBtn.style.opacity = '1';
+        
+        waBtn.onclick = async (e) => {
+            e.preventDefault();
+            
+            // Save order to central database
+            const orderId = 'ORD-' + Math.floor(1000 + Math.random() * 9000);
+            const promoCodeApplied = localStorage.getItem('si_promo_applied') || '';
+            const orderData = {
+                id: orderId,
+                customerId: user.id && !user.id.startsWith('guest-') ? user.id : null,
+                collector: user.name,
+                email: user.email,
+                wa: user.phone || '',
+                items: cartItems.map(i => `${i.name} (${i.size}) × ${i.qty}`).join(', '),
+                total: '₹' + total.toLocaleString('en-IN'),
+                date: new Date().toLocaleDateString('en-IN'),
+                status: 'pending',
+                promoCode: promoCodeApplied,
+                discount: discount > 0 ? '₹' + discount.toLocaleString('en-IN') : '',
+                address: user.address || '',
+                city: user.city || '',
+                state: user.state || '',
+                country: user.country || '',
+                zipCode: user.zipCode || user.zip_code || ''
+            };
+
+            try {
+                if (!user.id || user.id.startsWith('guest-')) {
+                    await fetch(getApiUrl('/api/customers'), {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            id: user.id,
+                            name: user.name,
+                            email: user.email,
+                            phone: user.phone || '',
+                            address: user.address || '',
+                            city: user.city || '',
+                            state: user.state || '',
+                            country: user.country || 'India',
+                            zipCode: user.zipCode || user.zip_code || ''
+                        })
+                    });
+                }
+
+                await fetch(getApiUrl('/api/orders'), {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(orderData)
+                });
+            } catch (err) {
+                console.error('Failed to save order in database:', err);
+            }
+
+            if (window.getWhatsAppLink) {
+                const waLink = window.getWhatsAppLink(cartItems, subtotal, discount, total, user);
+                window.open(waLink, '_blank');
+            } else {
+                const textMsg = `Hello Sugandh Ink 🌿\n\nI would like to place an order for the following compositions:\n\n${cartItems.map(i => `${i.name} × ${i.qty}`).join('\n')}\n\nTotal: ₹${total.toLocaleString('en-IN')}`;
+                window.open(`https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(textMsg)}`, '_blank');
+            }
+
+            localStorage.removeItem('si_cart');
+            window.dispatchEvent(new CustomEvent('cart:updated'));
+            window.location.href = 'index.html';
+        };
     }
-    summaryStr += `*Delivery:* Complimentary\n*Total Order Value:* ₹${total.toLocaleString('en-IN')}`;
-
-    const textMsg = `Hello Sugandh Ink 🌿\n\nI would like to place an order for the following compositions:\n\n${itemsListStr}\n${summaryStr}\n\nPlease verify availability and provide payment details. Thank you.`;
-    
-    waBtn.href = `https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(textMsg)}`;
-    waBtn.onclick = () => {
-        saveOrderToLocalStorage(subtotal, discount, total);
-    };
-}
 
 // ── Nav Badges ────────────────────────────────────────────────────────────────
 function updateNavBadge() {
@@ -257,5 +356,9 @@ document.addEventListener('DOMContentLoaded', () => {
     renderCart();
     setupPromoCode();
     window.addEventListener('cart:updated', updateNavBadge);
+    window.addEventListener('auth:updated', () => {
+        renderCart();
+        updateNavBadge();
+    });
     updateNavBadge();
 });

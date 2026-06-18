@@ -1,8 +1,9 @@
 /**
- * product-page.js — Handles individual product details, pricing, sizing, cart, reviews and related items
+ * product-page.js - Handles individual product details, pricing, sizing, cart, reviews and related items
  */
 
 import { products } from './products.js';
+import { getApiUrl } from './utils.js';
 
 const WA_NUMBER = '919769445567';
 
@@ -24,11 +25,20 @@ function parsePrice(priceStr) {
 }
 
 function getPriceForSize(basePriceNum, size) {
+    if (size === '10ml') {
+        if (product && product.samplePrice) {
+            return Math.round(parsePrice(product.samplePrice) * 0.4);
+        }
+        return Math.round(basePriceNum * 0.35);
+    }
     if (size === '30ml') {
         if (product && product.samplePrice) {
             return parsePrice(product.samplePrice);
         }
         return Math.round(basePriceNum * 0.6);
+    }
+    if (size === '100ml') {
+        return Math.round(basePriceNum * 1.6);
     }
     return basePriceNum; // 50ml standard
 }
@@ -45,6 +55,8 @@ document.addEventListener('DOMContentLoaded', () => {
     setupReviews();
     renderRelatedProducts();
     updatePurchaseDetails();
+
+    window.addEventListener('auth:updated', updatePurchaseDetails);
 });
 
 // ── Render Details ───────────────────────────────────────────────────────────
@@ -52,19 +64,19 @@ function renderProductDetails() {
     if (!product) return;
 
     // Head metadata title
-    document.title = `${product.originalName} — Sugandh Ink`;
+    document.title = `${product.name} - Sugandh Ink`;
 
     // Breadcrumb & specs
-    document.getElementById('breadcrumb-product-name').textContent = product.originalName;
+    document.getElementById('breadcrumb-product-name').textContent = product.name;
     document.getElementById('product-code').textContent = product.code;
-    document.getElementById('product-title').textContent = product.originalName;
+    document.getElementById('product-title').textContent = product.name;
     document.getElementById('product-desc').textContent = product.description;
     
     // Main image
     const mainImg = document.getElementById('product-main-img');
     if (mainImg) {
         mainImg.src = product.image;
-        mainImg.alt = product.originalName;
+        mainImg.alt = product.name;
     }
 
     // Story narrative
@@ -95,21 +107,51 @@ function renderProductDetails() {
         });
     }
 
-    // Render sizing pills dynamically
     const sizesWrap = document.querySelector('.sizes-wrap');
     if (sizesWrap) {
-        sizesWrap.innerHTML = '';
-        if (product.samplePrice) {
-            sizesWrap.innerHTML = `
-                <button class="size-pill" data-size="30ml">30ml (Sample) — ₹${parsePrice(product.samplePrice).toLocaleString('en-IN')}</button>
-                <button class="size-pill active" data-size="50ml">50ml (Standard) — ${product.price}</button>
-            `;
-            selectedSize = '50ml';
+        const basePrice = parsePrice(product.price);
+        const sample = product.samplePrice ? parsePrice(product.samplePrice) : null;
+        const p10 = sample ? Math.round(sample * 0.4) : Math.round(basePrice * 0.35);
+        const p30 = sample || Math.round(basePrice * 0.6);
+        const p50 = basePrice;
+        const p100 = Math.round(basePrice * 1.6);
+        sizesWrap.innerHTML = `
+            <button class="size-pill" data-size="10ml">10ml (Travel) - ₹${p10.toLocaleString('en-IN')}</button>
+            <button class="size-pill active" data-size="50ml">50ml (Standard) - ₹${p50.toLocaleString('en-IN')}</button>
+            <button class="size-pill" data-size="30ml">30ml (Sample) - ₹${p30.toLocaleString('en-IN')}</button>
+            <button class="size-pill" data-size="100ml">100ml (Prestige) - ₹${p100.toLocaleString('en-IN')}</button>
+        `;
+        selectedSize = '50ml';
+    }
+    // Render stock status
+    const stockStatus = document.getElementById('product-stock-status');
+    const cartBtn = document.getElementById('add-to-cart-btn');
+    if (stockStatus) {
+        const stockQty = product.stock !== undefined ? product.stock : 50;
+        if (stockQty <= 0) {
+            stockStatus.innerHTML = `<span style="color: var(--error);">Out of Stock - Maturing at Atelier</span>`;
+            if (cartBtn) {
+                cartBtn.disabled = true;
+                cartBtn.textContent = 'Out of Stock';
+                cartBtn.style.opacity = '0.5';
+                cartBtn.style.pointerEvents = 'none';
+            }
+        } else if (stockQty <= 5) {
+            stockStatus.innerHTML = `<span style="color: var(--gold);">Extremely Low Stock - Only ${stockQty} bottles left</span>`;
+            if (cartBtn) {
+                cartBtn.disabled = false;
+                cartBtn.textContent = 'Add to Private Collection';
+                cartBtn.style.opacity = '1';
+                cartBtn.style.pointerEvents = 'all';
+            }
         } else {
-            sizesWrap.innerHTML = `
-                <button class="size-pill active" data-size="50ml">50ml (Standard) — ${product.price}</button>
-            `;
-            selectedSize = '50ml';
+            stockStatus.innerHTML = `<span style="color: #27ae60;">In Stock (${stockQty} units available)</span>`;
+            if (cartBtn) {
+                cartBtn.disabled = false;
+                cartBtn.textContent = 'Add to Private Collection';
+                cartBtn.style.opacity = '1';
+                cartBtn.style.pointerEvents = 'all';
+            }
         }
     }
 }
@@ -172,47 +214,74 @@ function updatePurchaseDetails() {
     // WhatsApp Direct order link
     const total = finalPrice * selectedQty;
     const formattedTotal = '₹' + total.toLocaleString('en-IN');
-    const msg = encodeURIComponent(
-        `Hello Sugandh Ink 🌿\n\nI would like to place an order for:\n\n*${product.originalName}* (${product.code})\nSize: *${selectedSize}*\nQuantity: *${selectedQty}*\nPrice: ${formattedPrice} each\nTotal: ${formattedTotal}\n\nPlease share availability and payment details. Thank you.`
-    );
+    
     const waBtn = document.getElementById('whatsapp-checkout-btn');
     if (waBtn) {
-        waBtn.href = `https://wa.me/${WA_NUMBER}?text=${msg}`;
-        waBtn.onclick = () => {
-            const orderId = 'ORD-' + Math.floor(1000 + Math.random() * 9000);
-            const user = JSON.parse(localStorage.getItem('si_user')) || { name: 'Guest Collector', email: 'guest@sugandhink.in' };
-            const waNum = '+91 97694 45567';
+        const user = JSON.parse(localStorage.getItem('si_user'));
+        const warningId = 'product-page-auth-warning';
+        let warningEl = document.getElementById(warningId);
 
-            const newOrder = {
-                id: orderId,
-                collector: user.name,
-                email: user.email,
-                wa: waNum,
-                items: `${product.originalName} (${selectedSize}) × ${selectedQty}`,
-                value: formattedTotal,
-                date: new Date().toLocaleDateString('en-IN', { day: '2-digit', month: '2-digit', year: 'numeric' }),
-                status: 'pending'
+        if (!user || !user.name || !user.email || (user.id && user.id.startsWith('guest-'))) {
+            if (!warningEl) {
+                warningEl = document.createElement('div');
+                warningEl.id = warningId;
+                warningEl.style.cssText = 'background: rgba(192, 57, 43, 0.05); border: 1px solid rgba(192, 57, 43, 0.15); border-radius: 4px; padding: 12px; font-size: 0.76rem; color: #c0392b; margin: 16px 0; text-align: center; line-height: 1.4; font-family: \'Jost\', sans-serif;';
+                warningEl.innerHTML = `<strong>Details Required:</strong> Please click the profile icon <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align: middle; margin: 0 2px;"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg> on the top right to sign in or register before completing your order.`;
+                waBtn.parentNode.insertBefore(warningEl, waBtn);
+            }
+            waBtn.style.pointerEvents = 'none';
+            waBtn.style.opacity = '0.5';
+            waBtn.onclick = (e) => {
+                e.preventDefault();
             };
+        } else {
+            if (warningEl) {
+                warningEl.remove();
+            }
+            waBtn.style.pointerEvents = 'auto';
+            waBtn.style.opacity = '1';
+            
+            waBtn.onclick = async (e) => {
+                e.preventDefault();
 
-            let orders = [];
-            try {
-                orders = JSON.parse(localStorage.getItem('si_orders')) || [];
-            } catch {
-                orders = [];
-            }
-            
-            if (orders.length === 0) {
-                orders = [
-                    { id: 'ORD-9824', collector: 'Aarav Mehta', email: 'aarav.mehta@gmail.com', wa: '+91 98200 12345', items: 'Wild Blue (50ml) × 2', value: '₹1,598', date: '25/05/2026', status: 'pending' },
-                    { id: 'ORD-9823', collector: 'Ishita Sharma', email: 'ishita.s@yahoo.com', wa: '+91 97690 98765', items: 'Bleu Noir (50ml) × 1', value: '₹799', date: '22/05/2026', status: 'fulfilled' },
-                    { id: 'ORD-9822', collector: 'Rohan Singhal', email: 'rohan.singhal@outlook.com', wa: '+91 98110 54321', items: 'Eternity Men (50ml) × 1', value: '₹799', date: '20/05/2026', status: 'pending' }
-                ];
-            }
-            
-            orders.push(newOrder);
-            localStorage.setItem('si_orders', JSON.stringify(orders));
-        };
-    }
+                // Save order to central database
+                const orderId = 'ORD-' + Math.floor(1000 + Math.random() * 9000);
+                const orderData = {
+                    id: orderId,
+                    customerId: user.id && !user.id.startsWith('guest-') ? user.id : null,
+                    collector: user.name,
+                    email: user.email,
+                    wa: user.phone || '',
+                    items: `${product.name} (${selectedSize}) × ${selectedQty}`,
+                    total: formattedTotal,
+                    date: new Date().toLocaleDateString('en-IN'),
+                    status: 'pending'
+                };
+
+                try {
+                    await fetch(getApiUrl('/api/orders'), {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(orderData)
+                    });
+                } catch (err) {
+                    console.error('Failed to save order in database:', err);
+                }
+
+                // Open WhatsApp link (including customer details!)
+                if (window.getWhatsAppLink) {
+                    const singleItem = { name: product.name, code: product.code, size: selectedSize, qty: selectedQty, price: finalPrice };
+                    const waLink = window.getWhatsAppLink([singleItem], total, 0, total, user);
+                    window.open(waLink, '_blank');
+                } else {
+                    const msg = encodeURIComponent(
+                        `Hello Sugandh Ink 🌿\n\nI would like to place an order for:\n\n*${product.name}* (${product.code})\nSize: *${selectedSize}*\nQuantity: *${selectedQty}*\nPrice: ${formattedPrice} each\nTotal: ${formattedTotal}\n\nPlease share availability and payment details. Thank you.`
+                    );
+                    window.open(`https://wa.me/${WA_NUMBER}?text=${msg}`, '_blank');
+                }
+            }; // end waBtn.onclick
+        } // end else (user logged in)
+    } // end if (waBtn)
 
     // Add to Cart integration
     const cartBtn = document.getElementById('add-to-cart-btn');
@@ -223,7 +292,7 @@ function updatePurchaseDetails() {
         newCartBtn.addEventListener('click', () => {
             addToCart({
                 code: product.code,
-                name: product.originalName,
+                name: product.name,
                 size: selectedSize,
                 qty: selectedQty,
                 price: finalPrice,
@@ -311,100 +380,36 @@ function saveProductReviews(reviews) {
 function setupReviews() {
     const list = document.getElementById('product-reviews-list');
     const empty = document.getElementById('product-reviews-empty');
-    const loginBox = document.getElementById('product-review-login');
-    const writeBox = document.getElementById('product-write-box');
-
     if (!list) return;
 
-    function renderReviewsList() {
-        const reviews = getProductReviews();
-        const user = getUser();
+    const reviews = getProductReviews();
 
-        // Clear dynamic entries
-        list.querySelectorAll('.review-card').forEach(c => c.remove());
-
-        // Update counts
-        const reviewCountText = document.getElementById('product-rating-count');
-        if (reviewCountText) {
-            reviewCountText.textContent = `(${reviews.length} client review${reviews.length !== 1 ? 's' : ''})`;
-        }
-
-        if (reviews.length === 0) {
-            if (empty) empty.style.display = 'block';
-        } else {
-            if (empty) empty.style.display = 'none';
-            reviews.slice().reverse().forEach(rv => {
-                const card = document.createElement('div');
-                card.className = 'review-card';
-                card.innerHTML = `
-                    <div class="stars">${'★'.repeat(rv.rating)}${'☆'.repeat(5 - rv.rating)}</div>
-                    <p style="font-size:0.86rem; color:var(--ink-mid); margin:12px 0; line-height:1.6;">"${escHtml(rv.text)}"</p>
-                    <div style="display:flex; justify-content:space-between; font-size:0.75rem; border-top:1px solid var(--border); padding-top:10px; margin-top:auto;">
-                        <strong>${escHtml(rv.name)}</strong>
-                        <span style="color:var(--ink-dim);">${rv.date}</span>
-                    </div>
-                `;
-                list.appendChild(card);
-            });
-        }
-
-        // Show write or login prompts
-        if (writeBox) writeBox.style.display = user ? 'block' : 'none';
-        if (loginBox) loginBox.style.display = user ? 'none' : 'block';
+    // Update count badge
+    const reviewCountText = document.getElementById('product-rating-count');
+    if (reviewCountText) {
+        reviewCountText.textContent = `(${reviews.length} client review${reviews.length !== 1 ? 's' : ''})`;
     }
 
-    // Register form (username + email)
-    const regForm = document.getElementById('product-register-form');
-    if (regForm) {
-        regForm.addEventListener('submit', e => {
-            e.preventDefault();
-            const name = regForm.querySelector('[name=rname]')?.value.trim();
-            const email = regForm.querySelector('[name=remail]')?.value.trim();
-            if (!name || !email) return;
-            localStorage.setItem(USER_KEY, JSON.stringify({ name, email }));
-            renderReviewsList();
-        });
+    if (reviews.length === 0) {
+        if (empty) empty.style.display = 'block';
+        return;
     }
 
-    // Write review form
-    const writeForm = document.getElementById('product-write-form');
-    if (writeForm) {
-        // Star buttons selection
-        writeForm.querySelectorAll('.star-btn').forEach(btn => {
-            btn.addEventListener('click', () => {
-                const val = btn.dataset.val;
-                writeForm.querySelectorAll('.star-btn').forEach((b, i) => {
-                    b.textContent = i < val ? '★' : '☆';
-                    b.classList.toggle('filled', i < val);
-                });
-                writeForm.querySelector('[name=wrating]').value = val;
-            });
-        });
+    if (empty) empty.style.display = 'none';
 
-        writeForm.addEventListener('submit', e => {
-            e.preventDefault();
-            const user = getUser();
-            if (!user) return;
-            const text = writeForm.querySelector('[name=wtext]')?.value.trim();
-            const rating = parseInt(writeForm.querySelector('[name=wrating]')?.value || '5', 10);
-            if (!text) return;
-
-            const reviews = getProductReviews();
-            reviews.push({
-                name: user.name,
-                text,
-                rating,
-                date: new Date().toLocaleDateString('en-IN', { month: 'long', year: 'numeric' })
-            });
-            saveProductReviews(reviews);
-            writeForm.reset();
-            writeForm.querySelectorAll('.star-btn').forEach(b => b.textContent = '☆');
-            writeForm.querySelector('[name=wrating]').value = '5';
-            renderReviewsList();
-        });
-    }
-
-    renderReviewsList();
+    reviews.slice().reverse().forEach(rv => {
+        const card = document.createElement('div');
+        card.className = 'review-card';
+        card.innerHTML = `
+            <div class="stars">${'\u2605'.repeat(rv.rating)}${'\u2606'.repeat(5 - rv.rating)}</div>
+            <p style="font-size:0.86rem; color:var(--ink-mid); margin:12px 0; line-height:1.6;">"${escHtml(rv.text)}"</p>
+            <div style="display:flex; justify-content:space-between; font-size:0.75rem; border-top:1px solid var(--border); padding-top:10px; margin-top:auto;">
+                <strong>${escHtml(rv.name)}</strong>
+                <span style="color:var(--ink-dim);">${rv.date}</span>
+            </div>
+        `;
+        list.appendChild(card);
+    });
 }
 
 function escHtml(str) {
@@ -427,10 +432,10 @@ function renderRelatedProducts() {
         card.className = 'pcard';
         card.innerHTML = `
             <div class="pcard-img">
-                <img src="${p.image}" alt="${p.originalName}" loading="lazy">
+                <img src="${p.image}" alt="${p.name}" loading="lazy">
             </div>
             <div class="pcard-code">${p.code}</div>
-            <div class="pcard-name">${p.originalName}</div>
+            <div class="pcard-name">${p.name}</div>
             <div class="pcard-notes">${p.shortNotes}</div>
             <div class="pcard-footer">
                 <span class="pcard-price">${p.price}</span>

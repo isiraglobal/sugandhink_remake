@@ -1,0 +1,52 @@
+# Environment variables
+.env
+.env.local
+.env.*.local
+
+# Node modules
+node_modules/
+npm-debug.log
+yarn-error.log
+pnpm-debug.log
+
+# OS files
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Database files
+data/database.json
+data/backups/
+*.db
+*.sqlite
+
+# Logs
+logs/
+*.log
+
+# Build files
+dist/
+build/
+.next/
+out/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Temporary files
+temp/
+tmp/
+.tmp/
+
+# Sensitive credentials (extra safety)
+**/credentials.json
+**/secret*.json
+**/keys/
+**/.env*
+
+# Generated PDFs (optional - keep if you want to track some)
+invoices/*.pdf

@@ -1,7 +1,6 @@
 const baseProducts = [
     {
         "name": "Wild Blue / 01",
-        "originalName": "Wild Blue",
         "code": "FRSH/01",
         "topNotes": "calabrian bergamot, pepper",
         "heartNotes": "sichuan pepper, lavender, geranium",
@@ -13,11 +12,10 @@ const baseProducts = [
         "occasion": "daily wear, date night, all-season",
         "price": "\u20b9799",
         "samplePrice": "",
-        "image": "Products/FRSH-01.png"
+        "image": "assets/images/products/FRSH-01.png"
     },
     {
         "name": "Declaration / 02",
-        "originalName": "Declaration",
         "code": "SPC/02",
         "topNotes": "bergamot, neroli, bitter orange",
         "heartNotes": "cardamom, iris, ginger, cinnamon",
@@ -29,11 +27,10 @@ const baseProducts = [
         "occasion": "work, formal, evening",
         "price": "\u20b9799",
         "samplePrice": "",
-        "image": "Products/SPC-02.png"
+        "image": "assets/images/products/SPC-02.png"
     },
     {
         "name": "Eternity Men / 03",
-        "originalName": "Eternity Men",
         "code": "FRSH/03",
         "topNotes": "lavender, lemon, bergamot",
         "heartNotes": "geranium, sage, basil",
@@ -45,11 +42,10 @@ const baseProducts = [
         "occasion": "daily wear, work, all-season",
         "price": "\u20b9799",
         "samplePrice": "",
-        "image": "Products/FRSH-03.png"
+        "image": "assets/images/products/FRSH-03.png"
     },
     {
         "name": "Bleu Noir / 04",
-        "originalName": "Bleu Noir",
         "code": "WDS/04",
         "topNotes": "grapefruit, lemon, mint, bergamot, pink pepper",
         "heartNotes": "ginger, nutmeg, jasmine",
@@ -61,11 +57,10 @@ const baseProducts = [
         "occasion": "work, formal, date night, all-season",
         "price": "\u20b9799",
         "samplePrice": "",
-        "image": "Products/WDS-04.png"
+        "image": "assets/images/products/WDS-04.png"
     },
     {
         "name": "Bloom Rouge / 05",
-        "originalName": "Bloom Rouge",
         "code": "FLR/05",
         "topNotes": "rangoon creeper",
         "heartNotes": "tuberose, jasmine sambac, nandia flower",
@@ -77,11 +72,10 @@ const baseProducts = [
         "occasion": "date night, evening, spring/summer",
         "price": "\u20b9799",
         "samplePrice": "",
-        "image": "Products/FLR-05.png"
+        "image": "assets/images/products/FLR-05.png"
     },
     {
         "name": "Voyage / 06",
-        "originalName": "Voyage",
         "code": "AQUA/06",
         "topNotes": "green leaves, apple",
         "heartNotes": "lotus, mimosa",
@@ -93,11 +87,10 @@ const baseProducts = [
         "occasion": "daily wear, casual, spring/summer",
         "price": "\u20b9799",
         "samplePrice": "",
-        "image": "Products/AQUA-06.png"
+        "image": "assets/images/products/AQUA-06.png"
     },
     {
         "name": "Circe / 07",
-        "originalName": "Circe",
         "code": "FRU/07",
         "topNotes": "passionfruit, peach, pear, raspberry, cassis",
         "heartNotes": "lily-of-the-valley",
@@ -109,11 +102,10 @@ const baseProducts = [
         "occasion": "date night, evening, spring/summer",
         "price": "\u20b9799",
         "samplePrice": "",
-        "image": "Products/FRU-07.png"
+        "image": "assets/images/products/FRU-07.png"
     },
     {
         "name": "Viva Juicy / 08",
-        "originalName": "Viva Juicy",
         "code": "FRU/08",
         "topNotes": "wild berries, mandarin",
         "heartNotes": "honeysuckle, gardenia, jasmine",
@@ -125,11 +117,10 @@ const baseProducts = [
         "occasion": "casual, daily wear, spring/summer",
         "price": "\u20b9799",
         "samplePrice": "",
-        "image": "Products/FRU-08.png"
+        "image": "assets/images/products/FRU-08.png"
     },
     {
         "name": "Her Bloom / 09",
-        "originalName": "Her Bloom",
         "code": "FRU/09",
         "topNotes": "strawberry, blueberry, raspberry",
         "heartNotes": "jasmine, violet",
@@ -141,11 +132,10 @@ const baseProducts = [
         "occasion": "daily wear, casual, date night",
         "price": "\u20b9799",
         "samplePrice": "",
-        "image": "Products/FRU-09.png"
+        "image": "assets/images/products/FRU-09.png"
     },
     {
         "name": "Royal Hayati / 10",
-        "originalName": "Royal Hayati",
         "code": "SPC/10",
         "topNotes": "pink pepper, bergamot, ginger, nutmeg",
         "heartNotes": "cedar, incense, labdanum",
@@ -157,11 +147,10 @@ const baseProducts = [
         "occasion": "evening, casual, date night",
         "price": "\u20b9799",
         "samplePrice": "",
-        "image": "Products/SPC-10.png"
+        "image": "assets/images/products/SPC-10.png"
     },
     {
         "name": "CR Seven / 11",
-        "originalName": "CR Seven",
         "code": "FRSH/11",
         "topNotes": "lavender, cardamom, bergamot",
         "heartNotes": "tobacco, cinnamon, cedar, iris",
@@ -173,11 +162,10 @@ const baseProducts = [
         "occasion": "date night, evening, casual",
         "price": "\u20b9799",
         "samplePrice": "",
-        "image": "Products/FRSH-11.png"
+        "image": "assets/images/products/FRSH-11.png"
     },
     {
         "name": "Bombshell / 12",
-        "originalName": "Bombshell",
         "code": "FRU/12",
         "topNotes": "passionfruit, grapefruit, strawberry, tangerine",
         "heartNotes": "peony, vanilla orchid, jasmine",
@@ -189,11 +177,10 @@ const baseProducts = [
         "occasion": "casual, daily wear, spring/summer",
         "price": "\u20b9799",
         "samplePrice": "",
-        "image": "Products/FRU-12.png"
+        "image": "assets/images/products/FRU-12.png"
     },
     {
         "name": "Belle Paris / 13",
-        "originalName": "Belle Paris",
         "code": "FRU/13",
         "topNotes": "strawberry, raspberry, pear, bergamot",
         "heartNotes": "datura, peony, jasmine sambac",
@@ -205,11 +192,10 @@ const baseProducts = [
         "occasion": "date night, evening, casual",
         "price": "\u20b9799",
         "samplePrice": "",
-        "image": "Products/FRU-13.png"
+        "image": "assets/images/products/FRU-13.png"
     },
     {
         "name": "Ocean Drift / 14",
-        "originalName": "Ocean Drift",
         "code": "AQUA/14",
         "topNotes": "mint, lavender, coriander",
         "heartNotes": "geranium, neroli, jasmine",
@@ -221,11 +207,10 @@ const baseProducts = [
         "occasion": "daily wear, casual, work",
         "price": "\u20b9799",
         "samplePrice": "",
-        "image": "Products/AQUA-14.png"
+        "image": "assets/images/products/AQUA-14.png"
     },
     {
         "name": "Oud Noir / 15",
-        "originalName": "Oud Noir",
         "code": "OUD/15",
         "topNotes": "saffron, bergamot",
         "heartNotes": "rose, oud",
@@ -237,11 +222,10 @@ const baseProducts = [
         "occasion": "evening, occasions, fall/winter",
         "price": "\u20b9799",
         "samplePrice": "",
-        "image": "Products/OUD-15.png"
+        "image": "assets/images/products/OUD-15.png"
     },
     {
         "name": "Havana / 16",
-        "originalName": "Havana",
         "code": "SMK/16",
         "topNotes": "bergamot, rum",
         "heartNotes": "tobacco, leather, cedarwood",
@@ -253,11 +237,10 @@ const baseProducts = [
         "occasion": "evening, date night, fall/winter",
         "price": "\u20b9799",
         "samplePrice": "",
-        "image": "Products/SMK-16.png"
+        "image": "assets/images/products/SMK-16.png"
     },
     {
         "name": "Sanaya / 17",
-        "originalName": "Sanaya",
         "code": "FLR/17",
         "topNotes": "bergamot, citrus",
         "heartNotes": "rose, jasmine, oud",
@@ -269,11 +252,10 @@ const baseProducts = [
         "occasion": "evening, date night, casual",
         "price": "\u20b9799",
         "samplePrice": "",
-        "image": "Products/FLR-17.png"
+        "image": "assets/images/products/FLR-17.png"
     },
     {
         "name": "Weekend Men / 18",
-        "originalName": "Weekend Men",
         "code": "CIT/18",
         "topNotes": "lemon, grapefruit, bergamot, pineapple, melon",
         "heartNotes": "ivy, oakmoss, sandalwood",
@@ -285,11 +267,10 @@ const baseProducts = [
         "occasion": "casual, daily wear, spring/summer",
         "price": "\u20b9799",
         "samplePrice": "",
-        "image": "Products/CIT-18.png"
+        "image": "assets/images/products/CIT-18.png"
     },
     {
         "name": "Icon Absolute / 19",
-        "originalName": "Icon Absolute",
         "code": "OUD/19",
         "topNotes": "black pepper, bergamot",
         "heartNotes": "saffron, black rose, jasmine",
@@ -301,11 +282,10 @@ const baseProducts = [
         "occasion": "evening, formal, date night",
         "price": "\u20b9799",
         "samplePrice": "",
-        "image": "Products/OUD-19.png"
+        "image": "assets/images/products/OUD-19.png"
     },
     {
         "name": "Dao Wood / 20",
-        "originalName": "Dao Wood",
         "code": "WDS/20",
         "topNotes": "cypress, spices",
         "heartNotes": "myrtle, rosewood, sandalwood",
@@ -317,11 +297,10 @@ const baseProducts = [
         "occasion": "casual, daily wear, work",
         "price": "\u20b9799",
         "samplePrice": "",
-        "image": "Products/WDS-20.png"
+        "image": "assets/images/products/WDS-20.png"
     },
     {
         "name": "Icon / 21",
-        "originalName": "Icon",
         "code": "WDS/21",
         "topNotes": "grapefruit, bergamot, juniper",
         "heartNotes": "rose, guaiac wood",
@@ -333,11 +312,10 @@ const baseProducts = [
         "occasion": "work, casual, date night",
         "price": "\u20b9799",
         "samplePrice": "",
-        "image": "Products/WDS-21.png"
+        "image": "assets/images/products/WDS-21.png"
     },
     {
         "name": "Mizan / 22",
-        "originalName": "Mizan",
         "code": "OUD/22",
         "topNotes": "saffron, spices",
         "heartNotes": "rose, jasmine, oud",
@@ -349,11 +327,10 @@ const baseProducts = [
         "occasion": "evening, date night, occasions",
         "price": "\u20b9799",
         "samplePrice": "",
-        "image": "Products/OUD-22.png"
+        "image": "assets/images/products/OUD-22.png"
     },
     {
         "name": "Night Lounge / 23",
-        "originalName": "Night Lounge",
         "code": "JZC/23",
         "topNotes": "pink pepper, neroli, lemon",
         "heartNotes": "rum, vetiver, clary sage",
@@ -365,11 +342,10 @@ const baseProducts = [
         "occasion": "evening, date night, fall/winter",
         "price": "\u20b9799",
         "samplePrice": "",
-        "image": "Products/JZC-23.png"
+        "image": "assets/images/products/JZC-23.png"
     },
     {
         "name": "Blue Sea / 24",
-        "originalName": "Blue Sea",
         "code": "AQUA/24",
         "topNotes": "lime, lemon, bergamot, neroli, mandarin",
         "heartNotes": "sea notes, jasmine, rosemary, calone",
@@ -381,20 +357,217 @@ const baseProducts = [
         "occasion": "daily wear, casual, spring/summer",
         "price": "\u20b9799",
         "samplePrice": "",
-        "image": "Products/AQUA-24.png"
+        "image": "assets/images/products/AQUA-24.png"
+    },
+    {
+        "name": "Vanilla Luxe / 01",
+        "code": "VAN/01",
+        "topNotes": "vanilla, brown sugar",
+        "heartNotes": "orchid, tonka bean",
+        "baseNotes": "amber, sandalwood, musk",
+        "notes": "vanilla, brown sugar, orchid, tonka bean, amber, sandalwood, musk",
+        "shortNotes": "vanilla \u00b7 amber \u00b7 musk",
+        "memory": "golden maturation",
+        "description": "A smooth vanilla built around warmth and softness. Skin-close, sweet and deeply addictive.",
+        "occasion": "Daily Wear",
+        "price": "\u20b918,500",
+        "samplePrice": "\u20b911,100",
+        "image": "assets/images/products/VAN-01.png"
+    },
+    {
+        "name": "White Bloom / 07",
+        "code": "FLR/07",
+        "topNotes": "tuberose, jasmine",
+        "heartNotes": "gardenia, honeysuckle",
+        "baseNotes": "musk, sandalwood",
+        "notes": "tuberose, jasmine, gardenia, honeysuckle, musk, sandalwood",
+        "shortNotes": "tuberose \u00b7 jasmine \u00b7 musk",
+        "memory": "monastic devotion",
+        "description": "Dense white florals - natural, grand, and full. Rich spring bloom captured without any sharp edges.",
+        "occasion": "Day, Signature",
+        "price": "\u20b921,000",
+        "samplePrice": "\u20b912,600",
+        "image": "assets/images/products/FLR-07.png"
+    },
+    {
+        "name": "Oud Royal / 09",
+        "code": "OUD/09",
+        "topNotes": "indonesian oud, saffron",
+        "heartNotes": "leather, pepper, spice",
+        "baseNotes": "resin, amber, sandalwood",
+        "notes": "indonesian oud, saffron, leather, resin, pepper, spice, amber, sandalwood",
+        "shortNotes": "oud \u00b7 saffron \u00b7 leather",
+        "memory": "sovereign essence",
+        "description": "A deep, sovereign essence constructed around pure Indonesian Oud wood. Maturing in silence for twelve months, it is lifted with Kashmir Saffron, peppered with warm spices, and wrapped in rich, masculine leather and dark resin.",
+        "occasion": "Signature",
+        "price": "\u20b924,000",
+        "samplePrice": "",
+        "image": "assets/images/products/OUD-09.png"
+    },
+    {
+        "name": "Dark Amber / 12",
+        "code": "AMB/12",
+        "topNotes": "amber, incense",
+        "heartNotes": "pepper, labdanum",
+        "baseNotes": "cedar, vetiver, musk",
+        "notes": "amber, incense, pepper, labdanum, cedar, vetiver, musk",
+        "shortNotes": "amber \u00b7 incense \u00b7 musk",
+        "memory": "winter evening",
+        "description": "Dark, smoky, and deep. Built for strong presence and long-lasting trail.",
+        "occasion": "Evening, Winter",
+        "price": "\u20b926,500",
+        "samplePrice": "\u20b915,900",
+        "image": "assets/images/products/AMB-12.png"
+    },
+    {
+        "name": "Oud Intense / 15",
+        "code": "OUDI/15",
+        "topNotes": "oud, leather",
+        "heartNotes": "pepper, cardamom",
+        "baseNotes": "patchouli, amber, sandalwood",
+        "notes": "oud, leather, pepper, cardamom, patchouli, amber, sandalwood",
+        "shortNotes": "oud \u00b7 leather \u00b7 amber",
+        "memory": "quiet dominance",
+        "description": "Strong oud composition with spicy lift and smooth base. Power held back, quiet dominance.",
+        "occasion": "Luxury, Evening",
+        "price": "\u20b928,000",
+        "samplePrice": "\u20b916,800",
+        "image": "assets/images/products/OUD-15.png"
     }
 ];
 
 let loadedProducts = [];
 try {
-    loadedProducts = JSON.parse(localStorage.getItem('si_products'));
+    // Clear stale cache that may contain originalName from previous versions
+    const cached = JSON.parse(localStorage.getItem('si_products'));
+    // Invalidate if cached entries still have the banned originalName field
+    if (cached && Array.isArray(cached) && cached.length > 0 && !cached[0].hasOwnProperty('originalName')) {
+        loadedProducts = cached.map(p => {
+            p.stock = p.stock !== undefined ? p.stock : 50;
+            return p;
+        });
+    } else {
+        loadedProducts = null;
+    }
 } catch (e) {
     loadedProducts = null;
 }
 
-if (!loadedProducts || loadedProducts.length !== baseProducts.length) {
-    loadedProducts = [...baseProducts];
-    localStorage.setItem('si_products', JSON.stringify(baseProducts));
+if (!loadedProducts || !Array.isArray(loadedProducts) || loadedProducts.length === 0) {
+    loadedProducts = baseProducts.map(p => {
+        p.stock = p.stock !== undefined ? p.stock : 50;
+        return p;
+    });
+    localStorage.setItem('si_products', JSON.stringify(loadedProducts));
 }
+
+// Extremely robust ES6 CSV parser
+function parseCSV(text) {
+    const lines = [];
+    let row = [""];
+    let inQuotes = false;
+
+    for (let i = 0; i < text.length; i++) {
+        const c = text[i];
+        const next = text[i+1];
+        if (c === '"') {
+            if (inQuotes && next === '"') {
+                row[row.length - 1] += '"';
+                i++;
+            } else {
+                inQuotes = !inQuotes;
+            }
+        } else if (c === ',' && !inQuotes) {
+            row.push('');
+        } else if ((c === '\r' || c === '\n') && !inQuotes) {
+            if (c === '\r' && next === '\n') {
+                i++;
+            }
+            lines.push(row);
+            row = [''];
+        } else {
+            row[row.length - 1] += c;
+        }
+    }
+    if (row.length > 1 || row[0] !== '') {
+        lines.push(row);
+    }
+
+    if (lines.length < 2) return [];
+
+    const headers = lines[0].map(h => h.trim());
+    const items = [];
+
+    for (let i = 1; i < lines.length; i++) {
+        const values = lines[i];
+        if (values.length < headers.length) continue;
+
+        const obj = {};
+        headers.forEach((header, index) => {
+            obj[header] = (values[index] || '').trim();
+        });
+
+        const code = obj['Code'] || '';
+        if (!code) continue;
+
+        const rawPrice = obj['Price 50mL'] || '799';
+        const formattedPrice = rawPrice.startsWith('₹') 
+            ? rawPrice 
+            : '₹' + parseInt(rawPrice.replace(/[^\d]/g, ''), 10).toLocaleString('en-IN');
+
+        const samplePriceVal = obj['Sample 30 mL'] ? obj['Sample 30 mL'].replace(/[^\d]/g, '') : '';
+        const formattedSamplePrice = samplePriceVal
+            ? '₹' + parseInt(samplePriceVal, 10).toLocaleString('en-IN')
+            : '';
+
+        items.push({
+            name: obj['Name'] || '',
+            // NOTE: 'Original Name' (competitor brand names) and 'Previous Names' are
+            // intentionally NOT included - only the Sugandh Ink 'Name' is used everywhere.
+            code: code,
+            topNotes: obj['Top Notes'] || '',
+            heartNotes: obj['Heart Notes'] || '',
+            baseNotes: obj['Base Notes'] || '',
+            notes: obj['Full Notes'] || '',
+            shortNotes: obj['Short Notes'] || '',
+            memory: obj['Memory'] || '',
+            description: obj['Description'] || '',
+            occasion: obj['Occasion'] || '',
+            price: formattedPrice,
+            samplePrice: formattedSamplePrice,
+            image: `assets/images/products/${code.replace('/', '-')}.png`
+        });
+    }
+    return items;
+}
+
+// Background sync to fetch from unified data-perfume.csv database dynamically
+async function syncWithCSV() {
+    try {
+        const inPages = window.location.pathname.includes('/pages/');
+        const inAdmin = window.location.pathname.includes('/admin');
+        const pathPrefix = inAdmin ? '../sugandhink.in/' : (inPages ? '../' : '');
+        const response = await fetch(pathPrefix + 'assets/data/data-perfume.csv');
+        if (!response.ok) return;
+        const csvText = await response.text();
+        const parsed = parseCSV(csvText);
+        if (parsed && parsed.length > 0) {
+            const withStock = parsed.map(p => ({
+                ...p,
+                stock: p.stock !== undefined ? p.stock : 50
+            }));
+            localStorage.setItem('si_products', JSON.stringify(withStock));
+            // Update loaded array in memory in-place
+            loadedProducts.length = 0;
+            loadedProducts.push(...withStock);
+            window.dispatchEvent(new CustomEvent('products:updated', { detail: withStock }));
+        }
+    } catch (e) {
+        console.warn('Background CSV sync failed, using static product definitions.', e);
+    }
+}
+
+// Run background sync
+syncWithCSV();
 
 export const products = loadedProducts;

@@ -1,0 +1,32 @@
+{
+  "name": "perfume-redesign",
+  "version": "1.0.0",
+  "description": "Sugandh Ink - Private Atelier Fragrance Shop",
+  "main": "server.js",
+  "type": "module",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "fragrance",
+    "perfume",
+    "ecommerce",
+    "admin"
+  ],
+  "author": "Sugandh Ink",
+  "license": "ISC",
+  "dependencies": {
+    "@supabase/ssr": "^0.12.0",
+    "@supabase/supabase-js": "^2.108.1",
+    "cors": "^2.8.5",
+    "dotenv": "^16.3.1",
+    "express": "^4.18.2",
+    "nodemailer": "^6.9.7",
+    "pdfkit": "^0.13.0"
+  }
+}
