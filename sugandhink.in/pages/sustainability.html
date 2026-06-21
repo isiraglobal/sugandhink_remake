@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sustainability - Sugandh Ink</title>
+    <meta name="description" content="Sugandh Ink's commitment to sustainability: Deg-Bhapka distillation, recyclable glass bottles, minimal packaging, vegan and cruelty-free practices.">
+    <meta property="og:title" content="Sustainability - Sugandh Ink">
+    <meta property="og:description" content="Discover the sustainable practices behind Sugandh Ink - from traditional low-energy distillation to plastic-free packaging.">
+    <meta property="og:image" content="../assets/logo.png">
+    <meta property="og:type" content="website">
+    <meta name="twitter:card" content="summary_large_image">
+    <link rel="icon" href="../assets/logo.png" type="image/png">
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/base.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <style>
+        .inner-hero { padding: 140px 0 80px; text-align: center; border-bottom: 1px solid var(--border); }
+        .inner-hero h1 { font-family: var(--font-display); font-size: clamp(2.5rem, 6vw, 4.5rem); font-weight: 300; line-height: 1.1; color: var(--ink); margin-bottom: 24px; }
+        .inner-hero h1 em { font-style: italic; color: var(--gold); }
+        .inner-hero .lead { font-family: var(--font-body); font-size: 1.05rem; color: var(--ink-mid); max-width: 580px; margin: 0 auto; line-height: 1.8; }
+        .sus-section { padding: 80px 0; max-width: 720px; margin: 0 auto; }
+        .sus-card { display: grid; grid-template-columns: 60px 1fr; gap: 24px; padding: 32px 0; border-bottom: 1px solid var(--border); }
+        .sus-card:last-child { border-bottom: none; }
+        .sus-icon { font-family: var(--font-display); font-size: 2rem; color: var(--gold); line-height: 1; padding-top: 4px; }
+        .sus-card h3 { font-family: var(--font-display); font-size: 1.3rem; font-weight: 500; color: var(--ink); margin-bottom: 8px; }
+        .sus-card p { font-family: var(--font-body); font-size: 0.88rem; color: var(--ink-mid); line-height: 1.8; margin-bottom: 0; }
+        .sus-pledge { background: var(--ink); padding: 48px; border-radius: 12px; color: var(--cream); text-align: center; margin-top: 40px; }
+        .sus-pledge h2 { font-family: var(--font-display); font-size: 1.6rem; font-weight: 300; margin-bottom: 16px; }
+        .sus-pledge h2 em { font-style: italic; color: var(--gold); }
+        .sus-pledge p { font-family: var(--font-body); font-size: 0.88rem; line-height: 1.8; opacity: 0.8; max-width: 520px; margin: 0 auto; }
+        @media (max-width: 768px) {
+            .sus-section { padding: 60px 24px; }
+            .sus-card { grid-template-columns: 1fr; gap: 12px; }
+            .sus-pledge { padding: 32px 24px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="page-curtain" id="curtain"></div>
+
+    <div class="cursor" id="cursor"><div class="cursor-ring"></div><div class="cursor-dot"></div></div>
+
+    <div class="announcement-banner" id="announcement-banner">
+        <span>Complimentary Shipping on orders above ₹5,000 - <a href="../collection.html">Explore the Library</a></span>
+        <button class="banner-close" id="banner-close" aria-label="Close">✕</button>
+    </div>
+
+    <header class="site-header site-header-solid" id="site-header">
+        <div class="header-logo-row">
+            <a href="../index.html" class="nav-logo-img-link" aria-label="Sugandh Ink Home">
+                <img src="../assets/logo.png" alt="Sugandh Ink Logo" class="header-logo-img">
+            </a>
+        </div>
+        <nav class="main-nav" id="main-nav">
+            <div class="nav-left">
+                <a href="../collection.html" class="nav-link">Collection</a>
+                <a href="../index.html#new-arrivals" class="nav-link">New Arrivals</a>
+                <a href="../index.html#about" class="nav-link">Our Story</a>
+            </div>
+            <div class="nav-right">
+                <a href="../index.html#ingredients" class="nav-link">Ingredients</a>
+                <a href="contact.html" class="nav-link">Contact</a>
+                <button class="nav-icon-btn" id="btn-user-auth" aria-label="Account">
+                    <svg id="auth-icon-svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                    <span id="user-initials" style="display:none; font-family:&apos;Jost&apos;,sans-serif; font-size:0.7rem; font-weight:600; width:22px; height:22px; background:var(--gold); color:var(--cream); border-radius:50%; align-items:center; justify-content:center;"></span>
+                </button>
+                <button class="nav-icon-btn" id="toggle-shop" aria-label="Open fragrance library">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
+                    <span class="cart-count" id="cart-badge"></span>
+                </button>
+            </div>
+            <button class="hamburger" id="hamburger" aria-label="Menu" aria-expanded="false"><span></span><span></span></button>
+        </nav>
+        <div class="mobile-menu" id="mobile-menu" aria-hidden="true">
+            <nav class="mobile-menu-nav">
+                <a href="../collection.html" class="mm-link">Collection</a>
+                <a href="../index.html#new-arrivals" class="mm-link" data-close>New Arrivals</a>
+                <a href="../index.html#about" class="mm-link" data-close>Our Story</a>
+                <a href="../index.html#ingredients" class="mm-link" data-close>Ingredients</a>
+                <a href="contact.html" class="mm-link" data-close>Contact</a>
+            </nav>
+            <div class="mm-footer">
+                <a href="mailto:hello@sugandhink.in">hello@sugandhink.in</a>
+                <a href="tel:+919769445567">+91 97694 45567</a>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            <nav class="breadcrumb" style="padding-top: 120px;">
+                <a href="../index.html">Home</a>
+                <span class="breadcrumb-sep">/</span>
+                <span>Sustainability</span>
+            </nav>
+
+            <div class="inner-hero" data-reveal>
+                <h1>Sustainability &amp;<br><em>Ethical Practice</em></h1>
+                <p class="lead">Our responsibility to the earth that provides our raw materials, and to the artisans whose hands transform them.</p>
+            </div>
+        </div>
+
+        <div class="container">
+            <div class="sus-section">
+                <div class="sus-card" data-reveal>
+                    <div class="sus-icon">01</div>
+                    <div>
+                        <h3>Deg-Bhapka Traditional Distillation</h3>
+                        <p>Our attars are produced using the ancient Deg-Bhapka method &mdash; a copper still heated by sandalwood fire. Unlike modern high-pressure extraction, this process uses low, consistent heat over 12&ndash;16 hours, consuming a fraction of the energy required by industrial steam distillation. No synthetic accelerators, no chemical solvents.</p>
+                    </div>
+                </div>
+                <div class="sus-card" data-reveal>
+                    <div class="sus-icon">02</div>
+                    <div>
+                        <h3>Recyclable Glass Bottles</h3>
+                        <p>Every Sugandh Ink fragrance is housed in premium glass bottles that are fully recyclable. Our caps are made from sustainably sourced wood and aluminium &mdash; no plastic components. We encourage our collectors to refill or repurpose their bottles. A return-and-refill programme is in development.</p>
+                    </div>
+                </div>
+                <div class="sus-card" data-reveal>
+                    <div class="sus-icon">03</div>
+                    <div>
+                        <h3>Minimal Packaging, No Cellophane</h3>
+                        <p>Our outer boxes are crafted from recycled board and printed with soy-based inks. We use shredded kraft paper for cushioning instead of plastic bubble wrap. No cellophane, no shrink wrap, no single-use plastic lines our packaging. Each box is designed to be kept, reused, or composted.</p>
+                    </div>
+                </div>
+                <div class="sus-card" data-reveal>
+                    <div class="sus-icon">04</div>
+                    <div>
+                        <h3>Vegan &amp; Cruelty-Free</h3>
+                        <p>All Sugandh Ink compositions are 100% vegan. We never test on animals, nor do we commission third parties to do so. Our raw materials are sourced from ethical growers who share this commitment. We are proudly certified cruelty-free.</p>
+                    </div>
+                </div>
+                <div class="sus-card" data-reveal>
+                    <div class="sus-icon">05</div>
+                    <div>
+                        <h3>Local Sourcing, Reduced Footprint</h3>
+                        <p>We prioritise direct relationships with growers across India &mdash; rose and jasmine from Rajasthan, vetiver from Kerala, agarwood from Assam, sandalwood from Mysore. By sourcing domestically and working with traditional cooperatives, we minimise air miles while preserving generational knowledge.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="sus-pledge" data-reveal>
+                <h2>Our <em>Pledge</em></h2>
+                <p>We are committed to continuous improvement. As we grow, we will invest in carbon offset programs, eliminate remaining virgin materials from our supply chain, and publish annual sustainability reports. True luxury respects the earth that makes it possible.</p>
+            </div>
+        </div>
+    </main>
+
+    <footer class="site-footer" id="footer">
+        <div class="footer-top">
+            <div class="footer-brand">
+                <div class="footer-logo"><span>Sugandh</span><span class="italic"> Ink</span></div>
+                <p>Artisanal fragrances crafted with unyielding precision and historical reverence. Malad (West), Mumbai.</p>
+                <div class="footer-socials">
+                    <a href="https://instagram.com" class="fsocial" target="_blank" rel="noopener" aria-label="Instagram"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="5"/><circle cx="17.5" cy="6.5" r="1.5" fill="currentColor" stroke="none"/></svg></a>
+                    <a href="https://twitter.com" class="fsocial" target="_blank" rel="noopener" aria-label="Twitter / X"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg></a>
+                    <a href="https://facebook.com" class="fsocial" target="_blank" rel="noopener" aria-label="Facebook"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg></a>
+                </div>
+            </div>
+            <div class="footer-col"><h5>The Maison</h5><ul>
+                <li><a href="heritage.html">Our Heritage</a></li>
+                <li><a href="ingredients.html">The Ingredients</a></li>
+                <li><a href="../collection.html">The Library</a></li>
+                <li><a href="bespoke.html">Bespoke Enquiry</a></li>
+            </ul></div>
+            <div class="footer-col"><h5>Shop</h5><ul>
+                <li><a href="gift-cards.html">Gift Cards</a></li>
+                <li><a href="../index.html#new-arrivals">New Arrivals</a></li>
+                <li><a href="../index.html#top-selling">Best Sellers</a></li>
+                <li><a href="../collection.html">Full Collection</a></li>
+            </ul></div>
+            <div class="footer-col"><h5>Client Care</h5><ul>
+                <li><a href="contact.html">Contact Us</a></li>
+                <li><a href="consultation.html">Fragrance Consultation</a></li>
+                <li><a href="shipping-policy.html">Shipping &amp; Delivery</a></li>
+                <li><a href="size-guide.html">Size Guide</a></li>
+                <li><a href="faq.html">FAQ</a></li>
+                <li><a href="account.html">My Account</a></li>
+            </ul></div>
+            <div class="footer-col"><h5>Legal</h5><ul>
+                <li><a href="terms.html">Terms of Service</a></li>
+                <li><a href="privacy.html">Privacy Policy</a></li>
+                <li><a href="cookies.html">Cookie Policy</a></li>
+                <li><a href="returns.html">Returns &amp; Shipping</a></li>
+            </ul></div>
+        </div>
+        <div class="footer-bottom">
+            <span>&copy; 2026 Sugandh Ink - All Rights Reserved</span>
+            <span class="footer-wa-note">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12.8 12.8 0 00-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+                Orders via WhatsApp: <a href="https://wa.me/919769445567" target="_blank">+91 97694 45567</a>
+            </span>
+        </div>
+    </footer>
+
+    <script type="module" src="../js/loader.js"></script>
+    <script type="module" src="../js/transitions.js"></script>
+    <script type="module" src="../js/ui.js"></script>
+</body>
+</html>

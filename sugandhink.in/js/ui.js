@@ -3,6 +3,8 @@
  */
 
 import { getApiUrl, initReveals } from './utils.js';
+import { initSearch } from './search.js';
+import { initWishlist, updateWishlistBadge } from './wishlist.js';
 
 let supabaseClient = null;
 let currentSession = null;
@@ -34,6 +36,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     
     // Initialize Cart/Library Drawer
     setupUnifiedDrawer();
+    initSearch();
+    initWishlist();
 });
 
 // ── Supabase Dynamic Script Loader ───────────────────────────────────────────
@@ -176,6 +180,52 @@ window.handleDirectWA = function(e, product) {
 function setupUnifiedDrawer() {
     const openBtn = document.getElementById('toggle-shop');
     const userAuthBtn = document.getElementById('btn-user-auth');
+    
+    // Inject search button into nav-right if not present
+    const navRight = document.querySelector('.nav-right');
+    if (navRight && !document.getElementById('btn-search')) {
+        const searchBtn = document.createElement('button');
+        searchBtn.className = 'nav-icon-btn';
+        searchBtn.id = 'btn-search';
+        searchBtn.setAttribute('aria-label', 'Search');
+        searchBtn.innerHTML = `
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/>
+            </svg>
+        `;
+        const authBtn = navRight.querySelector('#btn-user-auth');
+        if (authBtn) {
+            navRight.insertBefore(searchBtn, authBtn);
+        } else {
+            navRight.prepend(searchBtn);
+        }
+    }
+
+    // Inject wishlist button into nav-right if not present
+    if (navRight && !document.getElementById('btn-wishlist')) {
+        const wishlistBtn = document.createElement('a');
+        wishlistBtn.className = 'nav-icon-btn';
+        wishlistBtn.id = 'btn-wishlist';
+        wishlistBtn.setAttribute('aria-label', 'Wishlist');
+        wishlistBtn.href = 'account.html?tab=wishlist';
+        wishlistBtn.innerHTML = `
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+            </svg>
+            <span class="cart-count" id="wishlist-badge"></span>
+        `;
+        const searchBtn = document.getElementById('btn-search');
+        if (searchBtn) {
+            navRight.insertBefore(wishlistBtn, searchBtn);
+        } else {
+            const authBtn = navRight.querySelector('#btn-user-auth');
+            if (authBtn) {
+                navRight.insertBefore(wishlistBtn, authBtn);
+            } else {
+                navRight.prepend(wishlistBtn);
+            }
+        }
+    }
     
     // Inject Cart Drawer HTML if it does not exist (useful for subpages)
     if (!document.getElementById('library-drawer')) {

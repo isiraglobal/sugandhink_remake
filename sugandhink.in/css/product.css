@@ -435,3 +435,93 @@
     width: 100%;
   }
 }
+
+/* =========================================================================
+   Image Zoom Lens & Result
+   ========================================================================= */
+.img-zoom-lens {
+  position: absolute;
+  width: 120px;
+  height: 120px;
+  border: 1.5px solid var(--gold);
+  background: rgba(255, 255, 255, 0.25);
+  pointer-events: none;
+  z-index: 5;
+  display: none;
+}
+
+.img-zoom-result {
+  position: absolute;
+  top: 0;
+  left: calc(100% + 20px);
+  width: 320px;
+  height: 320px;
+  border: 1px solid var(--border);
+  background-repeat: no-repeat;
+  background-color: var(--white);
+  z-index: 10;
+  display: none;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+}
+
+@media (max-width: 1100px) {
+  .img-zoom-result {
+    width: 220px;
+    height: 220px;
+  }
+}
+
+@media (max-width: 768px) {
+  .img-zoom-lens,
+  .img-zoom-result {
+    display: none !important;
+  }
+}
+
+/* =========================================================================
+   Social Share Section
+   ========================================================================= */
+.social-share-section {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 24px 0 20px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 8px;
+}
+
+.share-label {
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ink-dim);
+  white-space: nowrap;
+}
+
+.share-buttons {
+  display: flex;
+  gap: 8px;
+}
+
+.share-btn {
+  width: 36px;
+  height: 36px;
+  border: 1px solid var(--border-strong);
+  background: transparent;
+  color: var(--ink-mid);
+  display: grid;
+  place-content: center;
+  cursor: pointer;
+  transition: all 0.25s;
+}
+
+.share-btn:hover {
+  border-color: var(--ink);
+  color: var(--ink);
+  background: var(--cream-2);
+}
+
+.share-btn svg {
+  display: block;
+}

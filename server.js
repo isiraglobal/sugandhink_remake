@@ -945,6 +945,293 @@ app.delete('/api/reviews/:id', async (req, res) => {
     }
 });
 
+// ── NEWSLETTER SUBSCRIBERS ──────────────────────────────────────────────────
+
+app.post('/api/newsletter/subscribe', async (req, res) => {
+    try {
+        if (!supabase) throw new Error('Supabase client not initialized');
+        const { email, name } = req.body;
+        if (!email) return res.status(400).json({ success: false, error: 'Email is required' });
+        const subscriber = {
+            id: `sub_${Date.now()}`,
+            email,
+            name: name || null
+        };
+        const { data, error } = await supabase.from('newsletter_subscribers').insert([subscriber]).select();
+        if (error) {
+            if (error.code === '23505') return res.json({ success: true, message: 'Already subscribed' });
+            throw error;
+        }
+        res.json({ success: true, subscriber: data[0] });
+    } catch (err) {
+        res.status(500).json({ success: false, error: err.message });
+    }
+});
+
+app.get('/api/newsletter/subscribers', async (req, res) => {
+    try {
+        if (!supabase) throw new Error('Supabase client not initialized');
+        const { data, error } = await supabase.from('newsletter_subscribers').select('*').order('subscribed_at', { ascending: false });
+        if (error) throw error;
+        res.json({ success: true, subscribers: data });
+    } catch (err) {
+        res.status(500).json({ success: false, error: err.message });
+    }
+});
+
+app.delete('/api/newsletter/subscribers/:id', async (req, res) => {
+    try {
+        if (!supabase) throw new Error('Supabase client not initialized');
+        const { data, error } = await supabase.from('newsletter_subscribers').delete().eq('id', req.params.id).select();
+        if (error) throw error;
+        res.json({ success: true, subscriber: data[0] });
+    } catch (err) {
+        res.status(500).json({ success: false, error: err.message });
+    }
+});
+
+// ── BACK IN STOCK ───────────────────────────────────────────────────────────
+
+app.post('/api/back-in-stock', async (req, res) => {
+    try {
+        if (!supabase) throw new Error('Supabase client not initialized');
+        const { product_code, email, name } = req.body;
+        if (!product_code || !email) return res.status(400).json({ success: false, error: 'Product code and email are required' });
+        const request = {
+            id: `bis_${Date.now()}`,
+            product_code,
+            email,
+            name: name || null
+        };
+        const { data, error } = await supabase.from('back_in_stock_requests').insert([request]).select();
+        if (error) throw error;
+        res.json({ success: true, request: data[0] });
+    } catch (err) {
+        res.status(500).json({ success: false, error: err.message });
+    }
+});
+
+app.get('/api/back-in-stock', async (req, res) => {
+    try {
+        if (!supabase) throw new Error('Supabase client not initialized');
+        const { data, error } = await supabase.from('back_in_stock_requests').select('*').order('created_at', { ascending: false });
+        if (error) throw error;
+        res.json({ success: true, requests: data });
+    } catch (err) {
+        res.status(500).json({ success: false, error: err.message });
+    }
+});
+
+app.put('/api/back-in-stock/:id', async (req, res) => {
+    try {
+        if (!supabase) throw new Error('Supabase client not initialized');
+        const { data, error } = await supabase.from('back_in_stock_requests').update({ notified: true }).eq('id', req.params.id).select();
+        if (error) throw error;
+        res.json({ success: true, request: data[0] });
+    } catch (err) {
+        res.status(500).json({ success: false, error: err.message });
+    }
+});
+
+// ── COUPONS ─────────────────────────────────────────────────────────────────
+
+app.get('/api/coupons', async (req, res) => {
+    try {
+        if (!supabase) throw new Error('Supabase client not initialized');
+        const { data, error } = await supabase.from('coupons').select('*').order('created_at', { ascending: false });
+        if (error) throw error;
+        res.json({ success: true, coupons: data });
+    } catch (err) {
+        res.status(500).json({ success: false, error: err.message });
+    }
+});
+
+app.post('/api/coupons/validate', async (req, res) => {
+    try {
+        if (!supabase) throw new Error('Supabase client not initialized');
+        const { code } = req.body;
+        if (!code) return res.status(400).json({ success: false, error: 'Coupon code is required' });
+        const { data, error } = await supabase.from('coupons').select('*').eq('code', code.toUpperCase()).single();
+        if (error || !data) return res.json({ success: false, error: 'Invalid coupon code' });
+        if (!data.is_active) return res.json({ success: false, error: 'Coupon is no longer active' });
+        if (data.expires_at && new Date(data.expires_at) < new Date()) return res.json({ success: false, error: 'Coupon has expired' });
+        if (data.current_uses >= data.max_uses) return res.json({ success: false, error: 'Coupon usage limit reached' });
+        res.json({ success: true, coupon: data, discount_percent: data.discount_percent });
+    } catch (err) {
+        res.status(500).json({ success: false, error: err.message });
+    }
+});
+
+app.post('/api/coupons', async (req, res) => {
+    try {
+        if (!supabase) throw new Error('Supabase client not initialized');
+        const coupon = {
+            code: req.body.code.toUpperCase(),
+            discount_percent: req.body.discount_percent,
+            description: req.body.description || '',
+            max_uses: req.body.max_uses || 100,
+            current_uses: 0,
+            is_active: req.body.is_active !== undefined ? req.body.is_active : true,
+            expires_at: req.body.expires_at || null
+        };
+        const { data, error } = await supabase.from('coupons').insert([coupon]).select();
+        if (error) {
+            if (error.code === '23505') return res.status(409).json({ success: false, error: 'Coupon code already exists' });
+            throw error;
+        }
+        res.json({ success: true, coupon: data[0] });
+    } catch (err) {
+        res.status(500).json({ success: false, error: err.message });
+    }
+});
+
+app.put('/api/coupons/:code', async (req, res) => {
+    try {
+        if (!supabase) throw new Error('Supabase client not initialized');
+        const updates = {
+            discount_percent: req.body.discount_percent,
+            description: req.body.description,
+            max_uses: req.body.max_uses,
+            is_active: req.body.is_active,
+            expires_at: req.body.expires_at
+        };
+        Object.keys(updates).forEach(k => updates[k] === undefined && delete updates[k]);
+        const { data, error } = await supabase.from('coupons').update(updates).eq('code', req.params.code).select();
+        if (error) throw error;
+        res.json({ success: true, coupon: data[0] });
+    } catch (err) {
+        res.status(500).json({ success: false, error: err.message });
+    }
+});
+
+app.delete('/api/coupons/:code', async (req, res) => {
+    try {
+        if (!supabase) throw new Error('Supabase client not initialized');
+        const { data, error } = await supabase.from('coupons').delete().eq('code', req.params.code).select();
+        if (error) throw error;
+        res.json({ success: true, coupon: data[0] });
+    } catch (err) {
+        res.status(500).json({ success: false, error: err.message });
+    }
+});
+
+// ── GIFT CARDS ──────────────────────────────────────────────────────────────
+
+app.get('/api/gift-cards', async (req, res) => {
+    try {
+        if (!supabase) throw new Error('Supabase client not initialized');
+        const { data, error } = await supabase.from('gift_cards').select('*').order('created_at', { ascending: false });
+        if (error) throw error;
+        res.json({ success: true, giftCards: data });
+    } catch (err) {
+        res.status(500).json({ success: false, error: err.message });
+    }
+});
+
+app.post('/api/gift-cards', async (req, res) => {
+    try {
+        if (!supabase) throw new Error('Supabase client not initialized');
+        const code = req.body.code || `GIFT-${Date.now().toString(36).toUpperCase()}`;
+        const giftCard = {
+            id: `gc_${Date.now()}`,
+            code,
+            amount: req.body.amount,
+            remaining_balance: req.body.amount,
+            recipient_email: req.body.recipient_email || null,
+            recipient_name: req.body.recipient_name || null,
+            sender_name: req.body.sender_name || null,
+            message: req.body.message || null,
+            is_active: true,
+            expires_at: req.body.expires_at || null
+        };
+        const { data, error } = await supabase.from('gift_cards').insert([giftCard]).select();
+        if (error) throw error;
+        res.json({ success: true, giftCard: data[0] });
+    } catch (err) {
+        res.status(500).json({ success: false, error: err.message });
+    }
+});
+
+app.put('/api/gift-cards/:id', async (req, res) => {
+    try {
+        if (!supabase) throw new Error('Supabase client not initialized');
+        const { data, error } = await supabase.from('gift_cards').update(req.body).eq('id', req.params.id).select();
+        if (error) throw error;
+        res.json({ success: true, giftCard: data[0] });
+    } catch (err) {
+        res.status(500).json({ success: false, error: err.message });
+    }
+});
+
+app.delete('/api/gift-cards/:id', async (req, res) => {
+    try {
+        if (!supabase) throw new Error('Supabase client not initialized');
+        const { data, error } = await supabase.from('gift_cards').delete().eq('id', req.params.id).select();
+        if (error) throw error;
+        res.json({ success: true, giftCard: data[0] });
+    } catch (err) {
+        res.status(500).json({ success: false, error: err.message });
+    }
+});
+
+// ── ORDER FULFILLMENT ───────────────────────────────────────────────────────
+
+app.put('/api/orders/:id/fulfill', async (req, res) => {
+    try {
+        if (!supabase) throw new Error('Supabase client not initialized');
+        const { data, error } = await supabase.from('orders').update({ status: 'fulfilled' }).eq('id', req.params.id).select();
+        if (error) throw error;
+        const ord = data[0];
+        if (transporter && ord.email) {
+            try {
+                await transporter.sendMail({
+                    from: process.env.EMAIL_FROM || process.env.EMAIL_USER,
+                    to: ord.email,
+                    subject: `Order ${ord.id} Fulfilled - Sugandh Ink`,
+                    html: `<h2>Order Fulfilled</h2><p>Dear ${ord.collector},</p><p>Your order <strong>${ord.id}</strong> has been fulfilled.</p><p>Total: ${ord.value}</p><p>Thank you for your patronage.</p><p>Sugandh Ink Team</p>`
+                });
+            } catch (emailErr) {
+                console.error('Fulfillment email error:', emailErr.message);
+            }
+        }
+        res.json({
+            success: true,
+            order: {
+                id: ord.id, customerId: ord.customer_id, collector: ord.collector,
+                email: ord.email, wa: ord.wa, items: ord.items, value: ord.value,
+                date: ord.date, status: ord.status, promoCode: ord.promo_code,
+                discount: ord.discount, address: ord.address, city: ord.city,
+                state: ord.state, country: ord.country, zipCode: ord.zip_code
+            }
+        });
+    } catch (err) {
+        res.status(500).json({ success: false, error: err.message });
+    }
+});
+
+app.put('/api/orders/:id/ship', async (req, res) => {
+    try {
+        if (!supabase) throw new Error('Supabase client not initialized');
+        const trackingNumber = req.body.tracking_number || req.body.trackingNumber || '';
+        const { data, error } = await supabase.from('orders').update({ status: 'shipped' }).eq('id', req.params.id).select();
+        if (error) throw error;
+        const ord = data[0];
+        res.json({
+            success: true,
+            order: {
+                id: ord.id, customerId: ord.customer_id, collector: ord.collector,
+                email: ord.email, wa: ord.wa, items: ord.items, value: ord.value,
+                date: ord.date, status: ord.status, promoCode: ord.promo_code,
+                discount: ord.discount, address: ord.address, city: ord.city,
+                state: ord.state, country: ord.country, zipCode: ord.zip_code,
+                trackingNumber
+            }
+        });
+    } catch (err) {
+        res.status(500).json({ success: false, error: err.message });
+    }
+});
+
 // ════════════════════════════════════════════════════════════════════════════
 // SERVER INITIALIZATION
 // ════════════════════════════════════════════════════════════════════════════

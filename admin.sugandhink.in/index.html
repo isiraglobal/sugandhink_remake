@@ -60,6 +60,10 @@
                 <button class="nav-btn" data-tab="tab-invoices">Invoicing</button>
                 <button class="nav-btn" data-tab="tab-announcements">Announcements</button>
                 <button class="nav-btn" data-tab="tab-reviews">Client Reviews</button>
+                <button class="nav-btn" data-tab="tab-subscribers">Subscribers</button>
+                <button class="nav-btn" data-tab="tab-backinstock">Back in Stock</button>
+                <button class="nav-btn" data-tab="tab-coupons">Coupons</button>
+                <button class="nav-btn" data-tab="tab-fulfillment">Fulfillment</button>
                 <button class="nav-btn" data-tab="tab-settings">System Settings</button>
             </nav>
 
@@ -355,6 +359,104 @@
                             </form>
                         </div>
                     </div>
+                </div>
+            </section>
+
+            <!-- TAB: NEWSLETTER SUBSCRIBERS -->
+            <section class="admin-tab-pane" id="tab-subscribers">
+                <div class="pane-head">
+                    <h3>Newsletter Subscribers</h3>
+                </div>
+                <div class="orders-table-wrapper">
+                    <table class="admin-table">
+                        <thead>
+                            <tr>
+                                <th>Email</th>
+                                <th>Name</th>
+                                <th>Subscribed At</th>
+                                <th>Active</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="subscribers-list">
+                            <tr><td colspan="5" style="text-align:center;padding:40px;color:var(--ink-dim)">No subscribers yet.</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- TAB: BACK IN STOCK -->
+            <section class="admin-tab-pane" id="tab-backinstock">
+                <div class="pane-head">
+                    <h3>Back in Stock Requests</h3>
+                </div>
+                <div class="orders-table-wrapper">
+                    <table class="admin-table">
+                        <thead>
+                            <tr>
+                                <th>Product Code</th>
+                                <th>Email</th>
+                                <th>Name</th>
+                                <th>Requested At</th>
+                                <th>Notified</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="backinstock-list">
+                            <tr><td colspan="6" style="text-align:center;padding:40px;color:var(--ink-dim)">No back in stock requests yet.</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- TAB: COUPONS -->
+            <section class="admin-tab-pane" id="tab-coupons">
+                <div class="pane-head">
+                    <h3>Coupon Management</h3>
+                    <button class="btn btn-dark" id="add-coupon-trigger">+ Add Coupon</button>
+                </div>
+                <div class="orders-table-wrapper">
+                    <table class="admin-table">
+                        <thead>
+                            <tr>
+                                <th>Code</th>
+                                <th>Discount</th>
+                                <th>Description</th>
+                                <th>Uses</th>
+                                <th>Active</th>
+                                <th>Expires</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="coupons-list">
+                            <tr><td colspan="7" style="text-align:center;padding:40px;color:var(--ink-dim)">No coupons yet.</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- TAB: FULFILLMENT -->
+            <section class="admin-tab-pane" id="tab-fulfillment">
+                <div class="pane-head">
+                    <h3>Order Fulfillment</h3>
+                </div>
+                <div class="orders-table-wrapper">
+                    <table class="admin-table">
+                        <thead>
+                            <tr>
+                                <th>Order ID</th>
+                                <th>Collector</th>
+                                <th>Items</th>
+                                <th>Value</th>
+                                <th>Date</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="fulfillment-list">
+                            <tr><td colspan="7" style="text-align:center;padding:40px;color:var(--ink-dim)">No orders yet.</td></tr>
+                        </tbody>
+                    </table>
                 </div>
             </section>
 
@@ -775,6 +877,42 @@
                     </div>
                 </div>
             </div>
+        </div>
+    </div>
+
+    <!-- ============================================================
+          COUPON FORM MODAL
+         ============================================================ -->
+    <div class="admin-modal-overlay" id="coupon-modal">
+        <div class="admin-modal">
+            <div class="modal-header">
+                <h3 id="coupon-modal-title">Add Coupon</h3>
+                <button class="modal-close" id="coupon-modal-close">✕</button>
+            </div>
+            <form id="coupon-form">
+                <input type="hidden" id="form-coupon-edit-code">
+                <div class="form-group mb-12">
+                    <label class="form-label" for="form-coupon-code">Coupon Code</label>
+                    <input type="text" id="form-coupon-code" class="form-input" placeholder="e.g. SAVE20" required>
+                </div>
+                <div class="form-group mb-12">
+                    <label class="form-label" for="form-coupon-discount">Discount Percent</label>
+                    <input type="number" id="form-coupon-discount" class="form-input" placeholder="10" min="1" max="100" required>
+                </div>
+                <div class="form-group mb-12">
+                    <label class="form-label" for="form-coupon-desc">Description</label>
+                    <input type="text" id="form-coupon-desc" class="form-input" placeholder="10% off your order">
+                </div>
+                <div class="form-group mb-12">
+                    <label class="form-label" for="form-coupon-max">Max Uses</label>
+                    <input type="number" id="form-coupon-max" class="form-input" value="100" min="1">
+                </div>
+                <div class="form-group mb-20">
+                    <label class="form-label" for="form-coupon-expires">Expiry Date</label>
+                    <input type="date" id="form-coupon-expires" class="form-input">
+                </div>
+                <button type="submit" class="btn btn-dark" style="width:100%; height:48px;">Save Coupon</button>
+            </form>
         </div>
     </div>
 

@@ -163,3 +163,87 @@ VALUES
 ('VAN/01', 'Vanilla Luxe', '₹18,500', 45, 'vanilla absolute, sandalwood, amber, musk', 'vanilla · sandalwood · amber', 'daily wear, evening, autumn', 'A highly sophisticated vanilla. It is warm, skin-close, and lacks any synthetic sweetness. Truly addictive olfactive craftsmanship.', 'Products/VAN-01.png'),
 ('FRSH/01', 'Wild Blue', '₹16,000', 60, 'bergamot, black pepper, vetiver, cedar', 'bergamot · pepper · vetiver', 'day wear, spring, summer', 'Wild Blue is a masterpiece. Crisp bergamot combined with a sharp pepper note that feels clean yet deeply magnetic. It holds up beautifully in tropical climates.', 'Products/FRSH-01.png')
 ON CONFLICT (id) DO NOTHING;
+
+-- 8. NEWSLETTER SUBSCRIBERS TABLE
+CREATE TABLE IF NOT EXISTS public.newsletter_subscribers (
+    id TEXT PRIMARY KEY,
+    email TEXT UNIQUE NOT NULL,
+    name TEXT,
+    subscribed_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    is_active BOOLEAN NOT NULL DEFAULT true,
+    source TEXT DEFAULT 'web'
+);
+
+ALTER TABLE public.newsletter_subscribers ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Allow public insert to newsletter_subscribers" 
+ON public.newsletter_subscribers FOR INSERT WITH CHECK (true);
+
+CREATE POLICY "Allow authenticated admin full access to newsletter_subscribers" 
+ON public.newsletter_subscribers FOR ALL USING (auth.role() = 'authenticated');
+
+-- 9. BACK IN STOCK REQUESTS TABLE
+CREATE TABLE IF NOT EXISTS public.back_in_stock_requests (
+    id TEXT PRIMARY KEY,
+    product_code TEXT REFERENCES public.products(id) ON DELETE CASCADE,
+    email TEXT NOT NULL,
+    name TEXT,
+    notified BOOLEAN NOT NULL DEFAULT false,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+ALTER TABLE public.back_in_stock_requests ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Allow public insert to back_in_stock_requests" 
+ON public.back_in_stock_requests FOR INSERT WITH CHECK (true);
+
+CREATE POLICY "Allow authenticated admin full access to back_in_stock_requests" 
+ON public.back_in_stock_requests FOR ALL USING (auth.role() = 'authenticated');
+
+-- 10. COUPONS TABLE
+CREATE TABLE IF NOT EXISTS public.coupons (
+    code TEXT PRIMARY KEY,
+    discount_percent INTEGER NOT NULL,
+    description TEXT,
+    max_uses INTEGER DEFAULT 100,
+    current_uses INTEGER DEFAULT 0,
+    is_active BOOLEAN DEFAULT true,
+    expires_at TIMESTAMPTZ,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+ALTER TABLE public.coupons ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Allow public read access to coupons" 
+ON public.coupons FOR SELECT USING (true);
+
+CREATE POLICY "Allow authenticated admin full access to coupons" 
+ON public.coupons FOR ALL USING (auth.role() = 'authenticated');
+
+-- 11. GIFT CARDS TABLE
+CREATE TABLE IF NOT EXISTS public.gift_cards (
+    id TEXT PRIMARY KEY,
+    code TEXT UNIQUE NOT NULL,
+    amount NUMERIC NOT NULL,
+    remaining_balance NUMERIC NOT NULL,
+    recipient_email TEXT,
+    recipient_name TEXT,
+    sender_name TEXT,
+    message TEXT,
+    is_active BOOLEAN DEFAULT true,
+    expires_at TIMESTAMPTZ,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+ALTER TABLE public.gift_cards ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Allow authenticated admin full access to gift_cards" 
+ON public.gift_cards FOR ALL USING (auth.role() = 'authenticated');
+
+-- Seed coupons
+INSERT INTO public.coupons (code, discount_percent, description, max_uses)
+VALUES 
+('SUGANDH10', 10, '10% off your first order', 1000),
+('WELCOME5', 5, 'Welcome discount for new collectors', 500),
+('ROYAL20', 20, 'Premium loyalty discount', 100)
+ON CONFLICT (code) DO NOTHING;

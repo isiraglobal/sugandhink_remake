@@ -26,6 +26,9 @@ let adminReviews = [];
 let adminCustomers = [];
 let adminInvoices = [];
 let adminAnnouncements = [];
+let adminSubscribers = [];
+let adminBackInStock = [];
+let adminCoupons = [];
 
 let supabaseClient = null;
 let currentSession = null;
@@ -156,6 +159,38 @@ async function fetchAnnouncements() {
     }
 }
 
+// ── NEW DATA FETCHERS ────────────────────────────────────────────────────────
+
+async function fetchSubscribers() {
+    try {
+        const res = await fetch(`${API_BASE_URL}/newsletter/subscribers`);
+        const data = await res.json();
+        if (data.success) adminSubscribers = data.subscribers;
+    } catch (err) {
+        console.error('Fetch subscribers error:', err);
+    }
+}
+
+async function fetchBackInStock() {
+    try {
+        const res = await fetch(`${API_BASE_URL}/back-in-stock`);
+        const data = await res.json();
+        if (data.success) adminBackInStock = data.requests;
+    } catch (err) {
+        console.error('Fetch back-in-stock error:', err);
+    }
+}
+
+async function fetchCoupons() {
+    try {
+        const res = await fetch(`${API_BASE_URL}/coupons`);
+        const data = await res.json();
+        if (data.success) adminCoupons = data.coupons;
+    } catch (err) {
+        console.error('Fetch coupons error:', err);
+    }
+}
+
 // ── Initializations ──────────────────────────────────────────────────────────
 async function initData() {
     if (!localStorage.getItem(WA_SETTING_KEY)) {
@@ -169,6 +204,9 @@ async function initData() {
     await fetchCustomers();
     await fetchInvoices();
     await fetchAnnouncements();
+    await fetchSubscribers();
+    await fetchBackInStock();
+    await fetchCoupons();
     
     checkAuth();
 }
@@ -236,6 +274,10 @@ function renderAllDashboard() {
     renderInvoices();
     renderAnnouncements();
     renderReviewsTab();
+    renderSubscribers();
+    renderBackInStock();
+    renderCoupons();
+    renderFulfillment();
     loadSettings();
 }
 
@@ -1337,6 +1379,264 @@ async function deleteProduct(code) {
     }
 }
 
+// ── NEW TAB RENDERERS ────────────────────────────────────────────────────────
+
+function renderSubscribers() {
+    const tbody = document.getElementById('subscribers-list');
+    if (!tbody) return;
+    tbody.innerHTML = '';
+    if (adminSubscribers.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;padding:40px;color:var(--ink-dim)">No subscribers yet.</td></tr>';
+        return;
+    }
+    adminSubscribers.forEach(sub => {
+        const tr = document.createElement('tr');
+        const date = new Date(sub.subscribed_at).toLocaleDateString('en-IN');
+        tr.innerHTML = `
+            <td>${escHtml(sub.email)}</td>
+            <td>${escHtml(sub.name || '-')}</td>
+            <td>${date}</td>
+            <td><span class="status-badge ${sub.is_active ? 'fulfilled' : 'pending'}">${sub.is_active ? 'Active' : 'Inactive'}</span></td>
+            <td><button class="btn btn-outline delete-sub-btn" data-id="${sub.id}" style="padding:6px 10px; font-size:0.62rem; color:var(--error); border-color:rgba(192,57,43,0.1);">Unsubscribe</button></td>
+        `;
+        tbody.appendChild(tr);
+    });
+    document.querySelectorAll('.delete-sub-btn').forEach(btn => {
+        btn.addEventListener('click', async () => {
+            if (confirm('Unsubscribe this email?')) {
+                try {
+                    const res = await fetch(`${API_BASE_URL}/newsletter/subscribers/${btn.dataset.id}`, { method: 'DELETE' });
+                    const result = await res.json();
+                    if (result.success) {
+                        showToast('Subscriber removed.');
+                        await fetchSubscribers();
+                        renderSubscribers();
+                    }
+                } catch (err) { console.error(err); }
+            }
+        });
+    });
+}
+
+function renderBackInStock() {
+    const tbody = document.getElementById('backinstock-list');
+    if (!tbody) return;
+    tbody.innerHTML = '';
+    if (adminBackInStock.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;padding:40px;color:var(--ink-dim)">No back in stock requests yet.</td></tr>';
+        return;
+    }
+    adminBackInStock.forEach(req => {
+        const tr = document.createElement('tr');
+        const date = new Date(req.created_at).toLocaleDateString('en-IN');
+        const notifiedLabel = req.notified ? 'Notified' : 'Pending';
+        const notifiedClass = req.notified ? 'fulfilled' : 'pending';
+        tr.innerHTML = `
+            <td><code>${escHtml(req.product_code)}</code></td>
+            <td>${escHtml(req.email)}</td>
+            <td>${escHtml(req.name || '-')}</td>
+            <td>${date}</td>
+            <td><span class="status-badge ${notifiedClass}">${notifiedLabel}</span></td>
+            <td>${req.notified ? '' : `<button class="btn btn-outline notify-bis-btn" data-id="${req.id}" style="padding:6px 10px; font-size:0.62rem; color:var(--success); border-color:rgba(16,185,129,0.2);">Mark Notified</button>`}</td>
+        `;
+        tbody.appendChild(tr);
+    });
+    document.querySelectorAll('.notify-bis-btn').forEach(btn => {
+        btn.addEventListener('click', async () => {
+            try {
+                const res = await fetch(`${API_BASE_URL}/back-in-stock/${btn.dataset.id}`, { method: 'PUT' });
+                const result = await res.json();
+                if (result.success) {
+                    showToast('Marked as notified.');
+                    await fetchBackInStock();
+                    renderBackInStock();
+                }
+            } catch (err) { console.error(err); }
+        });
+    });
+}
+
+function renderCoupons() {
+    const tbody = document.getElementById('coupons-list');
+    if (!tbody) return;
+    tbody.innerHTML = '';
+    if (adminCoupons.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;padding:40px;color:var(--ink-dim)">No coupons yet.</td></tr>';
+        return;
+    }
+    adminCoupons.forEach(coupon => {
+        const tr = document.createElement('tr');
+        const expires = coupon.expires_at ? new Date(coupon.expires_at).toLocaleDateString('en-IN') : '-';
+        tr.innerHTML = `
+            <td><code>${escHtml(coupon.code)}</code></td>
+            <td><strong>${coupon.discount_percent}%</strong></td>
+            <td style="font-size:0.78rem;color:var(--ink-mid)">${escHtml(coupon.description || '-')}</td>
+            <td>${coupon.current_uses || 0}/${coupon.max_uses || 100}</td>
+            <td><span class="status-badge ${coupon.is_active ? 'fulfilled' : 'pending'}">${coupon.is_active ? 'Active' : 'Inactive'}</span></td>
+            <td style="font-size:0.78rem;">${expires}</td>
+            <td>
+                <button class="btn btn-outline edit-coupon-btn" data-code="${coupon.code}" style="padding:6px 10px; font-size:0.62rem;">Edit</button>
+                <button class="btn btn-outline delete-coupon-btn" data-code="${coupon.code}" style="padding:6px 10px; font-size:0.62rem; color:var(--error); border-color:rgba(192,57,43,0.1);">Delete</button>
+            </td>
+        `;
+        tbody.appendChild(tr);
+    });
+    document.querySelectorAll('.edit-coupon-btn').forEach(btn => {
+        btn.addEventListener('click', () => openCouponModal(btn.dataset.code));
+    });
+    document.querySelectorAll('.delete-coupon-btn').forEach(btn => {
+        btn.addEventListener('click', async () => {
+            if (confirm(`Delete coupon ${btn.dataset.code}?`)) {
+                try {
+                    const res = await fetch(`${API_BASE_URL}/coupons/${btn.dataset.code}`, { method: 'DELETE' });
+                    const result = await res.json();
+                    if (result.success) {
+                        showToast('Coupon deleted.');
+                        await fetchCoupons();
+                        renderCoupons();
+                    }
+                } catch (err) { console.error(err); }
+            }
+        });
+    });
+}
+
+function renderFulfillment() {
+    const tbody = document.getElementById('fulfillment-list');
+    if (!tbody) return;
+    tbody.innerHTML = '';
+    if (adminOrders.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;padding:40px;color:var(--ink-dim)">No orders yet.</td></tr>';
+        return;
+    }
+    adminOrders.forEach(ord => {
+        const tr = document.createElement('tr');
+        const statusLabel = ord.status.charAt(0).toUpperCase() + ord.status.slice(1);
+        tr.innerHTML = `
+            <td><code>${ord.id}</code></td>
+            <td><strong>${escHtml(ord.collector)}</strong></td>
+            <td style="font-size:0.78rem;color:var(--ink-mid)">${escHtml(ord.items)}</td>
+            <td><strong>${ord.value}</strong></td>
+            <td>${ord.date}</td>
+            <td><span class="status-badge ${ord.status}">${statusLabel}</span></td>
+            <td style="white-space:nowrap;">
+                ${ord.status === 'pending' ? `<button class="btn btn-outline fulfill-btn" data-id="${ord.id}" style="padding:6px 10px; font-size:0.62rem; color:var(--success); border-color:rgba(16,185,129,0.2);">Fulfill</button>` : ''}
+                ${ord.status === 'fulfilled' ? `<button class="btn btn-outline ship-btn" data-id="${ord.id}" style="padding:6px 10px; font-size:0.62rem; color:var(--gold); border-color:rgba(155,122,66,0.25);">Ship</button>` : ''}
+                ${ord.status === 'shipped' ? '<span style="font-size:0.62rem;color:var(--ink-dim)">Shipped</span>' : ''}
+            </td>
+        `;
+        tbody.appendChild(tr);
+    });
+    document.querySelectorAll('.fulfill-btn').forEach(btn => {
+        btn.addEventListener('click', async () => {
+            try {
+                const res = await fetch(`${API_BASE_URL}/orders/${btn.dataset.id}/fulfill`, { method: 'PUT' });
+                const result = await res.json();
+                if (result.success) {
+                    showToast('Order fulfilled.');
+                    await fetchOrders();
+                    renderOrders();
+                    renderFulfillment();
+                    renderOverview();
+                }
+            } catch (err) { console.error(err); }
+        });
+    });
+    document.querySelectorAll('.ship-btn').forEach(btn => {
+        btn.addEventListener('click', async () => {
+            const tracking = prompt('Enter tracking number (optional):');
+            try {
+                const res = await fetch(`${API_BASE_URL}/orders/${btn.dataset.id}/ship`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ tracking_number: tracking || '' })
+                });
+                const result = await res.json();
+                if (result.success) {
+                    showToast('Order shipped.');
+                    await fetchOrders();
+                    renderOrders();
+                    renderFulfillment();
+                    renderOverview();
+                }
+            } catch (err) { console.error(err); }
+        });
+    });
+}
+
+// ── COUPON MODAL FUNCTIONS ────────────────────────────────────────────────────
+
+function openCouponModal(editCode = '') {
+    const modal = document.getElementById('coupon-modal');
+    const form = document.getElementById('coupon-form');
+    const title = document.getElementById('coupon-modal-title');
+    const editInput = document.getElementById('form-coupon-edit-code');
+    if (!modal || !form) return;
+    form.reset();
+    document.getElementById('form-coupon-code').disabled = false;
+    if (editCode) {
+        title.textContent = 'Edit Coupon';
+        editInput.value = editCode;
+        const coupon = adminCoupons.find(c => c.code === editCode);
+        if (coupon) {
+            document.getElementById('form-coupon-code').value = coupon.code;
+            document.getElementById('form-coupon-code').disabled = true;
+            document.getElementById('form-coupon-discount').value = coupon.discount_percent;
+            document.getElementById('form-coupon-desc').value = coupon.description || '';
+            document.getElementById('form-coupon-max').value = coupon.max_uses || 100;
+            if (coupon.expires_at) {
+                document.getElementById('form-coupon-expires').value = coupon.expires_at.split('T')[0];
+            }
+        }
+    } else {
+        title.textContent = 'Add Coupon';
+        editInput.value = '';
+    }
+    modal.classList.add('open');
+}
+
+function closeCouponModal() {
+    const modal = document.getElementById('coupon-modal');
+    if (modal) modal.classList.remove('open');
+}
+
+async function handleCouponSubmit(e) {
+    e.preventDefault();
+    const editCode = document.getElementById('form-coupon-edit-code').value;
+    const data = {
+        code: document.getElementById('form-coupon-code').value.trim().toUpperCase(),
+        discount_percent: parseInt(document.getElementById('form-coupon-discount').value, 10),
+        description: document.getElementById('form-coupon-desc').value.trim(),
+        max_uses: parseInt(document.getElementById('form-coupon-max').value, 10) || 100,
+        expires_at: document.getElementById('form-coupon-expires').value || null
+    };
+    try {
+        let url = `${API_BASE_URL}/coupons`;
+        let method = 'POST';
+        if (editCode) {
+            url = `${API_BASE_URL}/coupons/${editCode}`;
+            method = 'PUT';
+        }
+        const res = await fetch(url, {
+            method,
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data)
+        });
+        const result = await res.json();
+        if (result.success) {
+            showToast(editCode ? 'Coupon updated.' : 'Coupon created.');
+            await fetchCoupons();
+            renderCoupons();
+            closeCouponModal();
+        } else {
+            alert('Error: ' + result.error);
+        }
+    } catch (err) {
+        console.error(err);
+        showToast('Error saving coupon.');
+    }
+}
+
 function escHtml(str) {
     return (str || '').replace(/[&<>"']/g, m =>
         ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[m])
@@ -1493,6 +1793,21 @@ function setupModalHandlers() {
     }
     if (addProdBtn) addProdBtn.addEventListener('click', () => openProductModal());
     if (prodForm) prodForm.addEventListener('submit', handleProductSubmit);
+
+    // Coupon Modal
+    const couponModal = document.getElementById('coupon-modal');
+    const couponClose = document.getElementById('coupon-modal-close');
+    const couponForm = document.getElementById('coupon-form');
+    const addCouponBtn = document.getElementById('add-coupon-trigger');
+
+    if (couponClose && couponModal) {
+        couponClose.addEventListener('click', closeCouponModal);
+        couponModal.addEventListener('click', (e) => {
+            if (e.target.id === 'coupon-modal') closeCouponModal();
+        });
+    }
+    if (addCouponBtn) addCouponBtn.addEventListener('click', () => openCouponModal());
+    if (couponForm) couponForm.addEventListener('submit', handleCouponSubmit);
 
     // Settings Form
     const settingsForm = document.getElementById('settings-form');

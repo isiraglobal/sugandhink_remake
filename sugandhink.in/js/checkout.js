@@ -1,0 +1,289 @@
+/**
+ * checkout.js - Multi-step checkout: Details → Review → Confirm
+ */
+
+import { getApiUrl } from './utils.js';
+
+const WA_NUMBER = '919769445567';
+
+document.addEventListener('DOMContentLoaded', () => {
+    const user = getUser();
+    if (!user || !user.email) {
+        showStep(0);
+        return;
+    }
+    initCheckout(user);
+});
+
+function getUser() {
+    try { return JSON.parse(localStorage.getItem('si_user')) || null; } catch { return null; }
+}
+
+let currentStep = 1;
+const totalSteps = 3;
+let cartItems = [];
+let subtotal = 0;
+let discount = 0;
+let total = 0;
+
+function initCheckout(user) {
+    loadCart();
+    if (cartItems.length === 0) {
+        document.getElementById('checkout-content').innerHTML = `
+            <div class="co-empty" style="text-align:center;padding:80px 24px;">
+                <h2 style="font-family:var(--font-display);font-weight:300;font-size:1.6rem;color:var(--ink);margin-bottom:12px;">Your cart is empty</h2>
+                <p style="font-family:var(--font-body);font-size:0.88rem;color:var(--ink-mid);margin-bottom:24px;">Add some compositions to your collection before checking out.</p>
+                <a href="../collection.html" class="btn btn-dark">Browse the Library</a>
+            </div>
+        `;
+        return;
+    }
+
+    prefillForm(user);
+    showStep(1);
+    setupStepNav();
+    setupPromo();
+}
+
+function loadCart() {
+    try { cartItems = JSON.parse(localStorage.getItem('si_cart')) || []; } catch { cartItems = []; }
+    subtotal = 0;
+    cartItems.forEach(i => subtotal += i.price * i.qty);
+    const promoCode = localStorage.getItem('si_promo_applied');
+    if (promoCode === 'SUGANDH10') discount = Math.round(subtotal * 0.1);
+    else if (promoCode === 'WELCOME5') discount = Math.round(subtotal * 0.05);
+    else if (promoCode === 'ROYAL20') discount = Math.round(subtotal * 0.2);
+    else discount = 0;
+    total = subtotal - discount;
+}
+
+function prefillForm(user) {
+    if (user.name) document.getElementById('co-name').value = user.name;
+    if (user.email) document.getElementById('co-email').value = user.email;
+    if (user.phone) document.getElementById('co-phone').value = user.phone;
+    if (user.address) document.getElementById('co-address').value = user.address;
+    if (user.city) document.getElementById('co-city').value = user.city;
+    if (user.state) document.getElementById('co-state').value = user.state;
+    if (user.zipCode || user.zip_code) document.getElementById('co-zip').value = user.zipCode || user.zip_code;
+    document.getElementById('co-country').value = user.country || 'India';
+}
+
+function showStep(step) {
+    currentStep = step;
+    document.querySelectorAll('.co-step').forEach(el => el.style.display = 'none');
+    const target = document.getElementById(`co-step-${step}`);
+    if (target) target.style.display = 'block';
+
+    document.querySelectorAll('.co-progress-step').forEach((el, i) => {
+        el.classList.toggle('active', i + 1 === step);
+        el.classList.toggle('done', i + 1 < step);
+    });
+
+    if (step === 2) renderReview();
+    if (step === 3) renderConfirm();
+}
+
+function setupStepNav() {
+    document.getElementById('co-to-step-2')?.addEventListener('click', (e) => {
+        e.preventDefault();
+        if (!validateStep1()) return;
+        saveFormToUser();
+        showStep(2);
+    });
+
+    document.getElementById('co-back-step-1')?.addEventListener('click', (e) => {
+        e.preventDefault();
+        showStep(1);
+    });
+
+    document.getElementById('co-to-step-3')?.addEventListener('click', (e) => {
+        e.preventDefault();
+        showStep(3);
+    });
+
+    document.getElementById('co-back-step-2')?.addEventListener('click', (e) => {
+        e.preventDefault();
+        showStep(2);
+    });
+
+    document.getElementById('co-place-order')?.addEventListener('click', (e) => {
+        e.preventDefault();
+        placeOrder();
+    });
+}
+
+function validateStep1() {
+    const fields = ['co-name', 'co-email', 'co-phone', 'co-address', 'co-city', 'co-state', 'co-zip'];
+    let valid = true;
+    fields.forEach(id => {
+        const el = document.getElementById(id);
+        if (!el || !el.value.trim()) {
+            valid = false;
+            if (el) { el.style.borderColor = '#c0392b'; }
+        } else {
+            if (el) el.style.borderColor = '';
+        }
+    });
+    if (!valid) {
+        const fb = document.getElementById('co-step1-feedback');
+        if (fb) { fb.textContent = 'Please fill in all required fields.'; fb.style.display = 'block'; }
+    }
+    return valid;
+}
+
+function saveFormToUser() {
+    let user = getUser() || {};
+    user.name = document.getElementById('co-name')?.value.trim() || user.name;
+    user.email = document.getElementById('co-email')?.value.trim() || user.email;
+    user.phone = document.getElementById('co-phone')?.value.trim() || user.phone;
+    user.address = document.getElementById('co-address')?.value.trim() || user.address;
+    user.city = document.getElementById('co-city')?.value.trim() || user.city;
+    user.state = document.getElementById('co-state')?.value.trim() || user.state;
+    user.zipCode = document.getElementById('co-zip')?.value.trim() || user.zipCode;
+    user.country = document.getElementById('co-country')?.value.trim() || user.country || 'India';
+    localStorage.setItem('si_user', JSON.stringify(user));
+}
+
+function renderReview() {
+    const list = document.getElementById('co-review-items');
+    if (!list) return;
+    let html = '';
+    cartItems.forEach((item, idx) => {
+        html += `
+            <div class="co-ri">
+                <div class="co-ri-img"><img src="${item.image}" alt="${escHtml(item.name)}"></div>
+                <div class="co-ri-info">
+                    <span class="co-ri-name">${escHtml(item.name)}</span>
+                    <span class="co-ri-meta">${item.code} · ${item.size} · Qty: ${item.qty}</span>
+                </div>
+                <span class="co-ri-price">₹${(item.price * item.qty).toLocaleString('en-IN')}</span>
+            </div>
+        `;
+    });
+    list.innerHTML = html;
+
+    document.getElementById('co-review-subtotal').textContent = '₹' + subtotal.toLocaleString('en-IN');
+    const promoCode = localStorage.getItem('si_promo_applied');
+    const discountRow = document.getElementById('co-review-discount-row');
+    if (discount > 0 && promoCode) {
+        discountRow.style.display = 'flex';
+        document.getElementById('co-review-discount').textContent = '-₹' + discount.toLocaleString('en-IN');
+        document.getElementById('co-review-promo-label').textContent = `Discount (${promoCode})`;
+    } else {
+        discountRow.style.display = 'none';
+    }
+    document.getElementById('co-review-total').textContent = '₹' + total.toLocaleString('en-IN');
+
+    const user = getUser();
+    document.getElementById('co-review-name').textContent = user?.name || '';
+    document.getElementById('co-review-email').textContent = user?.email || '';
+    document.getElementById('co-review-phone').textContent = user?.phone || '';
+    const addr = [user?.address, user?.city, user?.state, user?.zipCode].filter(Boolean).join(', ');
+    document.getElementById('co-review-address').textContent = addr || 'N/A';
+}
+
+function renderConfirm() {
+    document.getElementById('co-confirm-total').textContent = '₹' + total.toLocaleString('en-IN');
+}
+
+function setupPromo() {
+    document.getElementById('co-apply-promo')?.addEventListener('click', () => {
+        const input = document.getElementById('co-promo-input');
+        const code = input?.value.trim().toUpperCase();
+        const fb = document.getElementById('co-promo-feedback');
+        if (code === 'SUGANDH10' || code === 'WELCOME5' || code === 'ROYAL20') {
+            localStorage.setItem('si_promo_applied', code);
+            loadCart();
+            renderReview();
+            if (fb) { fb.textContent = `${code} applied!`; fb.style.color = 'var(--gold)'; }
+        } else if (!code) {
+            localStorage.removeItem('si_promo_applied');
+            loadCart();
+            renderReview();
+            if (fb) fb.textContent = '';
+        } else {
+            localStorage.removeItem('si_promo_applied');
+            loadCart();
+            renderReview();
+            if (fb) { fb.textContent = 'Invalid code.'; fb.style.color = '#c0392b'; }
+        }
+    });
+}
+
+async function placeOrder() {
+    const btn = document.getElementById('co-place-order');
+    btn.disabled = true;
+    btn.textContent = 'Placing Order...';
+
+    const user = getUser();
+    const orderId = 'ORD-' + Math.floor(1000 + Math.random() * 9000);
+    const promoCode = localStorage.getItem('si_promo_applied') || '';
+
+    const orderData = {
+        id: orderId,
+        customerId: user?.id && !user.id.startsWith('guest-') ? user.id : null,
+        collector: user?.name || '',
+        email: user?.email || '',
+        wa: user?.phone || '',
+        items: cartItems.map(i => `${i.name} (${i.code}, ${i.size}) × ${i.qty}`).join(', '),
+        total: '₹' + total.toLocaleString('en-IN'),
+        date: new Date().toLocaleDateString('en-IN'),
+        status: 'pending',
+        promoCode,
+        discount: discount > 0 ? '₹' + discount.toLocaleString('en-IN') : '',
+        address: user?.address || '',
+        city: user?.city || '',
+        state: user?.state || '',
+        country: user?.country || '',
+        zipCode: user?.zipCode || user?.zip_code || ''
+    };
+
+    try {
+        if (!user?.id || user.id.startsWith('guest-')) {
+            await fetch(getApiUrl('/api/customers'), {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ id: user?.id, name: user?.name, email: user?.email, phone: user?.phone || '', address: user?.address || '', city: user?.city || '', state: user?.state || '', country: user?.country || 'India', zipCode: user?.zipCode || user?.zip_code || '' })
+            });
+        }
+        await fetch(getApiUrl('/api/orders'), {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(orderData)
+        });
+    } catch (err) {
+        console.error('Failed to save order to database:', err);
+    }
+
+    window.open(`https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(buildWAMessage(user))}`, '_blank');
+
+    localStorage.setItem('si_last_order', JSON.stringify(orderData));
+    let orders = [];
+    try { orders = JSON.parse(localStorage.getItem('si_orders')) || []; } catch { orders = []; }
+    orders.push(orderData);
+    localStorage.setItem('si_orders', JSON.stringify(orders));
+
+    localStorage.removeItem('si_cart');
+    localStorage.removeItem('si_promo_applied');
+    window.dispatchEvent(new CustomEvent('cart:updated'));
+
+    window.location.href = `order-confirmation.html?id=${orderId}`;
+}
+
+function buildWAMessage(user) {
+    let msg = `Hello Sugandh Ink 🌿\n\nI would like to place an order for:\n\n`;
+    cartItems.forEach((item, i) => {
+        msg += `${i + 1}. ${item.name} (${item.code}) - ${item.size} - Qty: ${item.qty} - ₹${item.price.toLocaleString('en-IN')} each\n`;
+    });
+    msg += `\nSubtotal: ₹${subtotal.toLocaleString('en-IN')}`;
+    if (discount > 0) msg += `\nDiscount: -₹${discount.toLocaleString('en-IN')}`;
+    msg += `\nTotal: ₹${total.toLocaleString('en-IN')}`;
+    msg += `\nDelivery: Complimentary\n\nCustomer Details:\nName: ${user?.name || ''}\nEmail: ${user?.email || ''}\nPhone: ${user?.phone || ''}\nAddress: ${[user?.address, user?.city, user?.state, user?.country, user?.zipCode].filter(Boolean).join(', ')}`;
+    msg += `\n\nPlease verify availability and share payment details. Thank you.`;
+    return msg;
+}
+
+function escHtml(str) {
+    if (!str) return '';
+    return str.replace(/[&<>"']/g, m => ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' })[m]);
+}

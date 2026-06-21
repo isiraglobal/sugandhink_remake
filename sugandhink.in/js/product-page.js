@@ -4,6 +4,7 @@
 
 import { products } from './products.js';
 import { getApiUrl } from './utils.js';
+import { toggleWishlist, isInWishlist } from './wishlist.js';
 
 const WA_NUMBER = '919769445567';
 
@@ -48,12 +49,14 @@ document.addEventListener('DOMContentLoaded', () => {
     const code = getProductId();
     product = products.find(p => p.code === code) || products[0];
 
+    trackRecentlyViewed();
     renderProductDetails();
     setupSizeSelector();
     setupQuantityStepper();
     setupTabs();
     setupReviews();
     renderRelatedProducts();
+    renderRecentlyViewed();
     updatePurchaseDetails();
 
     window.addEventListener('auth:updated', updatePurchaseDetails);
@@ -71,6 +74,30 @@ function renderProductDetails() {
     document.getElementById('product-code').textContent = product.code;
     document.getElementById('product-title').textContent = product.name;
     document.getElementById('product-desc').textContent = product.description;
+
+    // Wishlist heart button next to title
+    const titleEl = document.getElementById('product-title');
+    const existingWishlistBtn = document.querySelector('.product-title-wishlist');
+    if (titleEl && !existingWishlistBtn) {
+        const wishBtn = document.createElement('button');
+        wishBtn.className = `product-title-wishlist wishlist-btn ${isInWishlist(product.code) ? 'in-wishlist' : ''}`;
+        wishBtn.setAttribute('aria-label', 'Toggle wishlist');
+        wishBtn.setAttribute('data-code', product.code);
+        wishBtn.innerHTML = `
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+            </svg>
+        `;
+        wishBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            toggleWishlist(product.code);
+            wishBtn.classList.toggle('in-wishlist');
+        });
+        titleEl.parentNode.insertBefore(wishBtn, titleEl.nextSibling);
+    } else if (existingWishlistBtn) {
+        existingWishlistBtn.classList.toggle('in-wishlist', isInWishlist(product.code));
+        existingWishlistBtn.dataset.code = product.code;
+    }
     
     // Main image
     const mainImg = document.getElementById('product-main-img');
@@ -154,6 +181,10 @@ function renderProductDetails() {
             }
         }
     }
+
+    renderJSONLD();
+    setupImageZoom();
+    setupSocialShare();
 }
 
 function capitalize(str) {
@@ -433,6 +464,11 @@ function renderRelatedProducts() {
         card.innerHTML = `
             <div class="pcard-img">
                 <img src="${p.image}" alt="${p.name}" loading="lazy">
+                <button class="card-wishlist-btn wishlist-btn ${isInWishlist(p.code) ? 'in-wishlist' : ''}" data-code="${p.code}" aria-label="Toggle wishlist">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+                    </svg>
+                </button>
             </div>
             <div class="pcard-code">${p.code}</div>
             <div class="pcard-name">${p.name}</div>
@@ -442,6 +478,13 @@ function renderRelatedProducts() {
                 <span class="pcard-wa" style="font-size:0.65rem;">Explore</span>
             </div>
         `;
+
+        const wishBtn = card.querySelector('.card-wishlist-btn');
+        wishBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            toggleWishlist(p.code);
+            wishBtn.classList.toggle('in-wishlist');
+        });
 
         card.addEventListener('click', () => {
             const targetUrl = `product.html?id=${p.code}`;
@@ -457,6 +500,244 @@ function renderRelatedProducts() {
             }
         });
 
+        rail.appendChild(card);
+    });
+}
+
+// ── JSON-LD Structured Data ───────────────────────────────────────────────
+function renderJSONLD() {
+    if (!product) return;
+    const existing = document.getElementById('product-jsonld');
+    if (existing) existing.remove();
+
+    const basePrice = parsePrice(product.price);
+    const availability = (product.stock !== undefined && product.stock <= 0)
+        ? 'https://schema.org/OutOfStock'
+        : 'https://schema.org/InStock';
+
+    const script = document.createElement('script');
+    script.id = 'product-jsonld';
+    script.type = 'application/ld+json';
+    script.textContent = JSON.stringify({
+        '@context': 'https://schema.org/',
+        '@type': 'Product',
+        name: product.name,
+        description: product.description,
+        productID: product.code,
+        url: `https://sugandhink.in/product.html?id=${encodeURIComponent(product.code)}`,
+        image: `https://sugandhink.in/${product.image}`,
+        brand: {
+            '@type': 'Brand',
+            name: 'Sugandh Ink'
+        },
+        offers: {
+            '@type': 'Offer',
+            url: `https://sugandhink.in/product.html?id=${encodeURIComponent(product.code)}`,
+            priceCurrency: 'INR',
+            price: basePrice,
+            availability: availability
+        }
+    });
+    document.head.appendChild(script);
+}
+
+// ── Image Zoom (div-based magnifier at 2x) ────────────────────────────────
+function setupImageZoom() {
+    const wrap = document.querySelector('.main-image-wrap');
+    const img = document.getElementById('product-main-img');
+    if (!wrap || !img) return;
+
+    wrap.style.position = 'relative';
+
+    const lens = document.createElement('div');
+    lens.className = 'img-zoom-lens';
+
+    const result = document.createElement('div');
+    result.className = 'img-zoom-result';
+
+    wrap.appendChild(lens);
+    wrap.appendChild(result);
+
+    const updateZoom = (e) => {
+        const rect = wrap.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+
+        const ls = 120;
+        const half = ls / 2;
+
+        let lx = x - half;
+        let ly = y - half;
+        lx = Math.max(0, Math.min(lx, rect.width - ls));
+        ly = Math.max(0, Math.min(ly, rect.height - ls));
+
+        lens.style.left = lx + 'px';
+        lens.style.top = ly + 'px';
+
+        const cx = (lx + half) / rect.width;
+        const cy = (ly + half) / rect.height;
+
+        result.style.backgroundImage = `url(${img.src})`;
+        result.style.backgroundSize = `${rect.width * 2}px ${rect.height * 2}px`;
+        result.style.backgroundPosition = `-${cx * rect.width * 2 - ls}px -${cy * rect.height * 2 - ls}px`;
+    };
+
+    wrap.addEventListener('mouseenter', () => {
+        lens.style.display = 'block';
+        result.style.display = 'block';
+        wrap.addEventListener('mousemove', updateZoom);
+    });
+
+    wrap.addEventListener('mouseleave', () => {
+        lens.style.display = 'none';
+        result.style.display = 'none';
+        wrap.removeEventListener('mousemove', updateZoom);
+    });
+}
+
+// ── Social Share Buttons ──────────────────────────────────────────────────
+function setupSocialShare() {
+    if (!product) return;
+    const specs = document.querySelector('.specs-size-wrap');
+    if (!specs) return;
+
+    const existing = document.querySelector('.social-share-section');
+    if (existing) existing.remove();
+
+    const section = document.createElement('div');
+    section.className = 'social-share-section';
+
+    const link = window.location.href;
+    const name = product.name;
+    const desc = product.description;
+
+    section.innerHTML = `
+        <span class="share-label">Share this composition</span>
+        <div class="share-buttons">
+            <button class="share-btn share-wa" data-share="whatsapp" aria-label="Share on WhatsApp">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12.8 12.8 0 00-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+            </button>
+            <button class="share-btn share-twitter" data-share="twitter" aria-label="Share on Twitter">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+            </button>
+            <button class="share-btn share-email" data-share="email" aria-label="Share via Email">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+            </button>
+            <button class="share-btn share-copy" data-share="copy" aria-label="Copy link">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+            </button>
+        </div>
+    `;
+
+    specs.after(section);
+
+    section.addEventListener('click', (e) => {
+        const btn = e.target.closest('.share-btn');
+        if (!btn) return;
+        const type = btn.dataset.share;
+        const pageUrl = window.location.href;
+
+        switch (type) {
+            case 'whatsapp':
+                window.open(`https://wa.me/?text=${encodeURIComponent(`${name} - ${desc}. Sugandh Ink ${pageUrl}`)}`, '_blank');
+                break;
+            case 'twitter':
+                window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(`${name} - ${desc} - Sugandh Ink`)}&url=${encodeURIComponent(pageUrl)}`, '_blank');
+                break;
+            case 'email':
+                window.location.href = `mailto:?subject=${encodeURIComponent(`${name} - Sugandh Ink`)}&body=${encodeURIComponent(`Discover ${name}: ${desc}\n\n${pageUrl}`)}`;
+                break;
+            case 'copy':
+                if (navigator.clipboard) {
+                    navigator.clipboard.writeText(pageUrl).then(() => {
+                        showToast('Link copied to clipboard.');
+                    });
+                }
+                break;
+        }
+    });
+}
+
+// ── Recently Viewed ───────────────────────────────────────────────────────
+function trackRecentlyViewed() {
+    if (!product) return;
+    let viewed = [];
+    try {
+        viewed = JSON.parse(localStorage.getItem('si_recently_viewed')) || [];
+    } catch {
+        viewed = [];
+    }
+    viewed = viewed.filter(code => code !== product.code);
+    viewed.unshift(product.code);
+    if (viewed.length > 6) viewed = viewed.slice(0, 6);
+    localStorage.setItem('si_recently_viewed', JSON.stringify(viewed));
+}
+
+function renderRecentlyViewed() {
+    let viewed = [];
+    try {
+        viewed = JSON.parse(localStorage.getItem('si_recently_viewed')) || [];
+    } catch {
+        viewed = [];
+    }
+    const section = document.getElementById('recently-viewed-section');
+    const rail = document.getElementById('recently-viewed-rail');
+    if (!section || !rail) return;
+
+    const filtered = viewed.filter(code => code !== (product ? product.code : null));
+    if (filtered.length === 0) {
+        section.style.display = 'none';
+        return;
+    }
+
+    const items = filtered.map(code => products.find(p => p.code === code)).filter(Boolean);
+    if (items.length === 0) {
+        section.style.display = 'none';
+        return;
+    }
+
+    section.style.display = '';
+
+    rail.innerHTML = '';
+    items.forEach(p => {
+        const card = document.createElement('div');
+        card.className = 'pcard';
+        card.innerHTML = `
+            <div class="pcard-img">
+                <img src="${p.image}" alt="${p.name}" loading="lazy">
+                <button class="card-wishlist-btn wishlist-btn ${typeof isInWishlist !== 'undefined' && isInWishlist(p.code) ? 'in-wishlist' : ''}" data-code="${p.code}" aria-label="Toggle wishlist">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+                    </svg>
+                </button>
+            </div>
+            <div class="pcard-code">${p.code}</div>
+            <div class="pcard-name">${p.name}</div>
+            <div class="pcard-notes">${p.shortNotes}</div>
+            <div class="pcard-footer">
+                <span class="pcard-price">${p.price}</span>
+                <span class="pcard-wa" style="font-size:0.65rem;">Explore</span>
+            </div>
+        `;
+        const wishBtn = card.querySelector('.card-wishlist-btn');
+        if (wishBtn && typeof toggleWishlist !== 'undefined') {
+            wishBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                toggleWishlist(p.code);
+                wishBtn.classList.toggle('in-wishlist');
+            });
+        }
+        card.addEventListener('click', () => {
+            const targetUrl = `product.html?id=${p.code}`;
+            const curtain = document.getElementById('curtain');
+            if (curtain) {
+                curtain.classList.remove('slide-out');
+                curtain.classList.add('slide-in');
+                setTimeout(() => { window.location.href = targetUrl; }, 600);
+            } else {
+                window.location.href = targetUrl;
+            }
+        });
         rail.appendChild(card);
     });
 }
