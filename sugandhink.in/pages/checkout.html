@@ -225,6 +225,49 @@
                         </div>
                     </div>
 
+                    <div class="co-gift-options" style="margin-top:24px;padding:20px;background:var(--cream-deep);border:1px solid var(--border);border-radius:6px;">
+                        <h3 style="font-family:var(--font-display);font-size:1.1rem;font-weight:500;color:var(--ink);margin-bottom:12px;">Gift Options</h3>
+                        <label style="display:flex;align-items:center;gap:10px;cursor:pointer;font-family:var(--font-body);font-size:0.82rem;color:var(--ink);">
+                            <input type="checkbox" id="co-is-gift" style="width:16px;height:16px;accent-color:var(--gold);">
+                            This is a gift
+                        </label>
+                        <div id="co-gift-details" style="display:none;margin-top:16px;">
+                            <div class="co-fg">
+                                <label>Gift Message (max 200 characters)</label>
+                                <textarea id="co-gift-message" maxlength="200" placeholder="Write a personal message for the recipient..." style="min-height:60px;"></textarea>
+                                <span id="co-gift-chars" style="font-size:0.65rem;color:var(--ink-dim);display:block;margin-top:4px;text-align:right;">0/200</span>
+                            </div>
+                            <label style="display:flex;align-items:center;gap:10px;cursor:pointer;font-family:var(--font-body);font-size:0.82rem;color:var(--ink);margin-top:12px;">
+                                <input type="checkbox" id="co-premium-wrap" style="width:16px;height:16px;accent-color:var(--gold);">
+                                Premium gift wrapping (+ note to order)
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="co-sample-section" style="margin-top:20px;padding:20px;background:var(--cream-deep);border:1px solid var(--border);border-radius:6px;">
+                        <h3 style="font-family:var(--font-display);font-size:1.1rem;font-weight:500;color:var(--ink);margin-bottom:8px;">Complimentary Samples</h3>
+                        <p style="font-family:var(--font-body);font-size:0.78rem;color:var(--ink-dim);margin-bottom:16px;">Select up to 2 complimentary samples to accompany your order.</p>
+                        <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:10px;" id="co-sample-options">
+                            <label class="co-sample-item" data-code="OUD/09" style="display:flex;align-items:center;gap:10px;padding:10px 14px;border:1px solid var(--border);border-radius:4px;cursor:pointer;font-family:var(--font-body);font-size:0.82rem;color:var(--ink);transition:border-color .2s,background .2s;">
+                                <input type="checkbox" value="Oud Royal" class="co-sample-cb" style="accent-color:var(--gold);flex-shrink:0;">
+                                <span>Oud Royal (OUD/09)</span>
+                            </label>
+                            <label class="co-sample-item" data-code="VAN/01" style="display:flex;align-items:center;gap:10px;padding:10px 14px;border:1px solid var(--border);border-radius:4px;cursor:pointer;font-family:var(--font-body);font-size:0.82rem;color:var(--ink);transition:border-color .2s,background .2s;">
+                                <input type="checkbox" value="Vanilla Luxe" class="co-sample-cb" style="accent-color:var(--gold);flex-shrink:0;">
+                                <span>Vanilla Luxe (VAN/01)</span>
+                            </label>
+                            <label class="co-sample-item" data-code="FLR/07" style="display:flex;align-items:center;gap:10px;padding:10px 14px;border:1px solid var(--border);border-radius:4px;cursor:pointer;font-family:var(--font-body);font-size:0.82rem;color:var(--ink);transition:border-color .2s,background .2s;">
+                                <input type="checkbox" value="White Bloom" class="co-sample-cb" style="accent-color:var(--gold);flex-shrink:0;">
+                                <span>White Bloom (FLR/07)</span>
+                            </label>
+                            <label class="co-sample-item" data-code="AMB/12" style="display:flex;align-items:center;gap:10px;padding:10px 14px;border:1px solid var(--border);border-radius:4px;cursor:pointer;font-family:var(--font-body);font-size:0.82rem;color:var(--ink);transition:border-color .2s,background .2s;">
+                                <input type="checkbox" value="Dark Amber" class="co-sample-cb" style="accent-color:var(--gold);flex-shrink:0;">
+                                <span>Dark Amber (AMB/12)</span>
+                            </label>
+                        </div>
+                        <p id="co-sample-feedback" style="font-family:var(--font-body);font-size:0.72rem;color:var(--gold);margin-top:8px;"></p>
+                    </div>
+
                     <div class="co-step-actions">
                         <button class="btn btn-outline" id="co-back-step-1">Back</button>
                         <button class="btn btn-dark" id="co-to-step-3">Continue to Confirm</button>
@@ -280,6 +323,8 @@
                 <li><a href="size-guide.html">Size Guide</a></li>
                 <li><a href="faq.html">FAQ</a></li>
                 <li><a href="account.html">My Account</a></li>
+                <li><a href="track-order.html">Track Order</a></li>
+                <li><a href="loyalty.html">The Atelier Club</a></li>
             </ul></div>
             <div class="footer-col"><h5>Legal</h5><ul>
                 <li><a href="terms.html">Terms of Service</a></li>

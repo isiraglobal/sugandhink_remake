@@ -5,6 +5,7 @@
 import { getApiUrl, initReveals } from './utils.js';
 import { initSearch } from './search.js';
 import { initWishlist, updateWishlistBadge } from './wishlist.js';
+import { initializeForNewUser, checkBirthdayBonus, addPoints } from './loyalty.js';
 
 let supabaseClient = null;
 let currentSession = null;
@@ -38,6 +39,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     setupUnifiedDrawer();
     initSearch();
     initWishlist();
+
+    // WhatsApp Chat Widget
+    setupWAChat();
 });
 
 // ── Supabase Dynamic Script Loader ───────────────────────────────────────────
@@ -144,6 +148,19 @@ window.getWhatsAppLink = function(items, subtotal, discount, total, customer) {
     }
     summaryStr += `*Delivery:* Complimentary\n*Total Order Value:* ₹${total.toLocaleString('en-IN')}\n\n`;
     summaryStr += `*Payment Accord:* Prepaid Only (No COD)\n\n`;
+
+    const checkoutSamples = JSON.parse(sessionStorage.getItem('si_checkout_samples') || '[]');
+    if (checkoutSamples.length > 0) {
+        summaryStr += `*Complimentary Samples:* ${checkoutSamples.join(', ')}\n\n`;
+    }
+
+    const checkoutGift = JSON.parse(sessionStorage.getItem('si_checkout_gift') || '{"isGift":false}');
+    if (checkoutGift.isGift) {
+        summaryStr += `*Gift Order:* Yes\n`;
+        if (checkoutGift.premiumWrap) summaryStr += `*Premium Gift Wrapping:* Yes\n`;
+        if (checkoutGift.giftMessage) summaryStr += `*Gift Message:* "${checkoutGift.giftMessage}"\n`;
+        summaryStr += `\n`;
+    }
     
     let custStr = `*Customer Details:*\n`;
     if (customer && customer.name) {
@@ -181,6 +198,37 @@ function setupUnifiedDrawer() {
     const openBtn = document.getElementById('toggle-shop');
     const userAuthBtn = document.getElementById('btn-user-auth');
     
+    // Inject Scent Finder link into nav-left if not present
+    const navLeft = document.querySelector('.nav-left');
+    if (navLeft && !document.querySelector('.nav-left .nav-link[href*="scent-quiz"]')) {
+        const sfLink = document.createElement('a');
+        sfLink.href = window.location.pathname.includes('/pages/') ? 'scent-quiz.html' : 'pages/scent-quiz.html';
+        sfLink.className = 'nav-link';
+        sfLink.textContent = 'Scent Finder';
+        const aboutLink = navLeft.querySelector('a[href*="about"], a[href*="heritage"]');
+        if (aboutLink) {
+            aboutLink.parentNode.insertBefore(sfLink, aboutLink.nextSibling);
+        } else {
+            navLeft.appendChild(sfLink);
+        }
+    }
+
+    // Inject Scent Finder link into mobile menu if not present
+    const mobileMenuNav = document.querySelector('.mobile-menu-nav');
+    if (mobileMenuNav && !mobileMenuNav.querySelector('a[href*="scent-quiz"]')) {
+        const mmSf = document.createElement('a');
+        mmSf.href = window.location.pathname.includes('/pages/') ? 'scent-quiz.html' : 'pages/scent-quiz.html';
+        mmSf.className = 'mm-link';
+        mmSf.setAttribute('data-close', '');
+        mmSf.textContent = 'Scent Finder';
+        const contactLink = mobileMenuNav.querySelector('a[href*="contact"]');
+        if (contactLink) {
+            contactLink.parentNode.insertBefore(mmSf, contactLink);
+        } else {
+            mobileMenuNav.appendChild(mmSf);
+        }
+    }
+
     // Inject search button into nav-right if not present
     const navRight = document.querySelector('.nav-right');
     if (navRight && !document.getElementById('btn-search')) {
@@ -858,6 +906,11 @@ function setupCartStepperListeners(cart, subtotal, discount, total) {
 
             const waLink = window.getWhatsAppLink(cart, subtotal, discount, total, user);
             window.open(waLink, '_blank');
+
+            initializeForNewUser();
+            checkBirthdayBonus();
+            addPoints(subtotal, 'Purchase');
+
             localStorage.removeItem('si_cart');
             localStorage.removeItem('si_promo_applied');
             window.dispatchEvent(new CustomEvent('cart:updated'));
@@ -1002,6 +1055,33 @@ function setupHeader() {
     window.addEventListener('scroll', () => {
         header.classList.toggle('lifted', window.scrollY > 10);
     }, { passive: true });
+}
+
+// ── WhatsApp Chat Widget ────────────────────────────────────────────────────
+function setupWAChat() {
+    if (document.getElementById('wa-chat-widget')) return;
+
+    const widget = document.createElement('div');
+    widget.className = 'wa-chat-widget';
+    widget.id = 'wa-chat-widget';
+
+    const tooltip = document.createElement('span');
+    tooltip.className = 'wa-chat-tooltip';
+    tooltip.textContent = 'Chat with us';
+
+    const btn = document.createElement('button');
+    btn.className = 'wa-chat-btn';
+    btn.setAttribute('aria-label', 'Chat with us on WhatsApp');
+    btn.innerHTML = `<svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12.8 12.8 0 00-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>`;
+
+    btn.addEventListener('click', () => {
+        const msg = encodeURIComponent('Hello Sugandh Ink! I would like to know more about your fragrances.');
+        window.open(`https://wa.me/919769445567?text=${msg}`, '_blank');
+    });
+
+    widget.appendChild(tooltip);
+    widget.appendChild(btn);
+    document.body.appendChild(widget);
 }
 
 function escHtml(str) {

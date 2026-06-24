@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Corporate Gifting - Sugandh Ink</title>
+    <meta name="description" content="Elevate your corporate gifting with Sugandh Ink. Bespoke fragrance collections, custom packaging, and tiered gifting programmes for businesses.">
+    <meta property="og:title" content="Corporate Gifting - Sugandh Ink">
+    <meta property="og:description" content="Premium corporate gifting solutions from Sugandh Ink. Custom fragrance collections for your clients and teams.">
+    <meta property="og:image" content="../assets/logo.png">
+    <meta property="og:type" content="website">
+    <meta name="twitter:card" content="summary_large_image">
+    <link rel="icon" href="../assets/logo.png" type="image/png">
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/base.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <style>
+        .cg-hero { padding: 140px 0 80px; text-align: center; background: var(--ink); }
+        .cg-hero .overline { font-family: var(--font-body); font-size: 0.7rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--gold); margin-bottom: 24px; }
+        .cg-hero h1 { font-family: var(--font-display); font-size: clamp(3rem, 7vw, 6rem); font-weight: 300; line-height: 1.1; color: var(--cream); margin-bottom: 24px; }
+        .cg-hero h1 em { font-style: italic; color: var(--gold); }
+        .cg-hero .lead { font-family: var(--font-body); font-size: 1.05rem; color: rgba(245,240,230,0.7); max-width: 580px; margin: 0 auto; line-height: 1.8; }
+        .cg-section { padding: 100px 0; }
+        .cg-section + .cg-section { border-top: 1px solid var(--border); }
+        .cg-section .section-eyebrow { font-family: var(--font-body); font-size: 0.65rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--gold); margin-bottom: 16px; display: block; }
+        .cg-section h2 { font-family: var(--font-display); font-size: clamp(2rem, 4vw, 3.2rem); font-weight: 300; color: var(--ink); margin-bottom: 32px; }
+        .cg-section h2 em { font-style: italic; }
+        .cg-section p { font-family: var(--font-body); font-size: 0.9rem; color: var(--ink-mid); line-height: 1.9; margin-bottom: 20px; max-width: 720px; }
+        .cg-why-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px; margin-top: 48px; }
+        .cg-why-card { background: var(--cream-deep); padding: 48px 40px; }
+        .cg-why-card .cg-icon { font-size: 2rem; margin-bottom: 16px; display: block; }
+        .cg-why-card h3 { font-family: var(--font-display); font-size: 1.3rem; font-weight: 300; color: var(--ink); margin-bottom: 12px; }
+        .cg-why-card p { font-family: var(--font-body); font-size: 0.83rem; color: var(--ink-mid); line-height: 1.8; max-width: 100%; }
+        .cg-dark { background: var(--ink); }
+        .cg-dark h2 { color: var(--cream); }
+        .cg-dark p { color: rgba(245,240,230,0.65); }
+        .cg-dark .section-eyebrow { color: var(--gold-light); }
+        .tier-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px; margin-top: 48px; }
+        .tier-card { background: var(--cream-deep); padding: 48px 40px; display: flex; flex-direction: column; }
+        .tier-name { font-family: var(--font-display); font-size: 2rem; font-weight: 300; color: var(--ink); margin-bottom: 8px; }
+        .tier-range { font-family: var(--font-body); font-size: 0.75rem; color: var(--gold); margin-bottom: 24px; display: block; }
+        .tier-card ul { margin-bottom: 32px; flex: 1; }
+        .tier-card ul li { font-family: var(--font-body); font-size: 0.83rem; color: var(--ink-mid); line-height: 2; padding-left: 20px; position: relative; }
+        .tier-card ul li::before { content: '—'; position: absolute; left: 0; color: var(--gold); }
+        .tier-card.featured { background: var(--gold-pale); }
+        .cg-custom-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px; margin-top: 48px; }
+        .cg-custom-item { padding: 48px 40px; background: var(--cream-deep); text-align: center; }
+        .cg-custom-item h3 { font-family: var(--font-display); font-size: 1.3rem; font-weight: 300; color: var(--ink); margin-bottom: 12px; }
+        .cg-custom-item p { font-family: var(--font-body); font-size: 0.83rem; color: var(--ink-mid); line-height: 1.8; max-width: 100%; text-align: center; }
+        .testimonial-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 2px; margin-top: 48px; }
+        .testimonial-card { padding: 40px; background: var(--cream-deep); }
+        .testimonial-card blockquote { font-family: var(--font-display); font-size: 1.15rem; font-style: italic; font-weight: 300; color: var(--ink); line-height: 1.6; margin-bottom: 20px; }
+        .testimonial-card cite { font-family: var(--font-body); font-size: 0.7rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--gold); }
+        .cg-form { max-width: 640px; margin: 48px auto 0; }
+        .cg-form .form-group { margin-bottom: 20px; }
+        .cg-form label { display: block; font-family: var(--font-body); font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-dim); margin-bottom: 6px; }
+        .cg-form input,
+        .cg-form textarea,
+        .cg-form select { width: 100%; padding: 12px 16px; border: 1px solid var(--border); background: var(--cream); font-family: var(--font-body); font-size: 0.85rem; color: var(--ink); outline: none; transition: border-color 0.3s; }
+        .cg-form input:focus,
+        .cg-form textarea:focus,
+        .cg-form select:focus { border-color: var(--gold); }
+        .cg-form textarea { min-height: 100px; resize: vertical; }
+        .cg-form .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+        .cg-form .form-submit { width: 100%; padding: 14px; background: var(--ink); color: var(--cream); border: none; font-family: var(--font-body); font-size: 0.8rem; letter-spacing: 0.15em; text-transform: uppercase; cursor: pointer; transition: background 0.3s; }
+        .cg-form .form-submit:hover { background: var(--gold); }
+        .cg-form .form-note { font-size: 0.72rem; color: var(--ink-dim); text-align: center; margin-top: 16px; }
+        @media (max-width: 768px) {
+            .cg-why-grid, .tier-grid, .cg-custom-grid { grid-template-columns: 1fr; }
+            .testimonial-grid { grid-template-columns: 1fr; }
+            .cg-form .form-row { grid-template-columns: 1fr; }
+            .cg-why-card, .tier-card, .cg-custom-item { padding: 32px 24px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="page-curtain" id="curtain"></div>
+    <div class="cursor" id="cursor"><div class="cursor-ring"></div><div class="cursor-dot"></div></div>
+    <div class="announcement-banner" id="announcement-banner">
+        <span>Complimentary Shipping on orders above ₹5,000 - <a href="../collection.html">Explore the Library</a></span>
+        <button class="banner-close" id="banner-close" aria-label="Close">✕</button>
+    </div>
+    <header class="site-header" id="site-header">
+        <div class="header-logo-row">
+            <a href="../index.html" class="nav-logo-img-link" aria-label="Sugandh Ink Home">
+                <img src="../assets/logo.png" alt="Sugandh Ink Logo" class="header-logo-img">
+            </a>
+        </div>
+        <nav class="main-nav" id="main-nav">
+            <div class="nav-left">
+                <a href="../collection.html" class="nav-link">Collection</a>
+                <a href="../index.html#new-arrivals" class="nav-link">New Arrivals</a>
+                <a href="heritage.html" class="nav-link">Our Heritage</a>
+            </div>
+            <div class="nav-right">
+                <a href="ingredient-glossary.html" class="nav-link">Scent Finder</a>
+                <a href="journal.html" class="nav-link">Journal</a>
+                <a href="contact.html" class="nav-link">Contact</a>
+                <button class="nav-icon-btn" id="btn-user-auth" aria-label="Account">
+                    <svg id="auth-icon-svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                    <span id="user-initials" style="display:none; font-family:'Jost',sans-serif; font-size:0.7rem; font-weight:600; width:22px; height:22px; background:var(--gold); color:var(--cream); border-radius:50%; align-items:center; justify-content:center;"></span>
+                </button>
+                <button class="nav-icon-btn" id="toggle-shop" aria-label="Open fragrance library">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
+                    <span class="cart-count" id="cart-badge"></span>
+                </button>
+            </div>
+            <button class="hamburger" id="hamburger" aria-label="Menu" aria-expanded="false"><span></span><span></span></button>
+        </nav>
+        <div class="mobile-menu" id="mobile-menu" aria-hidden="true">
+            <nav class="mobile-menu-nav">
+                <a href="../collection.html" class="mm-link">Collection</a>
+                <a href="../index.html#new-arrivals" class="mm-link" data-close>New Arrivals</a>
+                <a href="heritage.html" class="mm-link" data-close>Our Heritage</a>
+                <a href="ingredient-glossary.html" class="mm-link" data-close>Scent Finder</a>
+                <a href="journal.html" class="mm-link" data-close>Journal</a>
+                <a href="contact.html" class="mm-link" data-close>Contact</a>
+            </nav>
+            <div class="mm-footer">
+                <a href="mailto:hello@sugandhink.in">hello@sugandhink.in</a>
+                <a href="tel:+919769445567">+91 97694 45567</a>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="cg-hero" data-reveal>
+            <div class="container">
+                <p class="overline">B2B Gifting Program</p>
+                <h1>Corporate<br><em>Gifting</em></h1>
+                <p class="lead">Elevate your corporate relationships with the gift of olfactory artistry. Sugandh Ink offers bespoke gifting solutions for businesses seeking distinction, memorability, and the quiet power of rare natural fragrance.</p>
+            </div>
+        </div>
+
+        <div class="container">
+            <section class="cg-section" data-reveal>
+                <span class="section-eyebrow">The Maison</span>
+                <h2>Why Sugandh Ink for<br><em>Corporate Gifting?</em></h2>
+                <p>In a marketplace of generic corporate gifts, Sugandh Ink offers something genuinely uncommon: the gift of olfactory architecture. Each fragrance in our library represents months of maturation, rare botanicals sourced directly from Indian growers, and a centuries-old tradition of extraction that cannot be replicated.</p>
+                <p>Our corporate gifting programme is designed for organisations that value craft, provenance, and the subtle art of making a lasting impression. Every gift is an invitation into the world of artisanal Indian perfumery.</p>
+
+                <div class="cg-why-grid">
+                    <div class="cg-why-card" data-reveal>
+                        <span class="cg-icon">
+                            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="1.5"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+                        </span>
+                        <h3>Bespoke Curation</h3>
+                        <p>Every corporate gift is curated by our scent architects to align with your brand's character - whether understated elegance, bold presence, or warm approachability.</p>
+                    </div>
+                    <div class="cg-why-card" data-reveal>
+                        <span class="cg-icon">
+                            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="1.5"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 002 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
+                        </span>
+                        <h3>Custom Packaging</h3>
+                        <p>Full branding capability including engraved glass, embossed packaging, and branded outer boxes. Your corporate identity, realised in the Sugandh Ink atelier.</p>
+                    </div>
+                    <div class="cg-why-card" data-reveal>
+                        <span class="cg-icon">
+                            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="1.5"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
+                        </span>
+                        <h3>Volume Flexibility</h3>
+                        <p>From intimate gifts for board members to large-scale employee appreciation programmes. Minimum order quantity of 10 units; no upper limit.</p>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <div class="cg-section cg-dark">
+            <div class="container">
+                <section data-reveal>
+                    <span class="section-eyebrow">Tiers</span>
+                    <h2>Gifting <em>Tiers</em></h2>
+                    <p>Three distinct tiers designed to match your gifting budget and recipient relationship. Each tier includes curation, packaging, and a personalised note from our atelier.</p>
+
+                    <div class="tier-grid">
+                        <div class="tier-card" data-reveal>
+                            <div class="tier-name">Silver</div>
+                            <span class="tier-range">₹5,000 — ₹15,000</span>
+                            <ul>
+                                <li>1-2 signature fragrances</li>
+                                <li>Standard Sugandh Ink packaging</li>
+                                <li>Branded ribbon seal</li>
+                                <li>Digital gift message</li>
+                                <li>Volume: 10-50 units</li>
+                            </ul>
+                            <a href="#enquire" class="btn btn-outline" style="width:100%; text-align:center;">Enquire</a>
+                        </div>
+                        <div class="tier-card featured" data-reveal>
+                            <div class="tier-name">Gold</div>
+                            <span class="tier-range">₹15,000 — ₹50,000</span>
+                            <ul>
+                                <li>3-5 signature fragrances</li>
+                                <li>Custom engraved glass bottle</li>
+                                <li>Embossed outer packaging</li>
+                                <li>Branded presentation box</li>
+                                <li>Handwritten atelier note</li>
+                                <li>Volume: 10-100 units</li>
+                            </ul>
+                            <a href="#enquire" class="btn btn-dark" style="width:100%; text-align:center;">Most Popular</a>
+                        </div>
+                        <div class="tier-card" data-reveal>
+                            <div class="tier-name">Platinum</div>
+                            <span class="tier-range">₹50,000+</span>
+                            <ul>
+                                <li>Full library curation</li>
+                                <li>Custom engraved glass + gilded details</li>
+                                <li>Full bespoke box fabrication</li>
+                                <li>Corporate branding on all materials</li>
+                                <li>Private atelier consultation</li>
+                                <li>Volume: Unlimited</li>
+                            </ul>
+                            <a href="#enquire" class="btn btn-outline" style="width:100%; text-align:center;">Enquire</a>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </div>
+
+        <div class="container">
+            <section class="cg-section" data-reveal>
+                <span class="section-eyebrow">Customisation</span>
+                <h2>Tailored to Your <em>Identity</em></h2>
+                <p>Every corporate gifting order is a collaboration. Our team works with you to ensure the final product reflects your organisation's values, aesthetic, and message.</p>
+
+                <div class="cg-custom-grid">
+                    <div class="cg-custom-item" data-reveal>
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="1.5" style="margin-bottom:16px;"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="2"/></svg>
+                        <h3>Engraving</h3>
+                        <p>Laser-engraved bottle glass with recipient name, company logo, or commemorative message.</p>
+                    </div>
+                    <div class="cg-custom-item" data-reveal>
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="1.5" style="margin-bottom:16px;"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 002 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/></svg>
+                        <h3>Packaging</h3>
+                        <p>Custom-printed outer boxes, tissue paper, and ribbon in your brand colours. Foil stamping available.</p>
+                    </div>
+                    <div class="cg-custom-item" data-reveal>
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="1.5" style="margin-bottom:16px;"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18"/><path d="M9 21V9"/></svg>
+                        <h3>Branded Boxes</h3>
+                        <p>Custom-fabricated presentation cases with magnetic closure, branded inserts, and product information cards.</p>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <div class="container">
+            <section class="cg-section" data-reveal>
+                <span class="section-eyebrow">Testimonials</span>
+                <h2>Trusted by <em>Leading Organisations</em></h2>
+
+                <div class="testimonial-grid">
+                    <div class="testimonial-card" data-reveal>
+                        <blockquote>"Sugandh Ink transformed our annual client appreciation programme. The quality of the fragrances and the attention to packaging detail was extraordinary. Our clients are still calling to ask about the perfumes."</blockquote>
+                        <cite>— Head of Partnerships, Mumbai-based Fintech</cite>
+                    </div>
+                    <div class="testimonial-card" data-reveal>
+                        <blockquote>"We ordered 200 engraved bottles for our leadership retreat. The team at Sugandh Ink curated three fragrances that matched our brand ethos perfectly. The presentation was immaculate."</blockquote>
+                        <cite>— COO, Indian Luxury Hospitality Group</cite>
+                    </div>
+                    <div class="testimonial-card" data-reveal>
+                        <blockquote>"The Platinum tier gifting experience is unmatched. From the private atelier consultation to the bespoke packaging, every detail was considered. This is how you make people feel valued."</blockquote>
+                        <cite>— Director, Global Consulting Firm (India Office)</cite>
+                    </div>
+                    <div class="testimonial-card" data-reveal>
+                        <blockquote>"We have used Sugandh Ink for three consecutive Diwali gifting cycles. Our employees look forward to the gift every year. The quality and consistency are remarkable."</blockquote>
+                        <cite>— HR Lead, Bangalore-based Tech Company</cite>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <div class="cg-section cg-dark" id="enquire">
+            <div class="container">
+                <section data-reveal>
+                    <span class="section-eyebrow">Enquire</span>
+                    <h2>Begin Your <em>Gifting Programme</em></h2>
+                    <p>Submit the form below and our corporate gifting team will respond within 48 hours with a curated proposal, pricing, and samples.</p>
+
+                    <div class="cg-form" id="cg-form">
+                        <form id="corporate-gift-form">
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="cg-name">Full Name</label>
+                                    <input type="text" id="cg-name" name="name" required placeholder="Your full name">
+                                </div>
+                                <div class="form-group">
+                                    <label for="cg-company">Company</label>
+                                    <input type="text" id="cg-company" name="company" required placeholder="Organisation name">
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="cg-email">Email Address</label>
+                                    <input type="email" id="cg-email" name="email" required placeholder="your@company.com">
+                                </div>
+                                <div class="form-group">
+                                    <label for="cg-phone">Phone</label>
+                                    <input type="tel" id="cg-phone" name="phone" required placeholder="With country code">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="cg-quantity">Estimated Quantity</label>
+                                <select id="cg-quantity" name="quantity">
+                                    <option value="">Select range...</option>
+                                    <option value="10-25">10 - 25 units</option>
+                                    <option value="25-50">25 - 50 units</option>
+                                    <option value="50-100">50 - 100 units</option>
+                                    <option value="100-500">100 - 500 units</option>
+                                    <option value="500+">500+ units</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="cg-message">Message</label>
+                                <textarea id="cg-message" name="message" placeholder="Tell us about your gifting needs, preferred tier, timeline, and any special requirements..."></textarea>
+                            </div>
+                            <button type="submit" class="form-submit">Submit Enquiry</button>
+                            <p class="form-note">Your enquiry will be directed to our corporate gifting team. Alternatively, reach us via WhatsApp at +91 97694 45567.</p>
+                        </form>
+                        <div id="cg-form-success" style="display:none; text-align:center; padding:40px;">
+                            <p style="font-family:var(--font-display); font-size:1.6rem; color:var(--gold); margin-bottom:16px;">Thank You</p>
+                            <p style="font-family:var(--font-body); color:rgba(245,240,230,0.7); line-height:1.8;">Your corporate gifting enquiry has been received. Our team will respond within 48 hours with a curated proposal.</p>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </main>
+
+    <footer class="site-footer" id="footer">
+        <div class="footer-top">
+            <div class="footer-brand">
+                <div class="footer-logo"><span>Sugandh</span><span class="italic"> Ink</span></div>
+                <p>Artisanal fragrances crafted with unyielding precision and historical reverence. Malad (West), Mumbai.</p>
+                <div class="footer-socials">
+                    <a href="https://instagram.com" class="fsocial" target="_blank" rel="noopener" aria-label="Instagram"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="5"/><circle cx="17.5" cy="6.5" r="1.5" fill="currentColor" stroke="none"/></svg></a>
+                    <a href="https://twitter.com" class="fsocial" target="_blank" rel="noopener" aria-label="Twitter / X"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg></a>
+                    <a href="https://facebook.com" class="fsocial" target="_blank" rel="noopener" aria-label="Facebook"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg></a>
+                </div>
+            </div>
+            <div class="footer-col"><h5>The Maison</h5><ul>
+                <li><a href="heritage.html">Our Heritage</a></li>
+                <li><a href="ingredient-glossary.html">Ingredient Glossary</a></li>
+                <li><a href="layering-guide.html">Layering Guide</a></li>
+                <li><a href="../collection.html">The Library</a></li>
+                <li><a href="bespoke.html">Bespoke Enquiry</a></li>
+            </ul></div>
+            <div class="footer-col"><h5>Shop</h5><ul>
+                <li><a href="corporate-gifting.html">Corporate Gifting</a></li>
+                <li><a href="gift-cards.html">Gift Cards</a></li>
+                <li><a href="../index.html#new-arrivals">New Arrivals</a></li>
+                <li><a href="../index.html#top-selling">Best Sellers</a></li>
+                <li><a href="../index.html#families">By Scent Family</a></li>
+                <li><a href="../collection.html">Full Collection</a></li>
+            </ul></div>
+            <div class="footer-col"><h5>Client Care</h5><ul>
+                <li><a href="contact.html">Contact Us</a></li>
+                <li><a href="consultation.html">Fragrance Consultation</a></li>
+                <li><a href="journal.html">The Journal</a></li>
+                <li><a href="newsletter.html">Newsletter</a></li>
+                <li><a href="rewards.html">Rewards &amp; Loyalty</a></li>
+                <li><a href="faq.html">FAQ</a></li>
+            </ul></div>
+            <div class="footer-col"><h5>Legal</h5><ul>
+                <li><a href="terms.html">Terms of Service</a></li>
+                <li><a href="privacy.html">Privacy Policy</a></li>
+                <li><a href="cookies.html">Cookie Policy</a></li>
+                <li><a href="returns.html">Returns &amp; Shipping</a></li>
+            </ul></div>
+        </div>
+        <div class="footer-bottom">
+            <span>&copy; 2026 Sugandh Ink - All Rights Reserved</span>
+            <span class="footer-wa-note">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12.8 12.8 0 00-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+                Orders via WhatsApp: <a href="https://wa.me/919769445567" target="_blank">+91 97694 45567</a>
+            </span>
+        </div>
+    </footer>
+
+    <script type="module" src="../js/loader.js"></script>
+    <script type="module" src="../js/transitions.js"></script>
+    <script type="module" src="../js/ui.js"></script>
+    <script>
+        document.getElementById('corporate-gift-form')?.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const form = this;
+            const data = {
+                type: 'corporate_enquiry',
+                name: form.name.value.trim(),
+                company: form.company.value.trim(),
+                email: form.email.value.trim(),
+                phone: form.phone.value.trim(),
+                quantity: form.quantity.value,
+                message: form.message.value.trim()
+            };
+
+            const submitBtn = form.querySelector('.form-submit');
+            submitBtn.textContent = 'Submitting...';
+            submitBtn.disabled = true;
+
+            try {
+                const res = await fetch('/api/customers', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+                if (res.ok) {
+                    form.style.display = 'none';
+                    document.getElementById('cg-form-success').style.display = 'block';
+                } else {
+                    throw new Error('API Error');
+                }
+            } catch (err) {
+                const waNum = '919769445567';
+                const msg = encodeURIComponent(
+                    `Hello Sugandh Ink, I would like to enquire about corporate gifting.\n\nName: ${data.name}\nCompany: ${data.company}\nEmail: ${data.email}\nPhone: ${data.phone}\nQuantity: ${data.quantity || 'Not specified'}\nMessage: ${data.message || 'Not specified'}`
+                );
+                window.open(`https://wa.me/${waNum}?text=${msg}`, '_blank');
+                form.style.display = 'none';
+                document.getElementById('cg-form-success').style.display = 'block';
+            }
+        });
+    </script>
+</body>
+</html>

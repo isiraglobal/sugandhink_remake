@@ -1,8 +1,9 @@
 /**
- * account-page.js - Account dashboard with tabs for Profile, Orders, Wishlist, Addresses
+ * account-page.js - Account dashboard with tabs for Profile, Orders, Wishlist, Addresses, Loyalty
  */
 
 import { getApiUrl } from './utils.js';
+import { getPoints, getTier, getHistory, TIERS, renderPointsBadge } from './loyalty.js';
 
 const productsPromise = import('./products.js').then(m => m.products);
 
@@ -41,8 +42,8 @@ async function initAccountPage(user) {
     const greeting = document.getElementById('account-greeting');
     if (greeting) greeting.textContent = `Welcome, ${user.name || 'Atelier Member'}`;
 
-    const tabs = document.querySelectorAll('.account-tab');
-    const panes = document.querySelectorAll('.account-pane');
+    const tabs = document.querySelectorAll('.ac-tab');
+    const panes = document.querySelectorAll('.ac-pane');
 
     tabs.forEach(tab => {
         tab.addEventListener('click', () => {
@@ -59,7 +60,14 @@ async function initAccountPage(user) {
     const products = await productsPromise;
     renderWishlist(products);
     renderAddresses(user);
+    renderLoyalty();
+    renderPointsBadge();
 }
+
+window.addEventListener('loyalty:updated', () => {
+    renderLoyalty();
+    renderPointsBadge();
+});
 
 function renderProfile(user) {
     const pane = document.getElementById('pane-profile');
@@ -135,12 +143,49 @@ function renderOrders() {
                     <div class="ac-order-row"><span>Date</span><span>${escHtml(o.date)}</span></div>
                     <div class="ac-order-row"><span>Items</span><span>${escHtml(o.items)}</span></div>
                     <div class="ac-order-row"><span>Total</span><span>${escHtml(o.value || o.total)}</span></div>
+                    <div style="display:flex;gap:8px;margin-top:12px;">
+                        <button class="btn btn-outline ac-reorder-btn" data-order='${escHtml(JSON.stringify(o))}' style="font-size:0.65rem;padding:8px 16px;">Reorder</button>
+                        <a href="track-order.html?id=${escHtml(o.id)}" class="btn btn-outline" style="font-size:0.65rem;padding:8px 16px;">Track Order</a>
+                    </div>
                 </div>
             </div>
         `;
     });
     html += `</div>`;
     pane.innerHTML = html;
+
+    pane.querySelectorAll('.ac-reorder-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            try {
+                const order = JSON.parse(btn.dataset.order);
+                if (order.items) {
+                    const itemNames = order.items.split(',').map(s => s.trim().split('(')[0].trim());
+                    import('./products.js').then(m => {
+                        const prods = m.products;
+                        const cart = [];
+                        itemNames.forEach(name => {
+                            const match = prods.find(p => p.name.toLowerCase().includes(name.toLowerCase()) || name.toLowerCase().includes(p.name.toLowerCase()));
+                            if (match) {
+                                cart.push({
+                                    name: match.name,
+                                    code: match.code,
+                                    price: parseInt(match.price.replace(/[^0-9]/g, '')),
+                                    qty: 1,
+                                    size: '50ml',
+                                    image: match.image
+                                });
+                            }
+                        });
+                        if (cart.length > 0) {
+                            localStorage.setItem('si_cart', JSON.stringify(cart));
+                            window.dispatchEvent(new CustomEvent('cart:updated'));
+                            window.location.href = '../cart.html';
+                        }
+                    });
+                }
+            } catch (e) { /* ignore */ }
+        });
+    });
 }
 
 async function renderWishlist(products) {
@@ -248,7 +293,63 @@ function renderAddresses(user) {
     });
 }
 
-function escHtml(str) {
-    if (!str) return '';
-    return str.replace(/[&<>"']/g, m => ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' })[m]);
+function renderLoyalty() {
+    const pane = document.getElementById('pane-loyalty');
+    if (!pane) return;
+
+    const pts = getPoints();
+    const tier = getTier();
+    const history = getHistory().slice().reverse();
+
+    let html = `<div style="padding:16px 0;">`;
+
+    html += `
+        <div style="display:flex;align-items:center;gap:20px;padding:24px;background:var(--cream-deep);border:1px solid var(--border);border-radius:8px;margin-bottom:24px;">
+            <div style="text-align:center;flex-shrink:0;">
+                <div style="font-family:var(--font-display);font-size:2.4rem;font-weight:300;color:var(--gold);line-height:1;">${pts}</div>
+                <div style="font-family:var(--font-body);font-size:0.62rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--ink-dim);">Points</div>
+            </div>
+            <div>
+                <div style="font-family:var(--font-body);font-size:0.85rem;color:var(--ink);">Current Tier: <strong>${tier.name}</strong></div>
+                <div style="font-family:var(--font-body);font-size:0.75rem;color:var(--ink-dim);margin-top:4px;">${tier.benefit}</div>
+                <a href="loyalty.html" style="font-family:var(--font-body);font-size:0.72rem;color:var(--gold);display:inline-block;margin-top:8px;text-decoration:underline;">View full program details</a>
+            </div>
+        </div>
+    `;
+
+    html += `<h4 style="font-family:var(--font-display);font-size:1.1rem;font-weight:500;color:var(--ink);margin-bottom:16px;">How to Earn More</h4>`;
+    html += `<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px;margin-bottom:24px;">`;
+    const earnWays = [
+        { label: 'Every Purchase', desc: 'Re. 1 = 1 point', pts: '1/Re.1' },
+        { label: 'Sign Up Bonus', desc: 'Welcome to the Atelier', pts: '+100' },
+        { label: 'Write a Review', desc: 'Share your experience', pts: '+50' },
+        { label: 'Refer a Friend', desc: 'Invite fellow collectors', pts: '+200' }
+    ];
+    earnWays.forEach(e => {
+        html += `
+            <div style="padding:16px;border:1px solid var(--border);border-radius:6px;display:flex;justify-content:space-between;align-items:center;">
+                <div>
+                    <div style="font-family:var(--font-body);font-size:0.82rem;color:var(--ink);font-weight:500;">${e.label}</div>
+                    <div style="font-family:var(--font-body);font-size:0.7rem;color:var(--ink-dim);">${e.desc}</div>
+                </div>
+                <div style="font-family:var(--font-display);font-size:1rem;color:var(--gold);font-weight:500;flex-shrink:0;">${e.pts}</div>
+            </div>
+        `;
+    });
+    html += `</div>`;
+
+    if (history.length > 0) {
+        html += `<h4 style="font-family:var(--font-display);font-size:1.1rem;font-weight:500;color:var(--ink);margin-bottom:12px;">Recent Activity</h4>`;
+        html += `<table class="ly-history-table" style="margin-bottom:24px;">`;
+        html += `<thead><tr><th>Date</th><th>Reason</th><th>Points</th><th>Balance</th></tr></thead><tbody>`;
+        history.slice(0, 10).forEach(h => {
+            const cls = h.points >= 0 ? 'ly-pts-positive' : 'ly-pts-negative';
+            const sign = h.points >= 0 ? '+' : '';
+            html += `<tr><td>${h.date}</td><td>${h.reason}</td><td class="${cls}">${sign}${h.points}</td><td>${h.runningTotal}</td></tr>`;
+        });
+        html += `</tbody></table>`;
+    }
+
+    html += `</div>`;
+    pane.innerHTML = html;
 }

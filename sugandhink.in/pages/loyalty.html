@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Atelier Club - Sugandh Ink</title>
+    <meta name="description" content="Join The Atelier Club, Sugandh Ink's loyalty rewards program. Earn points with every purchase and unlock exclusive benefits across four tiers.">
+    <meta property="og:title" content="The Atelier Club - Sugandh Ink">
+    <meta property="og:description" content="Earn rewards with every purchase. Four tiers of exclusive benefits.">
+    <meta property="og:image" content="../assets/logo.png">
+    <meta property="og:type" content="website">
+    <meta name="twitter:card" content="summary_large_image">
+    <link rel="icon" href="../assets/logo.png" type="image/png">
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/base.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <style>
+        .ly-hero { padding: 140px 0 80px; text-align: center; border-bottom: 1px solid var(--border); }
+        .ly-hero h1 { font-family: var(--font-display); font-size: clamp(2.5rem, 6vw, 4.5rem); font-weight: 300; line-height: 1.1; color: var(--ink); margin-bottom: 24px; }
+        .ly-hero h1 em { font-style: italic; color: var(--gold); }
+        .ly-hero .lead { font-family: var(--font-body); font-size: 1.05rem; color: var(--ink-mid); max-width: 580px; margin: 0 auto; line-height: 1.8; }
+        .ly-content { padding: 80px 0; max-width: 860px; margin: 0 auto; }
+        .ly-points-panel { background: var(--cream-deep); padding: 40px; border-radius: 8px; text-align: center; margin-bottom: 60px; border: 1px solid var(--border); }
+        .ly-points-panel .ly-points-number { font-family: var(--font-display); font-size: 3.2rem; font-weight: 300; color: var(--gold); line-height: 1; }
+        .ly-points-panel .ly-points-label { font-family: var(--font-body); font-size: 0.72rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--ink-dim); margin: 8px 0 16px; }
+        .ly-points-panel .ly-tier-name { font-family: var(--font-body); font-size: 0.78rem; color: var(--ink-mid); }
+        .ly-points-panel .ly-tier-name strong { color: var(--ink); }
+        .ly-points-panel .ly-next-tier { font-family: var(--font-body); font-size: 0.75rem; color: var(--ink-dim); margin-top: 8px; }
+        .ly-tiers { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 60px; }
+        .ly-tier-card { border: 1px solid var(--border); border-radius: 8px; padding: 28px 20px; text-align: center; background: var(--cream); transition: transform .3s var(--ease-out), box-shadow .3s; }
+        .ly-tier-card:hover { transform: translateY(-4px); box-shadow: 0 12px 40px rgba(155,122,66,0.1); }
+        .ly-tier-card.current { border-color: var(--gold); background: var(--gold-pale); }
+        .ly-tier-icon { width: 48px; height: 48px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 16px; font-family: var(--font-display); font-size: 1.2rem; font-weight: 500; color: var(--cream); }
+        .ly-tier-card h3 { font-family: var(--font-display); font-size: 1.2rem; font-weight: 500; color: var(--ink); margin-bottom: 4px; }
+        .ly-tier-card .ly-tier-min { font-family: var(--font-body); font-size: 0.65rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-dim); margin-bottom: 12px; }
+        .ly-tier-card ul { list-style: none; padding: 0; margin: 0; text-align: left; }
+        .ly-tier-card ul li { font-family: var(--font-body); font-size: 0.78rem; color: var(--ink-mid); padding: 5px 0 5px 16px; position: relative; line-height: 1.5; }
+        .ly-tier-card ul li::before { content: '—'; position: absolute; left: 0; color: var(--gold); }
+        .ly-earn-section { margin-bottom: 60px; }
+        .ly-earn-section h2 { font-family: var(--font-display); font-size: 1.6rem; font-weight: 300; margin-bottom: 24px; text-align: center; }
+        .ly-earn-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
+        .ly-earn-card { border: 1px solid var(--border); border-radius: 6px; padding: 24px; display: flex; align-items: center; gap: 16px; background: var(--cream-deep); }
+        .ly-earn-icon { font-family: var(--font-display); font-size: 1.6rem; color: var(--gold); width: 40px; text-align: center; flex-shrink: 0; }
+        .ly-earn-info { flex: 1; }
+        .ly-earn-info strong { display: block; font-family: var(--font-body); font-size: 0.85rem; color: var(--ink); margin-bottom: 2px; }
+        .ly-earn-info span { font-family: var(--font-body); font-size: 0.75rem; color: var(--ink-dim); }
+        .ly-earn-points { font-family: var(--font-display); font-size: 1.2rem; color: var(--gold); font-weight: 500; flex-shrink: 0; }
+        .ly-history { margin-bottom: 60px; }
+        .ly-history h2 { font-family: var(--font-display); font-size: 1.6rem; font-weight: 300; margin-bottom: 24px; text-align: center; }
+        .ly-history-empty { text-align: center; padding: 40px; font-family: var(--font-body); font-size: 0.88rem; color: var(--ink-dim); }
+        .ly-history-table { width: 100%; border-collapse: collapse; }
+        .ly-history-table th { font-family: var(--font-body); font-size: 0.65rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-dim); padding: 10px 14px; text-align: left; border-bottom: 1px solid var(--border); }
+        .ly-history-table td { font-family: var(--font-body); font-size: 0.82rem; color: var(--ink-mid); padding: 10px 14px; border-bottom: 1px solid var(--border); }
+        .ly-history-table td.ly-pts-positive { color: #27ae60; font-weight: 500; }
+        .ly-history-table td.ly-pts-negative { color: #c0392b; }
+        .ly-cta { text-align: center; padding: 48px; background: var(--ink); border-radius: 12px; color: var(--cream); }
+        .ly-cta h2 { font-family: var(--font-display); font-size: 1.6rem; font-weight: 300; margin-bottom: 12px; }
+        .ly-cta h2 em { font-style: italic; color: var(--gold); }
+        .ly-cta p { font-family: var(--font-body); font-size: 0.88rem; color: rgba(248,245,240,0.6); margin-bottom: 24px; max-width: 480px; margin-left: auto; margin-right: auto; line-height: 1.7; }
+        .ly-cta .btn { font-size: 0.78rem; padding: 14px 36px; }
+        @media (max-width: 768px) {
+            .ly-content { padding: 60px 24px; }
+            .ly-tiers { grid-template-columns: repeat(2, 1fr); }
+            .ly-earn-grid { grid-template-columns: 1fr; }
+            .ly-points-panel { padding: 28px 20px; }
+        }
+        @media (max-width: 480px) {
+            .ly-tiers { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <div class="page-curtain" id="curtain"></div>
+    <div class="cursor" id="cursor"><div class="cursor-ring"></div><div class="cursor-dot"></div></div>
+    <div class="announcement-banner" id="announcement-banner">
+        <span>Complimentary Shipping on orders above ₹5,000 - <a href="../collection.html">Explore the Library</a></span>
+        <button class="banner-close" id="banner-close" aria-label="Close">✕</button>
+    </div>
+    <header class="site-header site-header-solid" id="site-header">
+        <div class="header-logo-row">
+            <a href="../index.html" class="nav-logo-img-link" aria-label="Sugandh Ink Home">
+                <img src="../assets/logo.png" alt="Sugandh Ink Logo" class="header-logo-img">
+            </a>
+        </div>
+        <nav class="main-nav" id="main-nav">
+            <div class="nav-left">
+                <a href="../collection.html" class="nav-link">Collection</a>
+                <a href="../index.html#new-arrivals" class="nav-link">New Arrivals</a>
+                <a href="../index.html#about" class="nav-link">Our Story</a>
+            </div>
+            <div class="nav-right">
+                <a href="../index.html#ingredients" class="nav-link">Ingredients</a>
+                <a href="contact.html" class="nav-link">Contact</a>
+                <button class="nav-icon-btn" id="btn-user-auth" aria-label="Account">
+                    <svg id="auth-icon-svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                    <span id="user-initials" style="display:none; font-family:'Jost',sans-serif; font-size:0.7rem; font-weight:600; width:22px; height:22px; background:var(--gold); color:var(--cream); border-radius:50%; align-items:center; justify-content:center;"></span>
+                </button>
+                <button class="nav-icon-btn" id="toggle-shop" aria-label="Open fragrance library">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
+                    <span class="cart-count" id="cart-badge"></span>
+                </button>
+            </div>
+            <button class="hamburger" id="hamburger" aria-label="Menu" aria-expanded="false"><span></span><span></span></button>
+        </nav>
+        <div class="mobile-menu" id="mobile-menu" aria-hidden="true">
+            <nav class="mobile-menu-nav">
+                <a href="../collection.html" class="mm-link">Collection</a>
+                <a href="../index.html#new-arrivals" class="mm-link" data-close>New Arrivals</a>
+                <a href="../index.html#about" class="mm-link" data-close>Our Story</a>
+                <a href="../index.html#ingredients" class="mm-link" data-close>Ingredients</a>
+                <a href="contact.html" class="mm-link" data-close>Contact</a>
+            </nav>
+            <div class="mm-footer">
+                <a href="mailto:hello@sugandhink.in">hello@sugandhink.in</a>
+                <a href="tel:+919769445567">+91 97694 45567</a>
+            </div>
+        </div>
+    </header>
+    <main>
+        <div class="container">
+            <nav class="breadcrumb" style="padding-top: 120px;">
+                <a href="../index.html">Home</a>
+                <span class="breadcrumb-sep">/</span>
+                <span>The Atelier Club</span>
+            </nav>
+            <div class="inner-hero" data-reveal>
+                <h1>The <em>Atelier Club</em></h1>
+                <p class="lead">A rewards program crafted for those who appreciate the finer accords. Earn points with every purchase and ascend through four tiers of exclusive privileges.</p>
+            </div>
+        </div>
+        <div class="container">
+            <div class="ly-content" id="loyalty-content"></div>
+        </div>
+    </main>
+    <footer class="site-footer" id="footer">
+        <div class="footer-top">
+            <div class="footer-brand">
+                <div class="footer-logo"><span>Sugandh</span><span class="italic"> Ink</span></div>
+                <p>Artisanal fragrances crafted with unyielding precision and historical reverence. Malad (West), Mumbai.</p>
+                <div class="footer-socials">
+                    <a href="https://instagram.com" class="fsocial" target="_blank" rel="noopener" aria-label="Instagram"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="5"/><circle cx="17.5" cy="6.5" r="1.5" fill="currentColor" stroke="none"/></svg></a>
+                    <a href="https://twitter.com" class="fsocial" target="_blank" rel="noopener" aria-label="Twitter / X"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg></a>
+                    <a href="https://facebook.com" class="fsocial" target="_blank" rel="noopener" aria-label="Facebook"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg></a>
+                </div>
+            </div>
+            <div class="footer-col"><h5>The Maison</h5><ul>
+                <li><a href="heritage.html">Our Heritage</a></li>
+                <li><a href="ingredients.html">The Ingredients</a></li>
+                <li><a href="../collection.html">The Library</a></li>
+                <li><a href="bespoke.html">Bespoke Enquiry</a></li>
+            </ul></div>
+            <div class="footer-col"><h5>Shop</h5><ul>
+                <li><a href="gift-cards.html">Gift Cards</a></li>
+                <li><a href="../index.html#new-arrivals">New Arrivals</a></li>
+                <li><a href="../index.html#top-selling">Best Sellers</a></li>
+                <li><a href="../collection.html">Full Collection</a></li>
+            </ul></div>
+            <div class="footer-col"><h5>Client Care</h5><ul>
+                <li><a href="contact.html">Contact Us</a></li>
+                <li><a href="consultation.html">Fragrance Consultation</a></li>
+                <li><a href="shipping-policy.html">Shipping &amp; Delivery</a></li>
+                <li><a href="size-guide.html">Size Guide</a></li>
+                <li><a href="faq.html">FAQ</a></li>
+                <li><a href="account.html">My Account</a></li>
+                <li><a href="loyalty.html">The Atelier Club</a></li>
+            </ul></div>
+            <div class="footer-col"><h5>Legal</h5><ul>
+                <li><a href="terms.html">Terms of Service</a></li>
+                <li><a href="privacy.html">Privacy Policy</a></li>
+                <li><a href="cookies.html">Cookie Policy</a></li>
+                <li><a href="returns.html">Returns &amp; Shipping</a></li>
+            </ul></div>
+        </div>
+        <div class="footer-bottom">
+            <span>&copy; 2026 Sugandh Ink - All Rights Reserved</span>
+            <span class="footer-wa-note">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12.8 12.8 0 00-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+                Orders via WhatsApp: <a href="https://wa.me/919769445567" target="_blank">+91 97694 45567</a>
+            </span>
+        </div>
+    </footer>
+    <script type="module" src="../js/loader.js"></script>
+    <script type="module" src="../js/transitions.js"></script>
+    <script type="module" src="../js/ui.js"></script>
+    <script type="module">
+        import { getPoints, getTier, getNextTier, getPointsToNextTier, getHistory, TIERS, initializeForNewUser, checkBirthdayBonus, renderPointsBadge } from '../js/loyalty.js';
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const user = JSON.parse(localStorage.getItem('si_user'));
+            const container = document.getElementById('loyalty-content');
+            if (!container) return;
+
+            if (user && user.email) {
+                initializeForNewUser();
+                checkBirthdayBonus();
+                renderSignedInView(container);
+            } else {
+                renderSignInView(container);
+            }
+        });
+
+        function renderSignedInView(container) {
+            const pts = getPoints();
+            const tier = getTier();
+            const nextTier = getNextTier();
+            const ptsToNext = getPointsToNextTier();
+            const history = getHistory().slice().reverse();
+
+            let html = `
+                <div class="ly-points-panel" data-reveal>
+                    <div class="ly-points-number">${pts}</div>
+                    <div class="ly-points-label">Atelier Points</div>
+                    <div class="ly-tier-name">Current Tier: <strong>${tier.name}</strong></div>
+                    ${ptsToNext > 0 ? `<div class="ly-next-tier">${ptsToNext} points to ${nextTier.name} tier</div>` : '<div class="ly-next-tier" style="color:var(--gold);font-weight:500;">Highest tier achieved</div>'}
+                </div>
+            `;
+
+            html += `<h2 style="font-family:var(--font-display);font-size:1.6rem;font-weight:300;margin-bottom:24px;text-align:center;">Membership <em style="font-style:italic;color:var(--gold);">Tiers</em></h2>`;
+            html += `<div class="ly-tiers" data-reveal>`;
+            TIERS.forEach(t => {
+                const isCurrent = t.name === tier.name;
+                const isUnlocked = pts >= t.min;
+                const iconColor = t.color;
+                html += `
+                    <div class="ly-tier-card ${isCurrent ? 'current' : ''}">
+                        <div class="ly-tier-icon" style="background:${iconColor};">${t.name[0]}</div>
+                        <h3>${t.name}</h3>
+                        <div class="ly-tier-min">${t.min === 0 ? 'Entry' : t.min + ' Points'}</div>
+                        <ul>
+                            <li>${t.benefit}</li>
+                            ${isUnlocked ? '<li style="color:var(--gold);">Tier unlocked</li>' : '<li>Locked until ' + t.min + ' points</li>'}
+                        </ul>
+                    </div>
+                `;
+            });
+            html += `</div>`;
+
+            html += `<div class="ly-earn-section" data-reveal>`;
+            html += `<h2>How to <em style="font-style:italic;color:var(--gold);">Earn</em></h2>`;
+            html += `<div class="ly-earn-grid">`;
+            const earnWays = [
+                { icon: 'R', label: 'Every Purchase', desc: 'Rs. 1 spent = 1 point', pts: '1 per Re. 1' },
+                { icon: 'S', label: 'Sign Up', desc: 'Welcome bonus on joining', pts: '+100' },
+                { icon: 'W', label: 'Write a Review', desc: 'Share your olfactory experience', pts: '+50' },
+                { icon: 'R', label: 'Refer a Friend', desc: 'Invite fellow collectors', pts: '+200' }
+            ];
+            earnWays.forEach(e => {
+                html += `
+                    <div class="ly-earn-card">
+                        <div class="ly-earn-icon">${e.icon}</div>
+                        <div class="ly-earn-info">
+                            <strong>${e.label}</strong>
+                            <span>${e.desc}</span>
+                        </div>
+                        <div class="ly-earn-points">${e.pts}</div>
+                    </div>
+                `;
+            });
+            html += `</div></div>`;
+
+            html += `<div class="ly-history" data-reveal>`;
+            html += `<h2>Points <em style="font-style:italic;color:var(--gold);">History</em></h2>`;
+            if (history.length === 0) {
+                html += `<div class="ly-history-empty">No points activity yet. Start earning with your next purchase.</div>`;
+            } else {
+                html += `<table class="ly-history-table">
+                    <thead><tr><th>Date</th><th>Reason</th><th>Points</th><th>Balance</th></tr></thead>
+                    <tbody>
+                `;
+                history.slice(0, 20).forEach(h => {
+                    const cls = h.points >= 0 ? 'ly-pts-positive' : 'ly-pts-negative';
+                    const sign = h.points >= 0 ? '+' : '';
+                    html += `<tr>
+                        <td>${h.date}</td>
+                        <td>${h.reason}</td>
+                        <td class="${cls}">${sign}${h.points}</td>
+                        <td>${h.runningTotal}</td>
+                    </tr>`;
+                });
+                html += `</tbody></table>`;
+            }
+            html += `</div>`;
+
+            container.innerHTML = html;
+            renderPointsBadge();
+        }
+
+        function renderSignInView(container) {
+            container.innerHTML = `
+                <div class="ly-points-panel" data-reveal style="max-width:480px;margin:0 auto 60px;">
+                    <div class="ly-points-number" style="font-size:2rem;">Atelier Club</div>
+                    <div class="ly-points-label" style="margin-bottom:20px;">Sign in to view your points</div>
+                    <button class="btn btn-dark" id="ly-go-auth">Sign In / Register</button>
+                </div>
+                <h2 style="font-family:var(--font-display);font-size:1.6rem;font-weight:300;margin-bottom:24px;text-align:center;">Membership <em style="font-style:italic;color:var(--gold);">Tiers</em></h2>
+                <div class="ly-tiers" data-reveal>
+                    ${TIERS.map(t => `
+                        <div class="ly-tier-card">
+                            <div class="ly-tier-icon" style="background:${t.color};">${t.name[0]}</div>
+                            <h3>${t.name}</h3>
+                            <div class="ly-tier-min">${t.min === 0 ? 'Entry' : t.min + ' Points'}</div>
+                            <ul>
+                                <li>${t.benefit}</li>
+                            </ul>
+                        </div>
+                    `).join('')}
+                </div>
+                <div class="ly-earn-section" data-reveal>
+                    <h2>How to <em style="font-style:italic;color:var(--gold);">Earn</em></h2>
+                    <div class="ly-earn-grid">
+                        <div class="ly-earn-card"><div class="ly-earn-icon">R</div><div class="ly-earn-info"><strong>Every Purchase</strong><span>Rs. 1 spent = 1 point</span></div><div class="ly-earn-points">1 per Re. 1</div></div>
+                        <div class="ly-earn-card"><div class="ly-earn-icon">S</div><div class="ly-earn-info"><strong>Sign Up</strong><span>Welcome bonus on joining</span></div><div class="ly-earn-points">+100</div></div>
+                        <div class="ly-earn-card"><div class="ly-earn-icon">W</div><div class="ly-earn-info"><strong>Write a Review</strong><span>Share your olfactory experience</span></div><div class="ly-earn-points">+50</div></div>
+                        <div class="ly-earn-card"><div class="ly-earn-icon">R</div><div class="ly-earn-info"><strong>Refer a Friend</strong><span>Invite fellow collectors</span></div><div class="ly-earn-points">+200</div></div>
+                    </div>
+                </div>
+                <div class="ly-cta" data-reveal>
+                    <h2>Join the <em>Atelier</em></h2>
+                    <p>Sign up today and receive 100 bonus points to start your journey. Ascend through four tiers of exclusive privileges crafted for discerning collectors.</p>
+                    <button class="btn btn-outline" id="ly-signup-btn" style="border-color:rgba(248,245,240,0.3);color:var(--cream);">Create Your Account</button>
+                </div>
+            `;
+            document.getElementById('ly-go-auth')?.addEventListener('click', () => {
+                document.getElementById('btn-user-auth')?.click();
+            });
+            document.getElementById('ly-signup-btn')?.addEventListener('click', () => {
+                document.getElementById('btn-user-auth')?.click();
+            });
+        }
+    </script>
+</body>
+</html>

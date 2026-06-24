@@ -3,6 +3,7 @@
  */
 
 import { getApiUrl } from './utils.js';
+import { initializeForNewUser, checkBirthdayBonus, addPoints } from './loyalty.js';
 
 const WA_NUMBER = '919769445567';
 
@@ -327,6 +328,10 @@ function updateWhatsAppCheckout(subtotal, discount, total) {
                 const textMsg = `Hello Sugandh Ink 🌿\n\nI would like to place an order for the following compositions:\n\n${cartItems.map(i => `${i.name} × ${i.qty}`).join('\n')}\n\nTotal: ₹${total.toLocaleString('en-IN')}`;
                 window.open(`https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(textMsg)}`, '_blank');
             }
+
+            initializeForNewUser();
+            checkBirthdayBonus();
+            addPoints(subtotal, 'Purchase');
 
             localStorage.removeItem('si_cart');
             window.dispatchEvent(new CustomEvent('cart:updated'));

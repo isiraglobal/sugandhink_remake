@@ -3,6 +3,7 @@
  */
 
 import { getApiUrl } from './utils.js';
+import { addPoints, initializeForNewUser, checkBirthdayBonus } from './loyalty.js';
 
 const WA_NUMBER = '919769445567';
 
@@ -25,6 +26,10 @@ let cartItems = [];
 let subtotal = 0;
 let discount = 0;
 let total = 0;
+let selectedSamples = [];
+let isGift = false;
+let giftMessage = '';
+let premiumWrap = false;
 
 function initCheckout(user) {
     loadCart();
@@ -43,6 +48,8 @@ function initCheckout(user) {
     showStep(1);
     setupStepNav();
     setupPromo();
+    setupGiftOptions();
+    setupSamples();
 }
 
 function loadCart() {
@@ -210,6 +217,48 @@ function setupPromo() {
     });
 }
 
+function setupGiftOptions() {
+    const giftCheckbox = document.getElementById('co-is-gift');
+    const giftDetails = document.getElementById('co-gift-details');
+    const giftMessage = document.getElementById('co-gift-message');
+    const giftChars = document.getElementById('co-gift-chars');
+    const premiumWrap = document.getElementById('co-premium-wrap');
+
+    giftCheckbox?.addEventListener('change', () => {
+        if (giftDetails) {
+            giftDetails.style.display = giftCheckbox.checked ? 'block' : 'none';
+        }
+    });
+
+    giftMessage?.addEventListener('input', () => {
+        const len = giftMessage.value.length;
+        if (giftChars) giftChars.textContent = `${len}/200`;
+    });
+}
+
+function setupSamples() {
+    const cbs = document.querySelectorAll('.co-sample-cb');
+    const feedback = document.getElementById('co-sample-feedback');
+    cbs.forEach(cb => {
+        cb.addEventListener('change', () => {
+            const checked = document.querySelectorAll('.co-sample-cb:checked');
+            if (checked.length > 2) {
+                cb.checked = false;
+                if (feedback) feedback.textContent = 'Maximum 2 samples allowed.';
+                return;
+            }
+            if (feedback) feedback.textContent = checked.length > 0 ? `${checked.length} of 2 samples selected` : '';
+            checked.forEach(c => {
+                c.closest('.co-sample-item')?.classList.toggle('co-sample-selected', c.checked);
+            });
+            document.querySelectorAll('.co-sample-item').forEach(el => {
+                const inp = el.querySelector('.co-sample-cb');
+                if (inp) el.classList.toggle('co-sample-selected', inp.checked);
+            });
+        });
+    });
+}
+
 async function placeOrder() {
     const btn = document.getElementById('co-place-order');
     btn.disabled = true;
@@ -218,6 +267,25 @@ async function placeOrder() {
     const user = getUser();
     const orderId = 'ORD-' + Math.floor(1000 + Math.random() * 9000);
     const promoCode = localStorage.getItem('si_promo_applied') || '';
+
+    const giftCb = document.getElementById('co-is-gift');
+    isGift = giftCb?.checked || false;
+    giftMessage = document.getElementById('co-gift-message')?.value.trim() || '';
+    premiumWrap = document.getElementById('co-premium-wrap')?.checked || false;
+
+    const sampleCbs = document.querySelectorAll('.co-sample-cb:checked');
+    selectedSamples = Array.from(sampleCbs).map(cb => cb.value);
+
+    let extrasStr = '';
+    if (selectedSamples.length > 0) {
+        extrasStr += `Samples: ${selectedSamples.join(', ')}`;
+    }
+    if (isGift) {
+        if (extrasStr) extrasStr += ' | ';
+        extrasStr += 'Gift order';
+        if (premiumWrap) extrasStr += ' + Premium wrapping';
+        if (giftMessage) extrasStr += `: "${giftMessage}"`;
+    }
 
     const orderData = {
         id: orderId,
@@ -235,7 +303,11 @@ async function placeOrder() {
         city: user?.city || '',
         state: user?.state || '',
         country: user?.country || '',
-        zipCode: user?.zipCode || user?.zip_code || ''
+        zipCode: user?.zipCode || user?.zip_code || '',
+        samples: selectedSamples,
+        isGift,
+        giftMessage,
+        premiumWrap
     };
 
     try {
@@ -255,7 +327,14 @@ async function placeOrder() {
         console.error('Failed to save order to database:', err);
     }
 
+    sessionStorage.setItem('si_checkout_samples', JSON.stringify(selectedSamples));
+    sessionStorage.setItem('si_checkout_gift', JSON.stringify({ isGift, giftMessage, premiumWrap }));
+
     window.open(`https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(buildWAMessage(user))}`, '_blank');
+
+    initializeForNewUser();
+    checkBirthdayBonus();
+    addPoints(subtotal, 'Purchase');
 
     localStorage.setItem('si_last_order', JSON.stringify(orderData));
     let orders = [];
@@ -278,7 +357,18 @@ function buildWAMessage(user) {
     msg += `\nSubtotal: ₹${subtotal.toLocaleString('en-IN')}`;
     if (discount > 0) msg += `\nDiscount: -₹${discount.toLocaleString('en-IN')}`;
     msg += `\nTotal: ₹${total.toLocaleString('en-IN')}`;
-    msg += `\nDelivery: Complimentary\n\nCustomer Details:\nName: ${user?.name || ''}\nEmail: ${user?.email || ''}\nPhone: ${user?.phone || ''}\nAddress: ${[user?.address, user?.city, user?.state, user?.country, user?.zipCode].filter(Boolean).join(', ')}`;
+    msg += `\nDelivery: Complimentary`;
+
+    if (selectedSamples.length > 0) {
+        msg += `\nComplimentary Samples: ${selectedSamples.join(', ')}`;
+    }
+    if (isGift) {
+        msg += `\nGift Order: Yes`;
+        if (premiumWrap) msg += `\nPremium Gift Wrapping: Yes`;
+        if (giftMessage) msg += `\nGift Message: "${giftMessage}"`;
+    }
+
+    msg += `\n\nCustomer Details:\nName: ${user?.name || ''}\nEmail: ${user?.email || ''}\nPhone: ${user?.phone || ''}\nAddress: ${[user?.address, user?.city, user?.state, user?.country, user?.zipCode].filter(Boolean).join(', ')}`;
     msg += `\n\nPlease verify availability and share payment details. Thank you.`;
     return msg;
 }

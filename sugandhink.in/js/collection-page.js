@@ -24,6 +24,92 @@ let activeProducts = [...products];
 let currentPage = 1;
 const itemsPerPage = 9;
 
+// ── Mood Mapping ──────────────────────────────────────────────────────────────
+const moodMappings = {
+    'fresh': {
+        keywords: ['fresh', 'citrus', 'clean', 'aquatic', 'marine', 'bergamot', 'lemon', 'mint', 'green', 'bright'],
+        occasions: ['daily wear', 'casual', 'spring/summer']
+    },
+    'warm-spicy': {
+        keywords: ['warm', 'spice', 'cinnamon', 'cardamom', 'nutmeg', 'pepper', 'tobacco', 'rum', 'amber'],
+        occasions: ['evening', 'date night', 'fall/winter']
+    },
+    'dark': {
+        keywords: ['dark', 'oud', 'incense', 'leather', 'smoke', 'noir', 'resin', 'deep', 'mysterious'],
+        occasions: ['evening', 'night', 'fall/winter']
+    },
+    'bold': {
+        keywords: ['bold', 'confident', 'strong', 'power', 'statement', 'beast', 'rich', 'intense', 'unforgettable', 'dominance'],
+        occasions: ['evening', 'formal', 'signature']
+    },
+    'romantic': {
+        keywords: ['soft', 'romantic', 'rose', 'vanilla', 'floral', 'jasmine', 'tuberose', 'gardenia', 'sweet', 'musk', 'intimate', 'warm'],
+        occasions: ['date night', 'evening', 'casual']
+    },
+    'earthy': {
+        keywords: ['earthy', 'wood', 'cedar', 'sandalwood', 'vetiver', 'oakmoss', 'green', 'forest', 'natural', 'moss', 'grounded'],
+        occasions: ['daily wear', 'work', 'casual']
+    }
+};
+
+function applyMoodFilter(mood) {
+    const map = moodMappings[mood];
+    if (!map) return;
+
+    document.querySelectorAll('.mood-pill').forEach(p => p.classList.remove('active'));
+    const activePill = document.querySelector(`.mood-pill[data-mood="${mood}"]`);
+    if (activePill) activePill.classList.add('active');
+
+    let filtered = [...products];
+    filtered = filtered.filter(p => {
+        const searchStr = `${p.notes} ${p.shortNotes} ${p.description} ${p.occasion}`.toLowerCase();
+        const kwMatch = map.keywords.some(kw => searchStr.includes(kw));
+        const occMatch = map.occasions.some(occ => p.occasion.toLowerCase().includes(occ));
+        return kwMatch || occMatch;
+    });
+
+    activeProducts = filtered;
+    currentPage = 1;
+
+    if (filtered.length === 0) {
+        activeProducts = [...products];
+    }
+
+    renderCatalog();
+
+    const grid = document.getElementById('catalog-grid');
+    if (grid) {
+        setTimeout(() => {
+            grid.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }, 100);
+    }
+}
+
+function clearMoodFilter() {
+    document.querySelectorAll('.mood-pill').forEach(p => p.classList.remove('active'));
+    activeProducts = [...products];
+    currentPage = 1;
+    renderCatalog();
+}
+
+function setupMoodPills() {
+    document.querySelectorAll('.mood-pill').forEach(pill => {
+        pill.addEventListener('click', () => {
+            const mood = pill.dataset.mood;
+            if (pill.classList.contains('active')) {
+                clearMoodFilter();
+            } else {
+                applyMoodFilter(mood);
+            }
+        });
+    });
+
+    const clearBtn = document.getElementById('clear-mood');
+    if (clearBtn) {
+        clearBtn.addEventListener('click', clearMoodFilter);
+    }
+}
+
 // ── Main Init ────────────────────────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', () => {
     const params = new URLSearchParams(window.location.search);
@@ -40,6 +126,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
     
+    setupMoodPills();
     setupFilters();
     setupSorting();
     setupMobileFilters();

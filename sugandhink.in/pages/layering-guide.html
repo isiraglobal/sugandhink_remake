@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Art of Layering - Sugandh Ink</title>
+    <meta name="description" content="Learn the art of fragrance layering with Sugandh Ink. Discover how to combine base, heart, and top notes for a personalised scent signature.">
+    <meta property="og:title" content="The Art of Layering - Sugandh Ink">
+    <meta property="og:description" content="Master the art of fragrance layering with Sugandh Ink. Expert pairings and seasonal tips.">
+    <meta property="og:image" content="../assets/logo.png">
+    <meta property="og:type" content="website">
+    <meta name="twitter:card" content="summary_large_image">
+    <link rel="icon" href="../assets/logo.png" type="image/png">
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/base.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <style>
+        .layering-hero { padding: 140px 0 80px; text-align: center; border-bottom: 1px solid var(--border); }
+        .layering-hero .overline { font-family: var(--font-body); font-size: 0.7rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--gold); margin-bottom: 24px; }
+        .layering-hero h1 { font-family: var(--font-display); font-size: clamp(3rem, 7vw, 6rem); font-weight: 300; line-height: 1.1; color: var(--ink); margin-bottom: 24px; }
+        .layering-hero h1 em { font-style: italic; color: var(--gold); }
+        .layering-hero .lead { font-family: var(--font-body); font-size: 1.05rem; color: var(--ink-mid); max-width: 580px; margin: 0 auto; line-height: 1.8; }
+        .layering-section { padding: 80px 0; }
+        .layering-section + .layering-section { border-top: 1px solid var(--border); }
+        .layering-section .section-eyebrow { font-family: var(--font-body); font-size: 0.65rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--gold); margin-bottom: 16px; display: block; }
+        .layering-section h2 { font-family: var(--font-display); font-size: clamp(2rem, 4vw, 3.2rem); font-weight: 300; color: var(--ink); margin-bottom: 32px; }
+        .layering-section h2 em { font-style: italic; }
+        .layering-section p { font-family: var(--font-body); font-size: 0.9rem; color: var(--ink-mid); line-height: 1.9; margin-bottom: 20px; max-width: 720px; }
+        .layering-section p:last-child { margin-bottom: 0; }
+        .golden-rules { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px; margin-top: 48px; }
+        .rule-card { background: var(--cream-deep); padding: 40px 32px; }
+        .rule-num { font-family: var(--font-display); font-size: 3rem; font-weight: 300; color: var(--gold); display: block; margin-bottom: 16px; }
+        .rule-card h3 { font-family: var(--font-display); font-size: 1.4rem; font-weight: 300; color: var(--ink); margin-bottom: 12px; }
+        .rule-card p { font-family: var(--font-body); font-size: 0.83rem; color: var(--ink-mid); line-height: 1.8; }
+        .pairing-card { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-items: center; padding: 40px; background: var(--cream-deep); margin-bottom: 2px; }
+        .pairing-info h3 { font-family: var(--font-display); font-size: 1.6rem; font-weight: 300; color: var(--ink); margin-bottom: 6px; }
+        .pairing-info .pair-result { font-family: var(--font-body); font-size: 0.7rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--gold); margin-bottom: 16px; display: block; }
+        .pairing-info p { font-family: var(--font-body); font-size: 0.85rem; color: var(--ink-mid); line-height: 1.8; margin-bottom: 8px; }
+        .pairing-products { display: flex; gap: 12px; flex-wrap: wrap; }
+        .pair-prod { display: flex; align-items: center; gap: 10px; padding: 8px 14px; background: var(--cream); border: 1px solid var(--border); }
+        .pair-prod img { width: 32px; height: 32px; object-fit: cover; }
+        .pair-prod span { font-family: var(--font-body); font-size: 0.75rem; color: var(--ink); }
+        .seasonal-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 2px; margin-top: 32px; }
+        .season-card { padding: 40px; background: var(--cream-deep); }
+        .season-card h3 { font-family: var(--font-display); font-size: 1.4rem; font-weight: 300; color: var(--ink); margin-bottom: 16px; }
+        .season-card p { font-family: var(--font-body); font-size: 0.83rem; color: var(--ink-mid); line-height: 1.8; }
+        .season-card ul { margin-top: 12px; }
+        .season-card ul li { font-family: var(--font-body); font-size: 0.83rem; color: var(--ink-mid); line-height: 1.8; padding-left: 16px; position: relative; }
+        .season-card ul li::before { content: '—'; position: absolute; left: 0; color: var(--gold); }
+        .layering-quote { padding: 80px 0; text-align: center; }
+        .layering-quote blockquote { font-family: var(--font-display); font-size: clamp(1.8rem, 4vw, 3rem); font-style: italic; font-weight: 300; color: var(--ink); max-width: 760px; margin: 0 auto 24px; line-height: 1.4; }
+        .layering-quote cite { font-family: var(--font-body); font-size: 0.7rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--gold); }
+        @media (max-width: 768px) {
+            .golden-rules { grid-template-columns: 1fr; }
+            .pairing-card { grid-template-columns: 1fr; gap: 20px; }
+            .seasonal-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <div class="page-curtain" id="curtain"></div>
+    <div class="cursor" id="cursor"><div class="cursor-ring"></div><div class="cursor-dot"></div></div>
+    <div class="announcement-banner" id="announcement-banner">
+        <span>Complimentary Shipping on orders above ₹5,000 - <a href="../collection.html">Explore the Library</a></span>
+        <button class="banner-close" id="banner-close" aria-label="Close">✕</button>
+    </div>
+    <header class="site-header" id="site-header">
+        <div class="header-logo-row">
+            <a href="../index.html" class="nav-logo-img-link" aria-label="Sugandh Ink Home">
+                <img src="../assets/logo.png" alt="Sugandh Ink Logo" class="header-logo-img">
+            </a>
+        </div>
+        <nav class="main-nav" id="main-nav">
+            <div class="nav-left">
+                <a href="../collection.html" class="nav-link">Collection</a>
+                <a href="../index.html#new-arrivals" class="nav-link">New Arrivals</a>
+                <a href="heritage.html" class="nav-link">Our Heritage</a>
+            </div>
+            <div class="nav-right">
+                <a href="ingredient-glossary.html" class="nav-link">Scent Finder</a>
+                <a href="journal.html" class="nav-link">Journal</a>
+                <a href="contact.html" class="nav-link">Contact</a>
+                <button class="nav-icon-btn" id="btn-user-auth" aria-label="Account">
+                    <svg id="auth-icon-svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                    <span id="user-initials" style="display:none; font-family:'Jost',sans-serif; font-size:0.7rem; font-weight:600; width:22px; height:22px; background:var(--gold); color:var(--cream); border-radius:50%; align-items:center; justify-content:center;"></span>
+                </button>
+                <button class="nav-icon-btn" id="toggle-shop" aria-label="Open fragrance library">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
+                    <span class="cart-count" id="cart-badge"></span>
+                </button>
+            </div>
+            <button class="hamburger" id="hamburger" aria-label="Menu" aria-expanded="false"><span></span><span></span></button>
+        </nav>
+        <div class="mobile-menu" id="mobile-menu" aria-hidden="true">
+            <nav class="mobile-menu-nav">
+                <a href="../collection.html" class="mm-link">Collection</a>
+                <a href="../index.html#new-arrivals" class="mm-link" data-close>New Arrivals</a>
+                <a href="heritage.html" class="mm-link" data-close>Our Heritage</a>
+                <a href="ingredient-glossary.html" class="mm-link" data-close>Scent Finder</a>
+                <a href="journal.html" class="mm-link" data-close>Journal</a>
+                <a href="contact.html" class="mm-link" data-close>Contact</a>
+            </nav>
+            <div class="mm-footer">
+                <a href="mailto:hello@sugandhink.in">hello@sugandhink.in</a>
+                <a href="tel:+919769445567">+91 97694 45567</a>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            <div class="layering-hero" data-reveal>
+                <p class="overline">The Sugandh Ink Atelier</p>
+                <h1>The Art of<br><em>Layering</em></h1>
+                <p class="lead">A personal scent signature is never accidental. It is composed, balanced, and refined. Layering is the highest expression of olfactory craftsmanship - the ability to create something uniquely yours from the Maison's palette.</p>
+            </div>
+        </div>
+
+        <div class="container">
+            <section class="layering-section" data-reveal>
+                <span class="section-eyebrow">Foundations</span>
+                <h2>What Is <em>Layering?</em></h2>
+                <p>Fragrance layering is the practice of wearing two or more scents simultaneously to create a personalised olfactory signature. Unlike a single composition, which is the work of a single perfumer, a layered scent is yours alone - a collaboration between the Maison and the wearer.</p>
+                <p>Traditional Indian perfumery has long understood this principle. Attars are rarely worn alone in the Subcontinent; they are stacked, combined, and balanced according to season, mood, and occasion. Sugandh Ink compositions are designed with layering in mind - each formulation has a clear structural role that allows it to harmonise with others.</p>
+                <p>When done correctly, layering does not produce a muddled blend but a third scent - more complex and more personal than any single bottle.</p>
+            </section>
+        </div>
+
+        <div class="container">
+            <section class="layering-section" data-reveal>
+                <span class="section-eyebrow">Principles</span>
+                <h2>The Golden <em>Rules</em></h2>
+                <p>Layering follows the same structural logic that governs single fragrances: a foundation, a heart, and a lift. The key is respecting the weight and volatility of each ingredient.</p>
+                <div class="golden-rules">
+                    <div class="rule-card" data-reveal>
+                        <span class="rule-num">I</span>
+                        <h3>Base First</h3>
+                        <p>Apply the heaviest, longest-lasting composition first - a deep attar or extrait. This anchors the entire structure. Oud, Amber, and Leather compositions form the foundation. They provide the silhouette of the scent; everything else is detail.</p>
+                    </div>
+                    <div class="rule-card" data-reveal>
+                        <span class="rule-num">II</span>
+                        <h3>Heart as Bridge</h3>
+                        <p>Layer a middle-weight composition over the base to link foundation with lift. Floral and spice compositions work beautifully here. They are the narrative - the story the fragrance tells. They soften the base while providing a transition to the top.</p>
+                    </div>
+                    <div class="rule-card" data-reveal>
+                        <span class="rule-num">III</span>
+                        <h3>Top as Signature</h3>
+                        <p>The lightest, most volatile layer goes last - and often on pulse points only. Fresh, citrus, or green compositions provide the opening impression. This is the handshake of the scent: what people notice first. It evaporates fastest, revealing the layers beneath.</p>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <div class="container">
+            <section class="layering-section" data-reveal>
+                <span class="section-eyebrow">Pairings</span>
+                <h2>Recommended <em>Compositions</em></h2>
+                <p>Each pairing below brings together two Sugandh Ink compositions built on complementary materials. The result is a third fragrance that honours both originals while transcending them.</p>
+
+                <div class="pairing-card" data-reveal>
+                    <div class="pairing-info">
+                        <h3>Oud Royal + White Bloom</h3>
+                        <span class="pair-result">Deep + Floral · Evening Wear</span>
+                        <p>The sovereign Indonesian Oud of Oud Royal provides a dark, smoky base that is lifted and softened by the dense white florals of White Bloom. The tuberose cuts through the oud without overpowering it, creating a composition that is both commanding and luminous.</p>
+                        <div class="pairing-products">
+                            <div class="pair-prod"><img src="../assets/images/products/OUD-09.png" alt="Oud Royal"><span>Oud Royal</span></div>
+                            <div class="pair-prod"><img src="../assets/images/products/FLR-07.png" alt="White Bloom"><span>+ White Bloom</span></div>
+                        </div>
+                    </div>
+                    <div class="pairing-info">
+                        <h3>Dark Amber + Declaration</h3>
+                        <span class="pair-result">Resinous + Spicy · Winter Signature</span>
+                        <p>The smoky, incense-laden body of Dark Amber is an ideal canvas for the vetiver-iris-spice complexity of Declaration. Cardamom and cinnamon find resonance with labdanum, while the iris provides a powdery counterpoint to the amber's weight.</p>
+                        <div class="pairing-products">
+                            <div class="pair-prod"><img src="../assets/images/products/AMB-12.png" alt="Dark Amber"><span>Dark Amber</span></div>
+                            <div class="pair-prod"><img src="../assets/images/products/SPC-02.png" alt="Declaration"><span>+ Declaration</span></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="pairing-card" data-reveal>
+                    <div class="pairing-info">
+                        <h3>Vanilla Luxe + Ocean Drift</h3>
+                        <span class="pair-result">Gourmand + Aquatic · Day Wear</span>
+                        <p>The warm, skin-close vanilla of Vanilla Luxe provides an unexpected yet harmonious base for the cool mint-aquatic character of Ocean Drift. The contrast between warm and cool creates a fascinating tension that resolves into a clean, airy sweetness.</p>
+                        <div class="pairing-products">
+                            <div class="pair-prod"><img src="../assets/images/products/VAN-01.png" alt="Vanilla Luxe"><span>Vanilla Luxe</span></div>
+                            <div class="pair-prod"><img src="../assets/images/products/AQUA-14.png" alt="Ocean Drift"><span>+ Ocean Drift</span></div>
+                        </div>
+                    </div>
+                    <div class="pairing-info">
+                        <h3>Icon + CR Seven</h3>
+                        <span class="pair-result">Woody + Aromatic · Confident Day</span>
+                        <p>The crisp, modern woody-citrus of Icon meets the lavender-tobacco warmth of CR Seven. Grapefruit and juniper from Icon cut through the tobacco-creamy heart, while the vanilla base of CR Seven softens Icon's vetiver edge. A study in balance.</p>
+                        <div class="pairing-products">
+                            <div class="pair-prod"><img src="../assets/images/products/WDS-21.png" alt="Icon"><span>Icon</span></div>
+                            <div class="pair-prod"><img src="../assets/images/products/FRSH-11.png" alt="CR Seven"><span>+ CR Seven</span></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="pairing-card" data-reveal>
+                    <div class="pairing-info">
+                        <h3>Bleu Noir + Sanaya</h3>
+                        <span class="pair-result">Incense + Rose Orient · Evening</span>
+                        <p>The incense-amber depth of Bleu Noir creates a dark, meditative foundation for the jasmine-rose-oud warmth of Sanaya. The two share sandalwood and amber as common ground, while the rose of Sanaya illuminates the darker Bleu Noir base like candlelight.</p>
+                        <div class="pairing-products">
+                            <div class="pair-prod"><img src="../assets/images/products/WDS-04.png" alt="Bleu Noir"><span>Bleu Noir</span></div>
+                            <div class="pair-prod"><img src="../assets/images/products/FLR-17.png" alt="Sanaya"><span>+ Sanaya</span></div>
+                        </div>
+                    </div>
+                    <div class="pairing-info">
+                        <h3>Havana + Wild Blue</h3>
+                        <span class="pair-result">Leather + Fresh · Rare Contrast</span>
+                        <p>The rum-tobacco-leather warmth of Havana is an unlikely but brilliant partner for the bergamot-pepper-ambroxan freshness of Wild Blue. Pepper from Wild Blue echoes Havana's rum spice, while ambroxan provides a clean modern base that lifts the tobacco into something airy and unexpected.</p>
+                        <div class="pairing-products">
+                            <div class="pair-prod"><img src="../assets/images/products/SMK-16.png" alt="Havana"><span>Havana</span></div>
+                            <div class="pair-prod"><img src="../assets/images/products/FRSH-01.png" alt="Wild Blue"><span>+ Wild Blue</span></div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <div class="container">
+            <section class="layering-section" data-reveal>
+                <span class="section-eyebrow">Seasonal</span>
+                <h2>Tips by <em>Season</em></h2>
+                <p>The climate of the Subcontinent demands a rhythmic approach to fragrance. The same composition can perform entirely differently in the dry heat of May versus the damp chill of December. Layering allows you to adapt your signature to the season.</p>
+
+                <div class="seasonal-grid">
+                    <div class="season-card" data-reveal>
+                        <h3>Summer / Monsoon</h3>
+                        <p>Heat and humidity amplify fragrance. The goal is freshness without sharpness and longevity without heaviness.</p>
+                        <ul>
+                            <li>Layer a light aquatic or citrus over a sheer musk base</li>
+                            <li>Ocean Drift + Vanilla Luxe (fresh + warm)</li>
+                            <li>Wild Blue alone or with a whisper of musk</li>
+                            <li>Avoid heavy oud or leather in direct heat</li>
+                        </ul>
+                    </div>
+                    <div class="season-card" data-reveal>
+                        <h3>Winter / Evening</h3>
+                        <p>Cold air suppresses diffusion. Heavier, richer compositions perform best. Layering adds necessary projection.</p>
+                        <ul>
+                            <li>Build from a heavy oud or amber base</li>
+                            <li>Dark Amber + Declaration (resin + spice)</li>
+                            <li>Oud Royal + White Bloom (smoke + floral)</li>
+                            <li>Apply generously to pulse points and clothing</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <div class="container">
+            <div class="layering-quote" data-reveal>
+                <blockquote>"A fragrance is never finished. It is only abandoned. Layering is the act of refusing to abandon it."</blockquote>
+                <cite>— The Sugandh Ink Atelier, Principles of Composition</cite>
+            </div>
+        </div>
+    </main>
+
+    <footer class="site-footer" id="footer">
+        <div class="footer-top">
+            <div class="footer-brand">
+                <div class="footer-logo"><span>Sugandh</span><span class="italic"> Ink</span></div>
+                <p>Artisanal fragrances crafted with unyielding precision and historical reverence. Malad (West), Mumbai.</p>
+                <div class="footer-socials">
+                    <a href="https://instagram.com" class="fsocial" target="_blank" rel="noopener" aria-label="Instagram"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="5"/><circle cx="17.5" cy="6.5" r="1.5" fill="currentColor" stroke="none"/></svg></a>
+                    <a href="https://twitter.com" class="fsocial" target="_blank" rel="noopener" aria-label="Twitter / X"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg></a>
+                    <a href="https://facebook.com" class="fsocial" target="_blank" rel="noopener" aria-label="Facebook"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg></a>
+                </div>
+            </div>
+            <div class="footer-col"><h5>The Maison</h5><ul>
+                <li><a href="heritage.html">Our Heritage</a></li>
+                <li><a href="ingredient-glossary.html">Ingredient Glossary</a></li>
+                <li><a href="layering-guide.html">Layering Guide</a></li>
+                <li><a href="../collection.html">The Library</a></li>
+                <li><a href="bespoke.html">Bespoke Enquiry</a></li>
+            </ul></div>
+            <div class="footer-col"><h5>Shop</h5><ul>
+                <li><a href="corporate-gifting.html">Corporate Gifting</a></li>
+                <li><a href="gift-cards.html">Gift Cards</a></li>
+                <li><a href="../index.html#new-arrivals">New Arrivals</a></li>
+                <li><a href="../index.html#top-selling">Best Sellers</a></li>
+                <li><a href="../index.html#families">By Scent Family</a></li>
+                <li><a href="../collection.html">Full Collection</a></li>
+            </ul></div>
+            <div class="footer-col"><h5>Client Care</h5><ul>
+                <li><a href="contact.html">Contact Us</a></li>
+                <li><a href="consultation.html">Fragrance Consultation</a></li>
+                <li><a href="journal.html">The Journal</a></li>
+                <li><a href="newsletter.html">Newsletter</a></li>
+                <li><a href="rewards.html">Rewards &amp; Loyalty</a></li>
+                <li><a href="faq.html">FAQ</a></li>
+            </ul></div>
+            <div class="footer-col"><h5>Legal</h5><ul>
+                <li><a href="terms.html">Terms of Service</a></li>
+                <li><a href="privacy.html">Privacy Policy</a></li>
+                <li><a href="cookies.html">Cookie Policy</a></li>
+                <li><a href="returns.html">Returns &amp; Shipping</a></li>
+            </ul></div>
+        </div>
+        <div class="footer-bottom">
+            <span>&copy; 2026 Sugandh Ink - All Rights Reserved</span>
+            <span class="footer-wa-note">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12.8 12.8 0 00-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+                Orders via WhatsApp: <a href="https://wa.me/919769445567" target="_blank">+91 97694 45567</a>
+            </span>
+        </div>
+    </footer>
+
+    <script type="module" src="../js/loader.js"></script>
+    <script type="module" src="../js/transitions.js"></script>
+    <script type="module" src="../js/ui.js"></script>
+</body>
+</html>
