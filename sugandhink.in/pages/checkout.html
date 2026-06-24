@@ -145,6 +145,31 @@
                 <!-- Step 1: Shipping Details -->
                 <div class="co-step" id="co-step-1">
                     <h2 style="font-family:var(--font-display);font-weight:300;font-size:1.6rem;margin-bottom:24px;">Shipping <em>Details</em></h2>
+
+                    <!-- Guest / Sign-in toggle section (hidden when user is signed in) -->
+                    <div id="co-auth-toggle" class="co-auth-toggle" style="display:none;">
+                        <div class="co-toggle-row">
+                            <button class="co-toggle-btn active" data-co-mode="guest" id="co-mode-guest">Continue as Guest</button>
+                            <span class="co-toggle-divider">or</span>
+                            <button class="co-toggle-btn" data-co-mode="signin" id="co-mode-signin">Sign In</button>
+                        </div>
+                        <div id="co-guest-panel" class="co-mode-panel">
+                            <p class="co-guest-notice">Provide your details below to place your order as a guest. All fields are required.</p>
+                            <label class="co-create-label">
+                                <input type="checkbox" id="co-create-account">
+                                <span>Create an account after purchase</span>
+                            </label>
+                        </div>
+                        <div id="co-signin-panel" class="co-mode-panel" style="display:none;">
+                            <div class="co-signin-fields">
+                                <input type="email" id="co-si-email" placeholder="Email address" class="co-si-input">
+                                <input type="password" id="co-si-pass" placeholder="Password" class="co-si-input">
+                                <button class="btn btn-dark" id="co-si-submit" style="font-size:0.7rem;padding:10px 24px;">Sign In</button>
+                                <p id="co-si-feedback" style="font-size:0.78rem;margin-top:8px;display:none;"></p>
+                            </div>
+                        </div>
+                    </div>
+
                     <div class="co-form-grid">
                         <div class="co-fg full">
                             <label>Full Name</label>

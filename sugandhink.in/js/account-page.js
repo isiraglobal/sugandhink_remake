@@ -4,6 +4,7 @@
 
 import { getApiUrl } from './utils.js';
 import { getPoints, getTier, getHistory, TIERS, renderPointsBadge } from './loyalty.js';
+import { getReferralCode, getReferralLink, getReferrals, getReferralEarnings, getReferrerEarnings, copyReferralLink, shareViaWhatsApp } from './referral.js';
 
 const productsPromise = import('./products.js').then(m => m.products);
 
@@ -55,17 +56,33 @@ async function initAccountPage(user) {
         });
     });
 
+    const urlParams = new URLSearchParams(window.location.search);
+    const tabParam = urlParams.get('tab');
+    if (tabParam) {
+        const targetTab = document.querySelector(`.ac-tab[data-tab="pane-${tabParam}"]`);
+        if (targetTab) {
+            tabs.forEach(t => t.classList.remove('active'));
+            targetTab.classList.add('active');
+            panes.forEach(p => p.classList.remove('active'));
+            const target = document.getElementById(`pane-${tabParam}`);
+            if (target) target.classList.add('active');
+        }
+    }
+
     renderProfile(user);
     renderOrders();
     const products = await productsPromise;
     renderWishlist(products);
     renderAddresses(user);
+    renderSubscription();
     renderLoyalty();
+    renderReferral();
     renderPointsBadge();
 }
 
 window.addEventListener('loyalty:updated', () => {
     renderLoyalty();
+    renderSubscription();
     renderPointsBadge();
 });
 
@@ -293,6 +310,70 @@ function renderAddresses(user) {
     });
 }
 
+function getSubscriptions() {
+    try {
+        return JSON.parse(localStorage.getItem('si_subscriptions')) || [];
+    } catch { return []; }
+}
+
+function renderSubscription() {
+    const pane = document.getElementById('pane-subscription');
+    if (!pane) return;
+
+    const subs = getSubscriptions();
+
+    if (subs.length === 0) {
+        pane.innerHTML = `<div class="ac-empty"><p>No active subscription.</p><a href="subscription.html" class="btn btn-outline" style="margin-top:16px;">Explore Scent of the Month</a></div>`;
+        return;
+    }
+
+    let html = `<div style="display:flex;flex-direction:column;gap:16px;">`;
+    subs.slice().reverse().forEach(s => {
+        const statusClass = s.status === 'active' ? 'sub-status-active' : (s.status === 'paused' ? 'sub-status-paused' : 'sub-status-cancelled');
+        html += `
+            <div style="border:1px solid var(--border);border-radius:8px;overflow:hidden;">
+                <div style="display:flex;justify-content:space-between;align-items:center;padding:14px 20px;background:var(--cream-deep);">
+                    <span style="font-family:var(--font-display);font-size:0.95rem;color:var(--ink);font-weight:500;">${escHtml(s.planName)}</span>
+                    <span class="sub-active-status ${statusClass}">${s.status.charAt(0).toUpperCase() + s.status.slice(1)}</span>
+                </div>
+                <div style="padding:14px 20px;">
+                    <div style="display:flex;justify-content:space-between;padding:4px 0;font-family:var(--font-body);font-size:0.82rem;color:var(--ink-mid);"><span style="color:var(--ink-dim);">ID</span><span>${escHtml(s.id)}</span></div>
+                    <div style="display:flex;justify-content:space-between;padding:4px 0;font-family:var(--font-body);font-size:0.82rem;color:var(--ink-mid);"><span style="color:var(--ink-dim);">Price</span><span>₹${s.price.toLocaleString('en-IN')}${s.period}</span></div>
+                    <div style="display:flex;justify-content:space-between;padding:4px 0;font-family:var(--font-body);font-size:0.82rem;color:var(--ink-mid);"><span style="color:var(--ink-dim);">Started</span><span>${escHtml(s.startDate)}</span></div>
+                    <div style="display:flex;justify-content:space-between;padding:4px 0;font-family:var(--font-body);font-size:0.82rem;color:var(--ink-mid);"><span style="color:var(--ink-dim);">Next Delivery</span><span>${escHtml(s.nextDelivery)}</span></div>
+                    <div style="display:flex;gap:8px;margin-top:12px;">
+                        ${s.status === 'active' ? `<button class="btn btn-outline ac-reorder-btn" data-sub-action="pause" data-sub-id="${escHtml(s.id)}" style="font-size:0.65rem;padding:8px 16px;">Pause</button>` : ''}
+                        ${s.status === 'paused' ? `<button class="btn btn-outline ac-reorder-btn" data-sub-action="resume" data-sub-id="${escHtml(s.id)}" style="font-size:0.65rem;padding:8px 16px;">Resume</button>` : ''}
+                        ${s.status !== 'cancelled' ? `<button class="btn btn-outline ac-reorder-btn" data-sub-action="cancel" data-sub-id="${escHtml(s.id)}" style="font-size:0.65rem;padding:8px 16px;color:#c0392b;border-color:rgba(192,57,43,0.2);">Cancel</button>` : ''}
+                        <a href="subscription.html" class="btn btn-outline" style="font-size:0.65rem;padding:8px 16px;">Manage</a>
+                    </div>
+                </div>
+            </div>
+        `;
+    });
+    html += `</div>`;
+    pane.innerHTML = html;
+
+    pane.querySelectorAll('[data-sub-action]').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const action = btn.dataset.subAction;
+            const id = btn.dataset.subId;
+            const subs = getSubscriptions();
+            const idx = subs.findIndex(s => s.id === id);
+            if (idx === -1) return;
+            if (action === 'pause') {
+                subs[idx].status = 'paused';
+            } else if (action === 'resume') {
+                subs[idx].status = 'active';
+            } else if (action === 'cancel') {
+                subs[idx].status = 'cancelled';
+            }
+            localStorage.setItem('si_subscriptions', JSON.stringify(subs));
+            renderSubscription();
+        });
+    });
+}
+
 function renderLoyalty() {
     const pane = document.getElementById('pane-loyalty');
     if (!pane) return;
@@ -352,4 +433,68 @@ function renderLoyalty() {
 
     html += `</div>`;
     pane.innerHTML = html;
+}
+
+function renderReferral() {
+    const pane = document.getElementById('pane-referral');
+    if (!pane) return;
+
+    const code = getReferralCode();
+    const link = getReferralLink();
+    const referrals = getReferrals();
+    const referrerEarnings = getReferrerEarnings();
+    const totalEarned = getReferralEarnings() + referrerEarnings.reduce((s, r) => s + r.points, 0);
+    const successfulRefs = referrals.filter(r => r.claimed).length + referrerEarnings.length;
+    const pts = getPoints();
+
+    let html = `<div style="padding:16px 0;">`;
+
+    html += `
+        <div style="display:flex;align-items:center;gap:20px;padding:24px;background:var(--cream-deep);border:1px solid var(--border);border-radius:8px;margin-bottom:24px;flex-wrap:wrap;">
+            <div style="text-align:center;flex-shrink:0;">
+                <div style="font-family:var(--serif);font-size:1.2rem;font-weight:500;color:var(--gold);line-height:1;">${code}</div>
+                <div style="font-family:var(--sans);font-size:0.6rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--ink-dim);">Your Code</div>
+            </div>
+            <div style="flex:1;min-width:200px;">
+                <div style="font-family:var(--sans);font-size:0.85rem;color:var(--ink);">Points Earned: <strong style="color:var(--gold);">${totalEarned}</strong></div>
+                <div style="font-family:var(--sans);font-size:0.72rem;color:var(--ink-dim);margin-top:4px;">${successfulRefs} successful referral${successfulRefs !== 1 ? 's' : ''}</div>
+            </div>
+            <div style="display:flex;gap:8px;">
+                <button class="btn btn-outline" id="ac-rf-copy" style="font-size:0.65rem;padding:10px 20px;">Copy Link</button>
+                <button class="btn btn-outline" id="ac-rf-wa" style="font-size:0.65rem;padding:10px 20px;">WhatsApp</button>
+            </div>
+        </div>
+    `;
+
+    if (referrals.filter(r => r.claimed).length > 0 || referrerEarnings.length > 0) {
+        html += `<h4 style="font-family:var(--serif);font-size:1.1rem;font-weight:500;color:var(--ink);margin-bottom:12px;">Referral History</h4>`;
+        html += `<table class="rf-history-table" style="margin-bottom:24px;">`;
+        html += `<thead><tr><th>Date</th><th>Activity</th><th>Points</th><th>Status</th></tr></thead><tbody>`;
+        const all = [
+            ...referrals.filter(r => r.claimed).map(r => ({ date: r.date, desc: 'Referred a friend', points: r.points, status: 'Claimed' })),
+            ...referrerEarnings.map(r => ({ date: r.date, desc: 'Referral bonus earned', status: 'Claimed', points: r.points }))
+        ].sort((a, b) => new Date(b.date.split('/').reverse().join('-')) - new Date(a.date.split('/').reverse().join('-')));
+        all.slice(0, 10).forEach(h => {
+            html += `<tr><td>${h.date}</td><td>${h.desc}</td><td class="rf-pts-positive">+${h.points}</td><td class="rf-status-claimed">${h.status}</td></tr>`;
+        });
+        html += `</tbody></table>`;
+    } else {
+        html += `<div class="rf-history-empty" style="padding:24px;text-align:center;color:var(--ink-dim);font-size:0.85rem;">No referral activity yet. Share your code to earn points.</div>`;
+    }
+
+    html += `<div style="margin-top:16px;"><a href="referral.html" style="font-family:var(--sans);font-size:0.72rem;color:var(--gold);text-decoration:underline;">View full referral program details</a></div>`;
+    html += `</div>`;
+    pane.innerHTML = html;
+
+    document.getElementById('ac-rf-copy')?.addEventListener('click', () => {
+        copyReferralLink();
+        const fb = document.createElement('span');
+        fb.textContent = 'Link copied';
+        fb.style.cssText = 'font-size:0.72rem;color:var(--gold);margin-left:12px;';
+        const btn = document.getElementById('ac-rf-copy');
+        btn.parentNode.appendChild(fb);
+        setTimeout(() => fb.remove(), 2000);
+    });
+
+    document.getElementById('ac-rf-wa')?.addEventListener('click', shareViaWhatsApp);
 }

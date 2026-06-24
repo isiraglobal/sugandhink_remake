@@ -4,6 +4,9 @@
 
 import { getApiUrl } from './utils.js';
 import { initializeForNewUser, checkBirthdayBonus, addPoints } from './loyalty.js';
+import { claimReferralBonus, getReferredBy } from './referral.js';
+import { products } from './products.js';
+import { requestBackInStock, isAlreadyRequested, addWaitlistRequest, getProductAvailability, showToast } from './waitlist.js';
 
 const WA_NUMBER = '919769445567';
 
@@ -52,9 +55,14 @@ function renderCart() {
 
     listContainer.innerHTML = '';
 
+    let hasOOS = false;
     cartItems.forEach((item, index) => {
+        const avail = getProductAvailability(item.code);
+        const isOOS = !avail.inStock;
+        if (isOOS) hasOOS = true;
+
         const row = document.createElement('div');
-        row.className = 'cart-item';
+        row.className = `cart-item${isOOS ? ' cart-item-oos' : ''}`;
         row.innerHTML = `
             <div class="cart-item-img">
                 <img src="${item.image}" alt="${item.name}">
@@ -63,19 +71,68 @@ function renderCart() {
                 <span class="cart-item-code">${item.code}</span>
                 <span class="cart-item-name">${item.name}</span>
                 <span class="cart-item-size">Size: ${item.size}</span>
+                ${isOOS ? '<div class="cart-oos-warning">This item is currently unavailable</div>' : ''}
                 <div class="cart-item-footer">
                     <span class="cart-item-price">₹${item.price.toLocaleString('en-IN')}</span>
+                    ${isOOS ? '' : `
                     <div class="stepper">
                         <button class="cart-minus" data-idx="${index}">−</button>
                         <span>${item.qty}</span>
                         <button class="cart-plus" data-idx="${index}">+</button>
                     </div>
+                    `}
                 </div>
+                ${isOOS ? `<button class="notify-btn notify-btn-sm" data-code="${item.code}" data-size="${item.size}">Notify Me</button>` : ''}
             </div>
             <button class="cart-item-remove" data-idx="${index}">Remove</button>
         `;
         listContainer.appendChild(row);
+
+        if (isOOS) {
+            const notifyBtn = row.querySelector('.notify-btn');
+            notifyBtn.addEventListener('click', async () => {
+                const code = notifyBtn.dataset.code;
+                const size = notifyBtn.dataset.size;
+                if (isAlreadyRequested(code, size)) {
+                    showToast('You are already on the waitlist for this item.');
+                    return;
+                }
+                const user = JSON.parse(localStorage.getItem('si_user'));
+                if (user && user.email) {
+                    try {
+                        await requestBackInStock(code, size, user.email);
+                        addWaitlistRequest(code, size, user.email);
+                        showToast('We will email you when this size is back in stock.');
+                        renderCart();
+                    } catch (err) {
+                        showToast('Failed to register. Please try again.');
+                    }
+                } else {
+                    showToast('Please sign in to join the waitlist.');
+                }
+            });
+        }
     });
+
+    // Disable checkout if OOS items exist
+    const waBtn = document.getElementById('checkout-wa-btn');
+    if (waBtn && hasOOS) {
+        waBtn.style.pointerEvents = 'none';
+        waBtn.style.opacity = '0.4';
+        if (!document.getElementById('cart-oos-block-msg')) {
+            const msg = document.createElement('div');
+            msg.id = 'cart-oos-block-msg';
+            msg.style.cssText = 'background: rgba(192,57,43,0.05); border:1px solid rgba(192,57,43,0.15); border-radius:4px; padding:12px; font-size:0.76rem; color:#c0392b; margin:12px 0; text-align:center; line-height:1.4; font-family:Jost,sans-serif;';
+            msg.innerHTML = '<strong>Unavailable Items:</strong> Some items in your collection are currently out of stock. Remove them or join the waitlist to proceed.';
+            waBtn.parentNode.insertBefore(msg, waBtn);
+        }
+    }
+    if (waBtn && !hasOOS) {
+        waBtn.style.pointerEvents = '';
+        waBtn.style.opacity = '';
+        const msg = document.getElementById('cart-oos-block-msg');
+        if (msg) msg.remove();
+    }
 
     setupItemActions();
     calculateSummary();
@@ -252,15 +309,16 @@ function updateWhatsAppCheckout(subtotal, discount, total) {
         if (!warningEl) {
             warningEl = document.createElement('div');
             warningEl.id = warningId;
-            warningEl.style.cssText = 'background: rgba(192, 57, 43, 0.05); border: 1px solid rgba(192, 57, 43, 0.15); border-radius: 4px; padding: 12px; font-size: 0.76rem; color: #c0392b; margin: 16px 0; text-align: center; line-height: 1.4; font-family: \'Jost\', sans-serif;';
-            warningEl.innerHTML = `<strong>Details Required:</strong> Please click the profile icon <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align: middle; margin: 0 2px;"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg> on the top right to sign in, register, or provide guest checkout details before completing your order.`;
+            warningEl.style.cssText = 'background: rgba(155, 122, 66, 0.06); border: 1px solid rgba(155, 122, 66, 0.15); border-radius: 4px; padding: 12px; font-size: 0.76rem; color: var(--gold); margin: 16px 0; text-align: center; line-height: 1.4; font-family: \'Jost\', sans-serif;';
+            warningEl.innerHTML = `Checking out as guest. Your details will be collected on the next page.`;
             waBtn.parentNode.insertBefore(warningEl, waBtn);
         }
-        waBtn.style.pointerEvents = 'none';
-        waBtn.style.opacity = '0.5';
-        waBtn.onclick = (e) => {
-            e.preventDefault();
-        };
+        waBtn.style.pointerEvents = 'auto';
+        waBtn.style.opacity = '1';
+        waBtn.href = 'pages/checkout.html';
+        waBtn.target = '_self';
+        waBtn.onclick = null;
+        waBtn.classList.add('guest-checkout-btn');
     } else {
         if (warningEl) {
             warningEl.remove();
@@ -332,6 +390,12 @@ function updateWhatsAppCheckout(subtotal, discount, total) {
             initializeForNewUser();
             checkBirthdayBonus();
             addPoints(subtotal, 'Purchase');
+
+            const referredBy = getReferredBy();
+            if (referredBy) {
+                claimReferralBonus(referredBy);
+                localStorage.removeItem('si_referred_by');
+            }
 
             localStorage.removeItem('si_cart');
             window.dispatchEvent(new CustomEvent('cart:updated'));

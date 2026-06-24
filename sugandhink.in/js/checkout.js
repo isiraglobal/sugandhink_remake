@@ -1,5 +1,6 @@
 /**
  * checkout.js - Multi-step checkout: Details → Review → Confirm
+ * Supports registered user and guest checkout paths.
  */
 
 import { getApiUrl } from './utils.js';
@@ -9,15 +10,21 @@ const WA_NUMBER = '919769445567';
 
 document.addEventListener('DOMContentLoaded', () => {
     const user = getUser();
-    if (!user || !user.email) {
-        showStep(0);
-        return;
+    if (user && user.email) {
+        isGuestMode = false;
+        initCheckout(user);
+    } else {
+        isGuestMode = true;
+        initGuestCheckout();
     }
-    initCheckout(user);
 });
 
 function getUser() {
     try { return JSON.parse(localStorage.getItem('si_user')) || null; } catch { return null; }
+}
+
+function getGuestInfo() {
+    try { return JSON.parse(localStorage.getItem('si_guest_info')) || null; } catch { return null; }
 }
 
 let currentStep = 1;
@@ -30,6 +37,7 @@ let selectedSamples = [];
 let isGift = false;
 let giftMessage = '';
 let premiumWrap = false;
+let isGuestMode = false;
 
 function initCheckout(user) {
     loadCart();
@@ -45,11 +53,57 @@ function initCheckout(user) {
     }
 
     prefillForm(user);
+    hideAuthToggle();
     showStep(1);
     setupStepNav();
     setupPromo();
     setupGiftOptions();
     setupSamples();
+}
+
+function initGuestCheckout() {
+    loadCart();
+    if (cartItems.length === 0) {
+        document.getElementById('checkout-content').innerHTML = `
+            <div class="co-empty" style="text-align:center;padding:80px 24px;">
+                <h2 style="font-family:var(--font-display);font-weight:300;font-size:1.6rem;color:var(--ink);margin-bottom:12px;">Your cart is empty</h2>
+                <p style="font-family:var(--font-body);font-size:0.88rem;color:var(--ink-mid);margin-bottom:24px;">Add some compositions to your collection before checking out.</p>
+                <a href="../collection.html" class="btn btn-dark">Browse the Library</a>
+            </div>
+        `;
+        return;
+    }
+
+    showGuestToggle();
+    prefillFromGuestInfo();
+    showStep(1);
+    setupStepNav();
+    setupPromo();
+    setupGiftOptions();
+    setupSamples();
+}
+
+function hideAuthToggle() {
+    const el = document.getElementById('co-auth-toggle');
+    if (el) el.style.display = 'none';
+}
+
+function showGuestToggle() {
+    const el = document.getElementById('co-auth-toggle');
+    if (el) el.style.display = 'block';
+}
+
+function prefillFromGuestInfo() {
+    const guest = getGuestInfo();
+    if (!guest) return;
+    if (guest.name) document.getElementById('co-name').value = guest.name;
+    if (guest.email) document.getElementById('co-email').value = guest.email;
+    if (guest.phone) document.getElementById('co-phone').value = guest.phone;
+    if (guest.address) document.getElementById('co-address').value = guest.address;
+    if (guest.city) document.getElementById('co-city').value = guest.city;
+    if (guest.state) document.getElementById('co-state').value = guest.state;
+    if (guest.zipCode || guest.zip_code) document.getElementById('co-zip').value = guest.zipCode || guest.zip_code;
+    if (guest.country) document.getElementById('co-country').value = guest.country;
 }
 
 function loadCart() {
@@ -94,7 +148,11 @@ function setupStepNav() {
     document.getElementById('co-to-step-2')?.addEventListener('click', (e) => {
         e.preventDefault();
         if (!validateStep1()) return;
-        saveFormToUser();
+        if (isGuestMode) {
+            saveFormAsGuest();
+        } else {
+            saveFormToUser();
+        }
         showStep(2);
     });
 
@@ -116,6 +174,41 @@ function setupStepNav() {
     document.getElementById('co-place-order')?.addEventListener('click', (e) => {
         e.preventDefault();
         placeOrder();
+    });
+
+    // Guest/Sign-in toggle
+    document.querySelectorAll('.co-toggle-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            document.querySelectorAll('.co-toggle-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            const mode = btn.dataset.coMode;
+            document.getElementById('co-guest-panel').style.display = mode === 'guest' ? 'block' : 'none';
+            document.getElementById('co-signin-panel').style.display = mode === 'signin' ? 'block' : 'none';
+        });
+    });
+
+    // Sign-in form submit
+    document.getElementById('co-si-submit')?.addEventListener('click', async (e) => {
+        e.preventDefault();
+        const email = document.getElementById('co-si-email')?.value.trim();
+        const password = document.getElementById('co-si-pass')?.value;
+        const fb = document.getElementById('co-si-feedback');
+        if (!email || !password) {
+            if (fb) { fb.textContent = 'Email and password required.'; fb.style.color = '#c0392b'; fb.style.display = 'block'; }
+            return;
+        }
+        // Simple local check against si_user
+        const saved = getUser();
+        if (saved && saved.email === email) {
+            // Authenticated locally (no Supabase for guest sign-in flow)
+            if (fb) { fb.textContent = 'Signed in successfully.'; fb.style.color = '#27ae60'; fb.style.display = 'block'; }
+            isGuestMode = false;
+            prefillForm(saved);
+            hideAuthToggle();
+            setTimeout(() => { if (fb) fb.style.display = 'none'; }, 2000);
+        } else {
+            if (fb) { fb.textContent = 'No account found with that email. Please continue as guest.'; fb.style.color = '#c0392b'; fb.style.display = 'block'; }
+        }
     });
 }
 
@@ -151,6 +244,25 @@ function saveFormToUser() {
     localStorage.setItem('si_user', JSON.stringify(user));
 }
 
+function saveFormAsGuest() {
+    const guest = {
+        name: document.getElementById('co-name')?.value.trim() || '',
+        email: document.getElementById('co-email')?.value.trim() || '',
+        phone: document.getElementById('co-phone')?.value.trim() || '',
+        address: document.getElementById('co-address')?.value.trim() || '',
+        city: document.getElementById('co-city')?.value.trim() || '',
+        state: document.getElementById('co-state')?.value.trim() || '',
+        zipCode: document.getElementById('co-zip')?.value.trim() || '',
+        country: document.getElementById('co-country')?.value.trim() || 'India'
+    };
+    localStorage.setItem('si_guest_info', JSON.stringify(guest));
+}
+
+function getActiveUser() {
+    if (!isGuestMode) return getUser();
+    return getGuestInfo();
+}
+
 function renderReview() {
     const list = document.getElementById('co-review-items');
     if (!list) return;
@@ -181,11 +293,11 @@ function renderReview() {
     }
     document.getElementById('co-review-total').textContent = '₹' + total.toLocaleString('en-IN');
 
-    const user = getUser();
-    document.getElementById('co-review-name').textContent = user?.name || '';
-    document.getElementById('co-review-email').textContent = user?.email || '';
-    document.getElementById('co-review-phone').textContent = user?.phone || '';
-    const addr = [user?.address, user?.city, user?.state, user?.zipCode].filter(Boolean).join(', ');
+    const u = getActiveUser();
+    document.getElementById('co-review-name').textContent = u?.name || '';
+    document.getElementById('co-review-email').textContent = u?.email || '';
+    document.getElementById('co-review-phone').textContent = u?.phone || '';
+    const addr = [u?.address, u?.city, u?.state, u?.zipCode].filter(Boolean).join(', ');
     document.getElementById('co-review-address').textContent = addr || 'N/A';
 }
 
@@ -264,7 +376,7 @@ async function placeOrder() {
     btn.disabled = true;
     btn.textContent = 'Placing Order...';
 
-    const user = getUser();
+    const user = getActiveUser();
     const orderId = 'ORD-' + Math.floor(1000 + Math.random() * 9000);
     const promoCode = localStorage.getItem('si_promo_applied') || '';
 
@@ -289,7 +401,7 @@ async function placeOrder() {
 
     const orderData = {
         id: orderId,
-        customerId: user?.id && !user.id.startsWith('guest-') ? user.id : null,
+        customerId: user?.id && !(user.id && user.id.startsWith('guest-')) ? user.id : null,
         collector: user?.name || '',
         email: user?.email || '',
         wa: user?.phone || '',
@@ -311,11 +423,22 @@ async function placeOrder() {
     };
 
     try {
-        if (!user?.id || user.id.startsWith('guest-')) {
+        const uid = user?.id;
+        if (!uid || uid.startsWith('guest-')) {
             await fetch(getApiUrl('/api/customers'), {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ id: user?.id, name: user?.name, email: user?.email, phone: user?.phone || '', address: user?.address || '', city: user?.city || '', state: user?.state || '', country: user?.country || 'India', zipCode: user?.zipCode || user?.zip_code || '' })
+                body: JSON.stringify({
+                    id: uid || ('guest-' + Date.now()),
+                    name: user?.name || '',
+                    email: user?.email || '',
+                    phone: user?.phone || '',
+                    address: user?.address || '',
+                    city: user?.city || '',
+                    state: user?.state || '',
+                    country: user?.country || 'India',
+                    zipCode: user?.zipCode || user?.zip_code || ''
+                })
             });
         }
         await fetch(getApiUrl('/api/orders'), {
@@ -342,6 +465,26 @@ async function placeOrder() {
     orders.push(orderData);
     localStorage.setItem('si_orders', JSON.stringify(orders));
 
+    // Guest account creation after purchase
+    if (isGuestMode) {
+        const createAccount = document.getElementById('co-create-account')?.checked;
+        if (createAccount && user?.email) {
+            const siUser = {
+                id: 'guest-' + Date.now(),
+                name: user.name || '',
+                email: user.email,
+                phone: user.phone || '',
+                address: user.address || '',
+                city: user.city || '',
+                state: user.state || '',
+                zipCode: user.zipCode || '',
+                country: user.country || 'India'
+            };
+            localStorage.setItem('si_user', JSON.stringify(siUser));
+        }
+        localStorage.removeItem('si_guest_info');
+    }
+
     localStorage.removeItem('si_cart');
     localStorage.removeItem('si_promo_applied');
     window.dispatchEvent(new CustomEvent('cart:updated'));
@@ -350,7 +493,7 @@ async function placeOrder() {
 }
 
 function buildWAMessage(user) {
-    let msg = `Hello Sugandh Ink 🌿\n\nI would like to place an order for:\n\n`;
+    let msg = `Hello Sugandh Ink\n\nI would like to place an order for:\n\n`;
     cartItems.forEach((item, i) => {
         msg += `${i + 1}. ${item.name} (${item.code}) - ${item.size} - Qty: ${item.qty} - ₹${item.price.toLocaleString('en-IN')} each\n`;
     });
@@ -368,7 +511,11 @@ function buildWAMessage(user) {
         if (giftMessage) msg += `\nGift Message: "${giftMessage}"`;
     }
 
-    msg += `\n\nCustomer Details:\nName: ${user?.name || ''}\nEmail: ${user?.email || ''}\nPhone: ${user?.phone || ''}\nAddress: ${[user?.address, user?.city, user?.state, user?.country, user?.zipCode].filter(Boolean).join(', ')}`;
+    if (isGuestMode) {
+        msg += `\n\nGuest Customer Details:\nName: ${user?.name || ''}\nEmail: ${user?.email || ''}\nPhone: ${user?.phone || ''}\nAddress: ${[user?.address, user?.city, user?.state, user?.country, user?.zipCode].filter(Boolean).join(', ')}`;
+    } else {
+        msg += `\n\nCustomer Details:\nName: ${user?.name || ''}\nEmail: ${user?.email || ''}\nPhone: ${user?.phone || ''}\nAddress: ${[user?.address, user?.city, user?.state, user?.country, user?.zipCode].filter(Boolean).join(', ')}`;
+    }
     msg += `\n\nPlease verify availability and share payment details. Thank you.`;
     return msg;
 }

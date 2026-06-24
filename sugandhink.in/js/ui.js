@@ -6,6 +6,7 @@ import { getApiUrl, initReveals } from './utils.js';
 import { initSearch } from './search.js';
 import { initWishlist, updateWishlistBadge } from './wishlist.js';
 import { initializeForNewUser, checkBirthdayBonus, addPoints } from './loyalty.js';
+import { claimReferralBonus, getReferredBy } from './referral.js';
 
 let supabaseClient = null;
 let currentSession = null;
@@ -19,14 +20,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     setupHeader();
     setupMobileMenu();
     
-    // Clean up any legacy guest users
-    try {
-        const u = JSON.parse(localStorage.getItem('si_user'));
-        if (u && u.id && u.id.startsWith('guest-')) {
-            localStorage.removeItem('si_user');
-        }
-    } catch (e) {}
-
     // Initial badge update
     updateCartBadge();
     window.addEventListener('cart:updated', updateCartBadge);
@@ -42,6 +35,9 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     // WhatsApp Chat Widget
     setupWAChat();
+
+    // Check for referral code in URL
+    import('./referral.js').then(m => m.checkForReferral());
 });
 
 // ── Supabase Dynamic Script Loader ───────────────────────────────────────────
@@ -910,6 +906,12 @@ function setupCartStepperListeners(cart, subtotal, discount, total) {
             initializeForNewUser();
             checkBirthdayBonus();
             addPoints(subtotal, 'Purchase');
+
+            const drawerReferredBy = getReferredBy();
+            if (drawerReferredBy) {
+                claimReferralBonus(drawerReferredBy);
+                localStorage.removeItem('si_referred_by');
+            }
 
             localStorage.removeItem('si_cart');
             localStorage.removeItem('si_promo_applied');

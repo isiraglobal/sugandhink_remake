@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Refer & Earn - Sugandh Ink</title>
+    <meta name="description" content="Share your unique referral link. Friends get INR 200 off their first order. You earn 200 Atelier points when they place their order.">
+    <meta property="og:title" content="Refer & Earn - Sugandh Ink">
+    <meta property="og:description" content="Invite fellow collectors and earn Atelier points with every successful referral.">
+    <meta property="og:image" content="../assets/logo.png">
+    <meta property="og:type" content="website">
+    <meta name="twitter:card" content="summary_large_image">
+    <link rel="icon" href="../assets/logo.png" type="image/png">
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/base.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <style>
+        .rf-hero { padding: 140px 0 80px; text-align: center; border-bottom: 1px solid var(--border); }
+        .rf-hero h1 { font-family: var(--serif); font-size: clamp(2.5rem, 6vw, 4.5rem); font-weight: 300; line-height: 1.1; color: var(--ink); margin-bottom: 24px; }
+        .rf-hero h1 em { font-style: italic; color: var(--gold); }
+        .rf-hero .lead { font-family: var(--sans); font-size: 1.05rem; color: var(--ink-mid); max-width: 580px; margin: 0 auto; line-height: 1.8; }
+        .rf-content { padding: 80px 0; max-width: 860px; margin: 0 auto; }
+        .rf-how { margin-bottom: 60px; }
+        .rf-how h2 { font-family: var(--serif); font-size: 1.6rem; font-weight: 300; margin-bottom: 36px; text-align: center; }
+        .rf-how h2 em { font-style: italic; color: var(--gold); }
+        .rf-steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+        .rf-step { border: 1px solid var(--border); border-radius: 8px; padding: 36px 24px; text-align: center; background: var(--cream); transition: transform .3s var(--ease-out), box-shadow .3s; }
+        .rf-step:hover { transform: translateY(-4px); box-shadow: 0 12px 40px rgba(155,122,66,0.1); }
+        .rf-step-num { width: 40px; height: 40px; border-radius: 50%; background: var(--gold); color: var(--cream); display: flex; align-items: center; justify-content: center; margin: 0 auto 16px; font-family: var(--sans); font-size: 0.85rem; font-weight: 500; }
+        .rf-step h3 { font-family: var(--serif); font-size: 1.15rem; font-weight: 500; color: var(--ink); margin-bottom: 8px; }
+        .rf-step p { font-family: var(--sans); font-size: 0.82rem; color: var(--ink-dim); line-height: 1.7; }
+        .rf-link-section { background: var(--cream-deep); padding: 36px 40px; border-radius: 8px; text-align: center; margin-bottom: 40px; border: 1px solid var(--border); }
+        .rf-link-section h2 { font-family: var(--serif); font-size: 1.4rem; font-weight: 300; margin-bottom: 8px; color: var(--ink); }
+        .rf-link-section .rf-sub { font-family: var(--sans); font-size: 0.82rem; color: var(--ink-dim); margin-bottom: 24px; }
+        .rf-code-display { display: flex; align-items: center; justify-content: center; gap: 12px; margin-bottom: 20px; flex-wrap: wrap; }
+        .rf-code { font-family: var(--serif); font-size: 1.3rem; font-weight: 500; color: var(--gold); letter-spacing: 0.12em; background: var(--cream); padding: 10px 24px; border: 1px solid var(--border); border-radius: 4px; user-select: all; }
+        .rf-code-actions { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+        .rf-btn { font-family: var(--sans); font-size: 0.72rem; font-weight: 600; letter-spacing: 0.15em; text-transform: uppercase; padding: 12px 28px; border-radius: 0; transition: all .3s var(--ease-out); cursor: pointer; display: inline-flex; align-items: center; gap: 8px; }
+        .rf-btn-copy { background: var(--ink); color: var(--cream); border: 1px solid var(--ink); }
+        .rf-btn-copy:hover { background: var(--gold); border-color: var(--gold); }
+        .rf-btn-wa { background: #25d366; color: #fff; border: 1px solid #25d366; }
+        .rf-btn-wa:hover { background: #128c7e; border-color: #128c7e; }
+        .rf-points-panel { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 40px; }
+        .rf-points-card { border: 1px solid var(--border); border-radius: 8px; padding: 28px 24px; text-align: center; background: var(--cream); }
+        .rf-points-card .rf-points-num { font-family: var(--serif); font-size: 2.4rem; font-weight: 300; color: var(--gold); line-height: 1; }
+        .rf-points-card .rf-points-label { font-family: var(--sans); font-size: 0.68rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--ink-dim); margin: 8px 0 4px; }
+        .rf-history { margin-bottom: 40px; }
+        .rf-history h2 { font-family: var(--serif); font-size: 1.4rem; font-weight: 300; margin-bottom: 20px; text-align: center; }
+        .rf-history h2 em { font-style: italic; color: var(--gold); }
+        .rf-history-empty { text-align: center; padding: 40px; font-family: var(--sans); font-size: 0.88rem; color: var(--ink-dim); }
+        .rf-history-table { width: 100%; border-collapse: collapse; }
+        .rf-history-table th { font-family: var(--sans); font-size: 0.65rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-dim); padding: 10px 14px; text-align: left; border-bottom: 1px solid var(--border); font-weight: 500; }
+        .rf-history-table td { font-family: var(--sans); font-size: 0.82rem; color: var(--ink-mid); padding: 10px 14px; border-bottom: 1px solid var(--border); }
+        .rf-history-table td.rf-pts-positive { color: #27ae60; font-weight: 500; }
+        .rf-history-table .rf-status-claimed { color: #27ae60; font-weight: 500; }
+        .rf-history-table .rf-status-pending { color: var(--gold); }
+        .rf-signin-prompt { text-align: center; padding: 60px 24px; }
+        .rf-signin-prompt p { font-family: var(--sans); font-size: 0.88rem; color: var(--ink-dim); margin-bottom: 20px; }
+        .rf-toast { position: fixed; bottom: 28px; left: 50%; transform: translateX(-50%); background: var(--ink); color: var(--cream); padding: 12px 28px; font-size: 0.82rem; font-family: var(--sans); border-radius: 4px; z-index: 99999; opacity: 0; transition: opacity .35s, transform .35s; pointer-events: none; }
+        .rf-toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+        @media (max-width: 768px) {
+            .rf-content { padding: 60px 24px; }
+            .rf-steps { grid-template-columns: 1fr; }
+            .rf-link-section { padding: 28px 20px; }
+            .rf-points-panel { grid-template-columns: 1fr; }
+            .rf-code-display { flex-direction: column; }
+            .rf-code-actions { flex-direction: column; align-items: center; }
+        }
+        @media (max-width: 480px) {
+            .rf-history-table th, .rf-history-table td { padding: 8px 10px; font-size: 0.72rem; }
+        }
+    </style>
+</head>
+<body>
+    <div class="page-curtain" id="curtain"></div>
+    <div class="cursor" id="cursor"><div class="cursor-ring"></div><div class="cursor-dot"></div></div>
+    <div class="announcement-banner" id="announcement-banner">
+        <span>Complimentary Shipping on orders above &#x20B9;5,000 - <a href="../collection.html">Explore the Library</a></span>
+        <button class="banner-close" id="banner-close" aria-label="Close">&#x2715;</button>
+    </div>
+    <header class="site-header site-header-solid" id="site-header">
+        <div class="header-logo-row">
+            <a href="../index.html" class="nav-logo-img-link" aria-label="Sugandh Ink Home">
+                <img src="../assets/logo.png" alt="Sugandh Ink Logo" class="header-logo-img">
+            </a>
+        </div>
+        <nav class="main-nav" id="main-nav">
+            <div class="nav-left">
+                <a href="../collection.html" class="nav-link">Collection</a>
+                <a href="../index.html#new-arrivals" class="nav-link">New Arrivals</a>
+                <a href="../index.html#about" class="nav-link">Our Story</a>
+            </div>
+            <div class="nav-right">
+                <a href="../index.html#ingredients" class="nav-link">Ingredients</a>
+                <a href="contact.html" class="nav-link">Contact</a>
+                <button class="nav-icon-btn" id="btn-user-auth" aria-label="Account">
+                    <svg id="auth-icon-svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                    <span id="user-initials" style="display:none; font-family:'Jost',sans-serif; font-size:0.7rem; font-weight:600; width:22px; height:22px; background:var(--gold); color:var(--cream); border-radius:50%; align-items:center; justify-content:center;"></span>
+                </button>
+                <button class="nav-icon-btn" id="toggle-shop" aria-label="Open fragrance library">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
+                    <span class="cart-count" id="cart-badge"></span>
+                </button>
+            </div>
+            <button class="hamburger" id="hamburger" aria-label="Menu" aria-expanded="false"><span></span><span></span></button>
+        </nav>
+        <div class="mobile-menu" id="mobile-menu" aria-hidden="true">
+            <nav class="mobile-menu-nav">
+                <a href="../collection.html" class="mm-link">Collection</a>
+                <a href="../index.html#new-arrivals" class="mm-link" data-close>New Arrivals</a>
+                <a href="../index.html#about" class="mm-link" data-close>Our Story</a>
+                <a href="../index.html#ingredients" class="mm-link" data-close>Ingredients</a>
+                <a href="contact.html" class="mm-link" data-close>Contact</a>
+            </nav>
+            <div class="mm-footer">
+                <a href="mailto:hello@sugandhink.in">hello@sugandhink.in</a>
+                <a href="tel:+919769445567">+91 97694 45567</a>
+            </div>
+        </div>
+    </header>
+    <main>
+        <div class="container">
+            <nav class="breadcrumb" style="padding-top: 120px;">
+                <a href="../index.html">Home</a>
+                <span class="breadcrumb-sep">/</span>
+                <span>Refer & Earn</span>
+            </nav>
+            <div class="rf-hero" data-reveal>
+                <h1>Refer & <em>Earn</em></h1>
+                <p class="lead">Share your private referral code with fellow collectors. They receive &#x20B9;200 off their first order. You earn 200 Atelier points when they place their order.</p>
+            </div>
+        </div>
+        <div class="container">
+            <div class="rf-content" id="referral-content"></div>
+        </div>
+    </main>
+    <footer class="site-footer" id="footer">
+        <div class="footer-top">
+            <div class="footer-brand">
+                <div class="footer-logo"><span>Sugandh</span><span class="italic"> Ink</span></div>
+                <p>Artisanal fragrances crafted with unyielding precision and historical reverence. Malad (West), Mumbai.</p>
+                <div class="footer-socials">
+                    <a href="https://instagram.com" class="fsocial" target="_blank" rel="noopener" aria-label="Instagram"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="5"/><circle cx="17.5" cy="6.5" r="1.5" fill="currentColor" stroke="none"/></svg></a>
+                    <a href="https://twitter.com" class="fsocial" target="_blank" rel="noopener" aria-label="Twitter / X"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg></a>
+                    <a href="https://facebook.com" class="fsocial" target="_blank" rel="noopener" aria-label="Facebook"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg></a>
+                </div>
+            </div>
+            <div class="footer-col"><h5>The Maison</h5><ul>
+                <li><a href="heritage.html">Our Heritage</a></li>
+                <li><a href="ingredients.html">The Ingredients</a></li>
+                <li><a href="../collection.html">The Library</a></li>
+                <li><a href="bespoke.html">Bespoke Enquiry</a></li>
+            </ul></div>
+            <div class="footer-col"><h5>Shop</h5><ul>
+                <li><a href="gift-cards.html">Gift Cards</a></li>
+                <li><a href="../index.html#new-arrivals">New Arrivals</a></li>
+                <li><a href="../index.html#top-selling">Best Sellers</a></li>
+                <li><a href="../collection.html">Full Collection</a></li>
+            </ul></div>
+            <div class="footer-col"><h5>Client Care</h5><ul>
+                <li><a href="contact.html">Contact Us</a></li>
+                <li><a href="consultation.html">Fragrance Consultation</a></li>
+                <li><a href="shipping-policy.html">Shipping &amp; Delivery</a></li>
+                <li><a href="size-guide.html">Size Guide</a></li>
+                <li><a href="faq.html">FAQ</a></li>
+                <li><a href="account.html">My Account</a></li>
+                <li><a href="loyalty.html">The Atelier Club</a></li>
+                <li><a href="referral.html">Refer &amp; Earn</a></li>
+            </ul></div>
+            <div class="footer-col"><h5>Legal</h5><ul>
+                <li><a href="terms.html">Terms of Service</a></li>
+                <li><a href="privacy.html">Privacy Policy</a></li>
+                <li><a href="cookies.html">Cookie Policy</a></li>
+                <li><a href="returns.html">Returns &amp; Shipping</a></li>
+            </ul></div>
+        </div>
+        <div class="footer-bottom">
+            <span>&copy; 2026 Sugandh Ink - All Rights Reserved</span>
+            <span class="footer-wa-note">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12.8 12.8 0 00-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+                Orders via WhatsApp: <a href="https://wa.me/919769445567" target="_blank">+91 97694 45567</a>
+            </span>
+        </div>
+    </footer>
+    <div class="rf-toast" id="rf-toast"></div>
+    <script type="module" src="../js/loader.js"></script>
+    <script type="module" src="../js/transitions.js"></script>
+    <script type="module" src="../js/ui.js"></script>
+    <script type="module">
+        import { getPoints, getTier, renderPointsBadge } from '../js/loyalty.js';
+        import {
+            getReferralCode, getReferralLink, copyReferralLink, shareViaWhatsApp,
+            getReferrals, getReferralEarnings, getReferrerEarnings, checkForReferral
+        } from '../js/referral.js';
+
+        document.addEventListener('DOMContentLoaded', () => {
+            checkForReferral();
+            const container = document.getElementById('referral-content');
+            if (!container) return;
+            renderReferralPage(container);
+        });
+
+        function showToast(msg) {
+            const toast = document.getElementById('rf-toast');
+            if (!toast) return;
+            toast.textContent = msg;
+            toast.classList.add('show');
+            clearTimeout(toast._hide);
+            toast._hide = setTimeout(() => toast.classList.remove('show'), 2500);
+        }
+
+        function renderReferralPage(container) {
+            const code = getReferralCode();
+            const link = getReferralLink();
+            const referrals = getReferrals();
+            const referrerEarnings = getReferrerEarnings();
+            const totalEarned = getReferralEarnings() + referrerEarnings.reduce((s, r) => s + r.points, 0);
+            const successfulRefs = referrals.filter(r => r.claimed).length + referrerEarnings.length;
+            const user = (() => { try { return JSON.parse(localStorage.getItem('si_user')); } catch { return null; } })();
+
+            let html = '';
+
+            html += `<div class="rf-steps" data-reveal>`;
+            html += `
+                <div class="rf-step">
+                    <div class="rf-step-num">01</div>
+                    <h3>Share Your Code</h3>
+                    <p>Send your unique referral link to friends via WhatsApp, email, or any messenger. They receive &#x20B9;200 off their first order.</p>
+                </div>
+                <div class="rf-step">
+                    <div class="rf-step-num">02</div>
+                    <h3>Friend Orders</h3>
+                    <p>Your friend places their first order from our library of artisanal fragrances using your referral link.</p>
+                </div>
+                <div class="rf-step">
+                    <div class="rf-step-num">03</div>
+                    <h3>You Earn Points</h3>
+                    <p>Once their order is completed, 200 Atelier points are credited to your account. Ascend through our membership tiers.</p>
+                </div>
+            `;
+            html += `</div>`;
+
+            html += `<div class="rf-link-section" data-reveal>`;
+            html += `<h2>Your Private Referral Code</h2>`;
+            html += `<p class="rf-sub">Share this code or link. Each successful referral earns you 200 Atelier points.</p>`;
+            html += `<div class="rf-code-display">`;
+            html += `<span class="rf-code" id="rf-referral-code">${code}</span>`;
+            html += `</div>`;
+            html += `<div class="rf-code-actions">`;
+            html += `<button class="rf-btn rf-btn-copy" id="rf-btn-copy">Copy Link</button>`;
+            html += `<button class="rf-btn rf-btn-wa" id="rf-btn-wa">Share via WhatsApp</button>`;
+            html += `</div>`;
+            html += `</div>`;
+
+            html += `<div class="rf-points-panel" data-reveal>`;
+            html += `
+                <div class="rf-points-card">
+                    <div class="rf-points-num">${getPoints()}</div>
+                    <div class="rf-points-label">Atelier Points</div>
+                    ${user ? `<div style="font-family:var(--sans);font-size:0.72rem;color:var(--ink-mid);">${getTier().name} tier</div>` : ''}
+                </div>
+                <div class="rf-points-card">
+                    <div class="rf-points-num">${totalEarned}</div>
+                    <div class="rf-points-label">Earned from Referrals</div>
+                    <div style="font-family:var(--sans);font-size:0.72rem;color:var(--ink-mid);">${successfulRefs} successful referral${successfulRefs !== 1 ? 's' : ''}</div>
+                </div>
+            `;
+            html += `</div>`;
+
+            const allHistory = [
+                ...referrals.filter(r => r.claimed).map(r => ({ date: r.date, desc: 'Referred a friend', points: r.points, status: 'Claimed' })),
+                ...referrerEarnings.map(r => ({ date: r.date, desc: 'Referral bonus earned', points: r.points, status: 'Claimed' }))
+            ].sort((a, b) => new Date(b.date.split('/').reverse().join('-')) - new Date(a.date.split('/').reverse().join('-')));
+
+            html += `<div class="rf-history" data-reveal>`;
+            html += `<h2>Referral <em>History</em></h2>`;
+            if (allHistory.length === 0) {
+                html += `<div class="rf-history-empty">No referral activity yet. Share your code to start earning.</div>`;
+            } else {
+                html += `<table class="rf-history-table">
+                    <thead><tr><th>Date</th><th>Activity</th><th>Points</th><th>Status</th></tr></thead>
+                    <tbody>
+                `;
+                allHistory.slice(0, 20).forEach(h => {
+                    const sign = h.points >= 0 ? '+' : '';
+                    html += `<tr>
+                        <td>${h.date}</td>
+                        <td>${h.desc}</td>
+                        <td class="rf-pts-positive">${sign}${h.points}</td>
+                        <td class="rf-status-claimed">${h.status}</td>
+                    </tr>`;
+                });
+                html += `</tbody></table>`;
+            }
+            html += `</div>`;
+
+            container.innerHTML = html;
+            renderPointsBadge();
+
+            document.getElementById('rf-btn-copy')?.addEventListener('click', () => {
+                copyReferralLink();
+                showToast('Referral link copied to clipboard.');
+            });
+
+            document.getElementById('rf-btn-wa')?.addEventListener('click', () => {
+                shareViaWhatsApp();
+            });
+        }
+    </script>
+</body>
+</html>

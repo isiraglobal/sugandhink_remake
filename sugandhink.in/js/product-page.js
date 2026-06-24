@@ -5,6 +5,8 @@
 import { products } from './products.js';
 import { getApiUrl } from './utils.js';
 import { toggleWishlist, isInWishlist } from './wishlist.js';
+import { addToCompare, getCompareState, syncBadge, loadFromLocalStorage } from './compare.js';
+import { requestBackInStock, isAlreadyRequested, addWaitlistRequest, getProductAvailability } from './waitlist.js';
 
 const WA_NUMBER = '919769445567';
 
@@ -49,6 +51,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const code = getProductId();
     product = products.find(p => p.code === code) || products[0];
 
+    loadFromLocalStorage();
+    syncBadge();
+
     trackRecentlyViewed();
     renderProductDetails();
     setupSizeSelector();
@@ -60,6 +65,8 @@ document.addEventListener('DOMContentLoaded', () => {
     updatePurchaseDetails();
 
     window.addEventListener('auth:updated', updatePurchaseDetails);
+    window.addEventListener('compare:updated', syncBadge);
+});
 });
 
 // ── Render Details ───────────────────────────────────────────────────────────
@@ -142,11 +149,15 @@ function renderProductDetails() {
         const p30 = sample || Math.round(basePrice * 0.6);
         const p50 = basePrice;
         const p100 = Math.round(basePrice * 1.6);
+        const outOfStock = product.stock !== undefined && product.stock <= 0;
+        const oosAttr = outOfStock ? 'disabled' : '';
+        const oosClass = outOfStock ? 'oos' : '';
+        const oosLabel = outOfStock ? ' <span class="oos-label">Out of Stock</span>' : '';
         sizesWrap.innerHTML = `
-            <button class="size-pill" data-size="10ml">10ml (Travel) - ₹${p10.toLocaleString('en-IN')}</button>
-            <button class="size-pill active" data-size="50ml">50ml (Standard) - ₹${p50.toLocaleString('en-IN')}</button>
-            <button class="size-pill" data-size="30ml">30ml (Sample) - ₹${p30.toLocaleString('en-IN')}</button>
-            <button class="size-pill" data-size="100ml">100ml (Prestige) - ₹${p100.toLocaleString('en-IN')}</button>
+            <button class="size-pill ${oosClass}" data-size="10ml" ${oosAttr}>10ml (Travel) - ₹${p10.toLocaleString('en-IN')}${oosLabel}</button>
+            <button class="size-pill ${oosClass} active" data-size="50ml" ${oosAttr}>50ml (Standard) - ₹${p50.toLocaleString('en-IN')}${oosLabel}</button>
+            <button class="size-pill ${oosClass}" data-size="30ml" ${oosAttr}>30ml (Sample) - ₹${p30.toLocaleString('en-IN')}${oosLabel}</button>
+            <button class="size-pill ${oosClass}" data-size="100ml" ${oosAttr}>100ml (Prestige) - ₹${p100.toLocaleString('en-IN')}${oosLabel}</button>
         `;
         selectedSize = '50ml';
     }
@@ -182,9 +193,75 @@ function renderProductDetails() {
         }
     }
 
+    renderWaitlistSection();
     renderJSONLD();
     setupImageZoom();
     setupSocialShare();
+}
+
+function renderWaitlistSection() {
+    if (!product) return;
+    const outOfStock = product.stock !== undefined && product.stock <= 0;
+
+    let container = document.getElementById('waitlist-section');
+    const purchaseWrap = document.querySelector('.purchase-wrap');
+
+    if (!outOfStock) {
+        if (container) container.remove();
+        return;
+    }
+
+    if (!container) {
+        container = document.createElement('div');
+        container.id = 'waitlist-section';
+        container.className = 'waitlist-section';
+        if (purchaseWrap) {
+            purchaseWrap.parentNode.insertBefore(container, purchaseWrap.nextSibling);
+        }
+    }
+
+    const user = JSON.parse(localStorage.getItem('si_user'));
+    const alreadyRequested = isAlreadyRequested(product.code, selectedSize);
+
+    if (alreadyRequested) {
+        container.innerHTML = '<div class="waitlist-confirmed"><span class="waitlist-confirmed-text">You are on the waitlist for this composition.</span></div>';
+        return;
+    }
+
+    if (user && user.email) {
+        container.innerHTML = '<button class="btn btn-outline notify-btn" id="notify-me-btn">Notify Me When Available</button>';
+        const btn = container.querySelector('#notify-me-btn');
+        btn.addEventListener('click', async () => {
+            try {
+                await requestBackInStock(product.code, selectedSize, user.email);
+                addWaitlistRequest(product.code, selectedSize, user.email);
+                showToast('We will email you when this size is back in stock.');
+                renderWaitlistSection();
+            } catch (err) {
+                showToast('Failed to register. Please try again.');
+            }
+        });
+    } else {
+        container.innerHTML = '<div class="waitlist-form-wrap"><p class="waitlist-prompt">Notify me when back in stock</p><div class="waitlist-inline-form"><input type="email" class="waitlist-email-input" id="waitlist-email" placeholder="Enter your email" required><button class="btn btn-outline notify-btn" id="notify-me-submit">Notify Me</button></div></div>';
+        const submitBtn = container.querySelector('#notify-me-submit');
+        const emailInput = container.querySelector('#waitlist-email');
+        submitBtn.addEventListener('click', async () => {
+            const email = emailInput.value.trim();
+            if (!email || !email.includes('@')) {
+                showToast('Please enter a valid email address.');
+                return;
+            }
+            try {
+                const name = user && user.name ? user.name : '';
+                await requestBackInStock(product.code, selectedSize, email);
+                addWaitlistRequest(product.code, selectedSize, email);
+                showToast('We will email you when this size is back in stock.');
+                renderWaitlistSection();
+            } catch (err) {
+                showToast('Failed to register. Please try again.');
+            }
+        });
+    }
 }
 
 function capitalize(str) {
@@ -199,6 +276,7 @@ function setupSizeSelector() {
     sizesWrap.addEventListener('click', (e) => {
         const pill = e.target.closest('.size-pill');
         if (!pill) return;
+        if (pill.disabled || pill.classList.contains('oos')) return;
 
         sizesWrap.querySelectorAll('.size-pill').forEach(p => p.classList.remove('active'));
         pill.classList.add('active');
@@ -313,6 +391,22 @@ function updatePurchaseDetails() {
             }; // end waBtn.onclick
         } // end else (user logged in)
     } // end if (waBtn)
+
+    // Add to Compare integration
+    const compareContainer = document.getElementById('compare-btn-container');
+    if (compareContainer) {
+        const state = getCompareState();
+        const isAdded = state.includes(product.code);
+        compareContainer.innerHTML = `<button class="compare-detail-btn ${isAdded ? 'added' : ''}" id="product-compare-btn">${isAdded ? 'Added to Compare' : 'Add to Compare'}</button>`;
+        const compareBtn = document.getElementById('product-compare-btn');
+        compareBtn.addEventListener('click', () => {
+            if (getCompareState().includes(product.code)) return;
+            addToCompare(product.code);
+            compareBtn.classList.add('added');
+            compareBtn.textContent = 'Added to Compare';
+            showToast(`${product.name} added to compare.`);
+        });
+    }
 
     // Add to Cart integration
     const cartBtn = document.getElementById('add-to-cart-btn');

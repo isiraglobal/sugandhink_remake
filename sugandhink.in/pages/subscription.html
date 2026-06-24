@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scent of the Month - Sugandh Ink</title>
+    <meta name="description" content="Discover a new fragrance every month with Sugandh Ink's Scent of the Month subscription. Curated by our master perfumers.">
+    <meta property="og:title" content="Scent of the Month - Sugandh Ink">
+    <meta property="og:description" content="A new fragrance every month, curated by our master perfumers.">
+    <meta property="og:image" content="../assets/logo.png">
+    <meta property="og:type" content="website">
+    <meta name="twitter:card" content="summary_large_image">
+    <link rel="icon" href="../assets/logo.png" type="image/png">
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <style>
+        .sub-hero { padding: 160px 0 80px; text-align: center; border-bottom: 1px solid var(--border); }
+        .sub-hero h1 { font-family: var(--font-display); font-size: clamp(2.5rem, 6vw, 4.5rem); font-weight: 300; line-height: 1.1; color: var(--ink); margin-bottom: 20px; }
+        .sub-hero h1 em { font-style: italic; color: var(--gold); }
+        .sub-hero p { font-family: var(--font-body); font-size: 1.05rem; color: var(--ink-mid); max-width: 580px; margin: 0 auto; line-height: 1.8; }
+        .sub-plans { padding: 80px 0; }
+        .sub-plans-header { text-align: center; margin-bottom: 48px; }
+        .sub-plans-header .section-eyebrow { font-size: 0.7rem; letter-spacing: 0.22em; text-transform: uppercase; color: var(--gold); margin-bottom: 8px; }
+        .sub-plans-header h2 { font-family: var(--font-display); font-size: clamp(1.8rem, 4vw, 2.8rem); font-weight: 300; color: var(--ink); }
+        .sub-plans-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px; max-width: var(--max); margin: 0 auto; padding: 0 var(--gutter); }
+        .sub-plan-card { background: var(--cream); border: 1px solid var(--border); padding: 40px 32px; display: flex; flex-direction: column; transition: all 0.3s var(--ease-out); position: relative; }
+        .sub-plan-card:hover { border-color: var(--gold-light); transform: translateY(-4px); }
+        .sub-plan-card.selected { border-color: var(--gold); background: var(--gold-pale); }
+        .sub-plan-card.selected .sub-plan-btn { background: var(--gold); color: var(--cream); border-color: var(--gold); }
+        .sub-plan-badge { position: absolute; top: -1px; right: -1px; background: var(--ink); color: var(--cream); font-size: 0.55rem; letter-spacing: 0.15em; text-transform: uppercase; padding: 6px 14px; font-weight: 500; display: none; }
+        .sub-plan-badge.show { display: block; }
+        .sub-plan-name { font-family: var(--font-display); font-size: 1.4rem; font-weight: 500; color: var(--ink); margin-bottom: 4px; }
+        .sub-plan-price { font-family: var(--font-display); font-size: 2.2rem; font-weight: 300; color: var(--gold); margin-bottom: 20px; }
+        .sub-plan-price small { font-size: 0.7rem; color: var(--ink-dim); font-family: var(--font-body); }
+        .sub-plan-desc { font-family: var(--font-body); font-size: 0.82rem; color: var(--ink-mid); line-height: 1.6; margin-bottom: 20px; }
+        .sub-plan-features { list-style: none; padding: 0; margin: 0 0 28px; flex: 1; }
+        .sub-plan-features li { font-family: var(--font-body); font-size: 0.78rem; color: var(--ink-mid); padding: 6px 0; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 8px; }
+        .sub-plan-features li::before { content: ''; width: 4px; height: 4px; background: var(--gold); border-radius: 50%; flex-shrink: 0; }
+        .sub-plan-btn { width: 100%; padding: 14px; font-family: var(--sans); font-size: 0.72rem; letter-spacing: 0.15em; text-transform: uppercase; border: 1px solid var(--border); background: transparent; color: var(--ink); transition: all 0.3s var(--ease-out); font-weight: 500; }
+        .sub-plan-btn:hover { background: var(--ink); color: var(--cream); border-color: var(--ink); }
+        .sub-how { padding: 80px 0; background: var(--cream-dark); }
+        .sub-how-header { text-align: center; margin-bottom: 48px; }
+        .sub-how-header .section-eyebrow { font-size: 0.7rem; letter-spacing: 0.22em; text-transform: uppercase; color: var(--gold); }
+        .sub-how-header h2 { font-family: var(--font-display); font-size: clamp(1.8rem, 4vw, 2.8rem); font-weight: 300; color: var(--ink); }
+        .sub-steps { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 32px; max-width: var(--max); margin: 0 auto; padding: 0 var(--gutter); }
+        .sub-step { text-align: center; }
+        .sub-step-num { width: 48px; height: 48px; border-radius: 50%; border: 1px solid var(--gold); display: flex; align-items: center; justify-content: center; margin: 0 auto 16px; font-family: var(--font-display); font-size: 1.1rem; color: var(--gold); }
+        .sub-step h3 { font-family: var(--font-display); font-size: 1.1rem; font-weight: 500; color: var(--ink); margin-bottom: 8px; }
+        .sub-step p { font-family: var(--font-body); font-size: 0.82rem; color: var(--ink-mid); line-height: 1.6; }
+        .sub-testimonials { padding: 80px 0; }
+        .sub-testimonials-header { text-align: center; margin-bottom: 48px; }
+        .sub-testimonials-header .section-eyebrow { font-size: 0.7rem; letter-spacing: 0.22em; text-transform: uppercase; color: var(--gold); }
+        .sub-testimonials-header h2 { font-family: var(--font-display); font-size: clamp(1.8rem, 4vw, 2.8rem); font-weight: 300; color: var(--ink); }
+        .sub-testimonials-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px; max-width: var(--max); margin: 0 auto; padding: 0 var(--gutter); }
+        .sub-testimonial-card { padding: 32px; border: 1px solid var(--border); background: var(--cream); }
+        .sub-testimonial-text { font-family: var(--font-body); font-size: 0.85rem; color: var(--ink-mid); line-height: 1.7; font-style: italic; margin-bottom: 16px; }
+        .sub-testimonial-author { font-family: var(--font-display); font-size: 0.9rem; color: var(--ink); }
+        .sub-testimonial-role { font-family: var(--font-body); font-size: 0.68rem; color: var(--ink-dim); text-transform: uppercase; letter-spacing: 0.1em; }
+        .sub-faq { padding: 80px 0; background: var(--cream-dark); }
+        .sub-faq-header { text-align: center; margin-bottom: 48px; }
+        .sub-faq-header .section-eyebrow { font-size: 0.7rem; letter-spacing: 0.22em; text-transform: uppercase; color: var(--gold); }
+        .sub-faq-header h2 { font-family: var(--font-display); font-size: clamp(1.8rem, 4vw, 2.8rem); font-weight: 300; color: var(--ink); }
+        .sub-faq-list { max-width: 700px; margin: 0 auto; padding: 0 var(--gutter); }
+        .sub-faq-item { border-bottom: 1px solid var(--border); padding: 20px 0; }
+        .sub-faq-q { font-family: var(--font-body); font-size: 0.88rem; color: var(--ink); font-weight: 500; cursor: pointer; display: flex; justify-content: space-between; align-items: center; }
+        .sub-faq-q::after { content: '+'; font-size: 1.2rem; color: var(--gold); transition: transform 0.3s; }
+        .sub-faq-item.open .sub-faq-q::after { transform: rotate(45deg); }
+        .sub-faq-a { font-family: var(--font-body); font-size: 0.82rem; color: var(--ink-mid); line-height: 1.7; max-height: 0; overflow: hidden; transition: max-height 0.3s ease, padding 0.3s ease; padding: 0; }
+        .sub-faq-item.open .sub-faq-a { max-height: 200px; padding-top: 12px; }
+        .sub-form-overlay { position: fixed; inset: 0; background: rgba(24,25,26,0.6); z-index: 99990; display: none; align-items: center; justify-content: center; padding: 24px; overflow-y: auto; }
+        .sub-form-overlay.open { display: flex; }
+        .sub-form-modal { background: var(--cream); max-width: 600px; width: 100%; max-height: 90vh; overflow-y: auto; padding: 48px 40px; position: relative; }
+        .sub-form-close { position: absolute; top: 16px; right: 16px; background: none; border: none; font-size: 1.4rem; color: var(--ink-dim); cursor: pointer; font-family: var(--sans); }
+        .sub-form-close:hover { color: var(--ink); }
+        .sub-form-modal h2 { font-family: var(--font-display); font-size: 1.6rem; font-weight: 300; color: var(--ink); margin-bottom: 4px; }
+        .sub-form-modal .sub-form-subtitle { font-family: var(--font-body); font-size: 0.82rem; color: var(--ink-dim); margin-bottom: 28px; }
+        .sub-form-group { margin-bottom: 20px; }
+        .sub-form-group label { font-family: var(--font-body); font-size: 0.7rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-dim); display: block; margin-bottom: 6px; }
+        .sub-form-group input, .sub-form-group textarea, .sub-form-group select { width: 100%; padding: 10px 14px; border: 1px solid var(--border); border-radius: 4px; font-family: var(--font-body); font-size: 0.88rem; color: var(--ink); background: var(--white); box-sizing: border-box; }
+        .sub-form-group input:focus, .sub-form-group textarea:focus, .sub-form-group select:focus { outline: none; border-color: var(--gold); }
+        .sub-form-group textarea { min-height: 60px; resize: vertical; }
+        .sub-form-row { display: flex; gap: 12px; }
+        .sub-form-row .sub-form-group { flex: 1; }
+        .sub-form-prefs { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+        .sub-form-pref-item { padding: 12px 16px; border: 1px solid var(--border); cursor: pointer; transition: all 0.2s; font-family: var(--font-body); font-size: 0.78rem; color: var(--ink-mid); text-align: center; background: var(--white); }
+        .sub-form-pref-item:hover { border-color: var(--gold-light); }
+        .sub-form-pref-item.selected { border-color: var(--gold); background: var(--gold-pale); color: var(--ink); }
+        .sub-form-pref-group { margin-bottom: 20px; }
+        .sub-form-pref-group > label { margin-bottom: 10px; }
+        .sub-form-submit { width: 100%; padding: 16px; background: var(--ink); color: var(--cream); border: none; font-family: var(--sans); font-size: 0.75rem; letter-spacing: 0.15em; text-transform: uppercase; cursor: pointer; transition: all 0.3s; font-weight: 500; }
+        .sub-form-submit:hover { background: var(--gold); }
+        .sub-form-submit:disabled { opacity: 0.4; cursor: not-allowed; }
+        .sub-success { display: none; text-align: center; padding: 40px 24px; }
+        .sub-success.show { display: block; }
+        .sub-success h3 { font-family: var(--font-display); font-size: 1.5rem; color: var(--ink); margin-bottom: 12px; }
+        .sub-success p { font-family: var(--font-body); font-size: 0.88rem; color: var(--ink-mid); line-height: 1.7; }
+        .sub-success .sub-success-id { font-family: var(--font-display); font-size: 1.1rem; color: var(--gold); margin: 16px 0; }
+        .sub-active-card { max-width: var(--max); margin: 0 auto 60px; padding: 0 var(--gutter); }
+        .sub-active-inner { border: 1px solid var(--gold); background: var(--gold-pale); padding: 32px; display: flex; flex-wrap: wrap; gap: 24px; align-items: center; justify-content: space-between; }
+        .sub-active-info h3 { font-family: var(--font-display); font-size: 1.2rem; font-weight: 500; color: var(--ink); margin-bottom: 4px; }
+        .sub-active-info .sub-active-plan { font-family: var(--font-body); font-size: 0.82rem; color: var(--ink-mid); }
+        .sub-active-info .sub-active-date { font-family: var(--font-body); font-size: 0.72rem; color: var(--ink-dim); margin-top: 4px; }
+        .sub-active-status { display: inline-flex; align-items: center; gap: 6px; font-family: var(--font-body); font-size: 0.65rem; letter-spacing: 0.12em; text-transform: uppercase; padding: 4px 12px; border-radius: 20px; }
+        .sub-status-active { background: rgba(39,174,96,0.08); color: #27ae60; }
+        .sub-status-paused { background: rgba(155,122,66,0.1); color: #9b7a42; }
+        .sub-status-cancelled { background: rgba(192,57,43,0.06); color: #c0392b; }
+        .sub-active-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+        .sub-active-actions button { font-family: var(--sans); font-size: 0.65rem; letter-spacing: 0.12em; text-transform: uppercase; padding: 10px 20px; border: 1px solid var(--border); background: transparent; color: var(--ink); cursor: pointer; transition: all 0.2s; }
+        .sub-active-actions button:hover { background: var(--ink); color: var(--cream); border-color: var(--ink); }
+        .sub-active-actions .sub-btn-pause { border-color: #9b7a42; color: #9b7a42; }
+        .sub-active-actions .sub-btn-pause:hover { background: #9b7a42; color: var(--cream); }
+        .sub-active-actions .sub-btn-cancel { border-color: #c0392b; color: #c0392b; }
+        .sub-active-actions .sub-btn-cancel:hover { background: #c0392b; color: var(--cream); }
+        .sub-active-actions .sub-btn-resume { border-color: #27ae60; color: #27ae60; }
+        .sub-active-actions .sub-btn-resume:hover { background: #27ae60; color: var(--cream); }
+        .sub-page { padding: 140px 0 40px; }
+        @media (max-width: 768px) {
+            .sub-plans-grid { grid-template-columns: 1fr; }
+            .sub-form-modal { padding: 32px 24px; }
+            .sub-form-prefs { grid-template-columns: 1fr; }
+            .sub-form-row { flex-direction: column; }
+            .sub-active-inner { flex-direction: column; text-align: center; }
+            .sub-steps { grid-template-columns: 1fr 1fr; }
+        }
+        @media (max-width: 500px) {
+            .sub-steps { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <div class="page-curtain" id="curtain"></div>
+
+    <div class="cursor" id="cursor">
+        <div class="cursor-ring"></div>
+        <div class="cursor-dot"></div>
+    </div>
+
+    <div class="announcement-banner" id="announcement-banner">
+        <span>Complimentary Shipping on orders above 5,000 - <a href="../collection.html">Explore the Library</a></span>
+        <button class="banner-close" id="banner-close" aria-label="Close">X</button>
+    </div>
+
+    <header class="site-header site-header-solid" id="site-header">
+        <div class="header-logo-row">
+            <a href="../index.html" class="nav-logo-img-link" aria-label="Sugandh Ink Home">
+                <img src="../assets/logo.png" alt="Sugandh Ink Logo" class="header-logo-img">
+            </a>
+        </div>
+        <nav class="main-nav" id="main-nav">
+            <div class="nav-left">
+                <a href="../collection.html" class="nav-link">Collection</a>
+                <a href="../index.html#new-arrivals" class="nav-link">New Arrivals</a>
+                <a href="../index.html#about" class="nav-link">Our Story</a>
+            </div>
+            <div class="nav-right">
+                <a href="ingredient-glossary.html" class="nav-link">Scent Finder</a>
+                <a href="journal.html" class="nav-link">Journal</a>
+                <a href="contact.html" class="nav-link">Contact</a>
+                <button class="nav-icon-btn" id="btn-user-auth" aria-label="Account">
+                    <svg id="auth-icon-svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                    <span id="user-initials" style="display:none; font-family:'Jost',sans-serif; font-size:0.7rem; font-weight:600; width:22px; height:22px; background:var(--gold); color:var(--cream); border-radius:50%; align-items:center; justify-content:center;"></span>
+                </button>
+                <button class="nav-icon-btn" id="toggle-shop" aria-label="Open fragrance library">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
+                    <span class="cart-count" id="cart-badge"></span>
+                </button>
+            </div>
+            <button class="hamburger" id="hamburger" aria-label="Menu" aria-expanded="false"><span></span><span></span></button>
+        </nav>
+        <div class="mobile-menu" id="mobile-menu" aria-hidden="true">
+            <nav class="mobile-menu-nav">
+                <a href="../collection.html" class="mm-link" data-close>Collection</a>
+                <a href="../index.html#new-arrivals" class="mm-link" data-close>New Arrivals</a>
+                <a href="../index.html#about" class="mm-link" data-close>Our Story</a>
+                <a href="ingredient-glossary.html" class="mm-link" data-close>Scent Finder</a>
+                <a href="journal.html" class="mm-link" data-close>Journal</a>
+                <a href="contact.html" class="mm-link" data-close>Contact</a>
+                <a href="#" class="mm-link" id="mm-auth-btn">Sign In</a>
+            </nav>
+            <div class="mm-footer">
+                <a href="mailto:hello@sugandhink.in">hello@sugandhink.in</a>
+                <a href="tel:+919769445567">+91 97694 45567</a>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            <div class="sub-page" id="sub-page">
+                <div class="sub-active-card" id="sub-active-card" style="display:none;"></div>
+
+                <div class="sub-hero">
+                    <h1>Scent of the <em>Month</em></h1>
+                    <p>Discover a new fragrance every month. Curated by our master perfumers and delivered to your door.</p>
+                </div>
+
+                <section class="sub-plans" id="sub-plans">
+                    <div class="sub-plans-header">
+                        <div class="section-eyebrow">- Choose Your Accord</div>
+                        <h2>Subscription Plans</h2>
+                    </div>
+                    <div class="sub-plans-grid" id="sub-plans-grid">
+                        <div class="sub-plan-card" data-plan="monthly">
+                            <div class="sub-plan-badge">Most Popular</div>
+                            <div class="sub-plan-name">Monthly Discovery</div>
+                            <div class="sub-plan-price">1,999 <small>/mo</small></div>
+                            <p class="sub-plan-desc">A curated introduction to our library. One full bottle and two samples, delivered each month.</p>
+                            <ul class="sub-plan-features">
+                                <li>1 full bottle (15ml) every month</li>
+                                <li>2 complimentary samples</li>
+                                <li>Curated by master perfumers</li>
+                                <li>Free shipping</li>
+                                <li>Cancel anytime</li>
+                            </ul>
+                            <button class="sub-plan-btn" data-plan="monthly">Subscribe</button>
+                        </div>
+                        <div class="sub-plan-card" data-plan="quarterly">
+                            <div class="sub-plan-badge show">Best Value</div>
+                            <div class="sub-plan-name">Quarterly Collection</div>
+                            <div class="sub-plan-price">5,499 <small>/quarter</small></div>
+                            <p class="sub-plan-desc">Three full bottles and an exclusive sample set. A deeper exploration of our olfactory palette.</p>
+                            <ul class="sub-plan-features">
+                                <li>3 full bottles (15ml each) per quarter</li>
+                                <li>Exclusive quarterly sample set</li>
+                                <li>Curated by master perfumers</li>
+                                <li>Free shipping</li>
+                                <li>Cancel anytime</li>
+                            </ul>
+                            <button class="sub-plan-btn" data-plan="quarterly">Subscribe</button>
+                        </div>
+                        <div class="sub-plan-card" data-plan="atelier">
+                            <div class="sub-plan-badge show">Premium</div>
+                            <div class="sub-plan-name">The Atelier</div>
+                            <div class="sub-plan-price">9,999 <small>/quarter</small></div>
+                            <p class="sub-plan-desc">The ultimate subscription. Full bottles, a discovery set, and priority access to new launches.</p>
+                            <ul class="sub-plan-features">
+                                <li>3 full bottles (15ml) per quarter</li>
+                                <li>1 exclusive discovery set</li>
+                                <li>Priority access to new launches</li>
+                                <li>Curated by master perfumers</li>
+                                <li>Free shipping</li>
+                                <li>Cancel anytime</li>
+                            </ul>
+                            <button class="sub-plan-btn" data-plan="atelier">Subscribe</button>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="sub-how">
+                    <div class="sub-how-header">
+                        <div class="section-eyebrow">- How It Works</div>
+                        <h2>Your Journey</h2>
+                    </div>
+                    <div class="sub-steps">
+                        <div class="sub-step">
+                            <div class="sub-step-num">01</div>
+                            <h3>Choose Your Plan</h3>
+                            <p>Select the subscription that suits your curiosity. Monthly or quarterly, each plan is designed for discovery.</p>
+                        </div>
+                        <div class="sub-step">
+                            <div class="sub-step-num">02</div>
+                            <h3>Tell Us Your Preferences</h3>
+                            <p>Share your scent profile - mood, family, notes you love and those you prefer to avoid. We listen carefully.</p>
+                        </div>
+                        <div class="sub-step">
+                            <div class="sub-step-num">03</div>
+                            <h3>We Curate</h3>
+                            <p>Our master perfumers hand-select each fragrance based on your profile. Every bottle is a considered choice.</p>
+                        </div>
+                        <div class="sub-step">
+                            <div class="sub-step-num">04</div>
+                            <h3>Delivered Monthly</h3>
+                            <p>Your curated selection arrives at your door. A new olfactory experience, every cycle.</p>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="sub-testimonials">
+                    <div class="sub-testimonials-header">
+                        <div class="section-eyebrow">- From Our Collectors</div>
+                        <h2>What Subscribers Say</h2>
+                    </div>
+                    <div class="sub-testimonials-grid">
+                        <div class="sub-testimonial-card">
+                            <p class="sub-testimonial-text">The Monthly Discovery has completely transformed how I experience fragrance. Each delivery feels like a carefully wrapped gift from someone who truly understands my taste.</p>
+                            <div class="sub-testimonial-author">Ananya R.</div>
+                            <div class="sub-testimonial-role">Monthly Discovery, 3 months</div>
+                        </div>
+                        <div class="sub-testimonial-card">
+                            <p class="sub-testimonial-text">I started with the Quarterly Collection and immediately appreciated the depth of curation. The sample sets alone are worth it - I have found signatures I would never have chosen myself.</p>
+                            <div class="sub-testimonial-author">Vikram S.</div>
+                            <div class="sub-testimonial-role">Quarterly Collection, 6 months</div>
+                        </div>
+                        <div class="sub-testimonial-card">
+                            <p class="sub-testimonial-text">The Atelier subscription is pure indulgence. Priority access to new launches means I experience compositions before anyone else. Truly a collector's program.</p>
+                            <div class="sub-testimonial-author">Neha P.</div>
+                            <div class="sub-testimonial-role">The Atelier, 1 year</div>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="sub-faq">
+                    <div class="sub-faq-header">
+                        <div class="section-eyebrow">- Questions</div>
+                        <h2>Frequently Asked</h2>
+                    </div>
+                    <div class="sub-faq-list">
+                        <div class="sub-faq-item">
+                            <div class="sub-faq-q">Can I skip a month?</div>
+                            <div class="sub-faq-a">Yes. You can pause your subscription at any time through your account dashboard. Your subscription will resume automatically on your next billing cycle unless you choose to extend the pause.</div>
+                        </div>
+                        <div class="sub-faq-item">
+                            <div class="sub-faq-q">Can I cancel my subscription?</div>
+                            <div class="sub-faq-a">Absolutely. You can cancel anytime from your account. Your subscription will remain active until the end of the current billing period. No cancellation fees.</div>
+                        </div>
+                        <div class="sub-faq-item">
+                            <div class="sub-faq-q">What if I don't like a fragrance?</div>
+                            <div class="sub-faq-a">We carefully curate based on your preferences, but taste is personal. If a fragrance does not resonate with you, we welcome your feedback so our perfumers can refine future selections.</div>
+                        </div>
+                        <div class="sub-faq-item">
+                            <div class="sub-faq-q">Can I swap a bottle for something else?</div>
+                            <div class="sub-faq-a">Our curation is designed to expand your olfactory horizons. However, if you have a strong preference against a specific note, please let us know in your preferences and we will accommodate.</div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </main>
+
+    <footer class="site-footer" id="footer">
+        <div class="footer-top">
+            <div class="footer-brand">
+                <div class="footer-logo"><span>Sugandh</span><span class="italic"> Ink</span></div>
+                <p>Artisanal fragrances crafted with unyielding precision and historical reverence. Malad (West), Mumbai.</p>
+                <div class="footer-socials">
+                    <a href="https://instagram.com" class="fsocial" target="_blank" rel="noopener" aria-label="Instagram"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="5"/><circle cx="17.5" cy="6.5" r="1.5" fill="currentColor" stroke="none"/></svg></a>
+                    <a href="https://twitter.com" class="fsocial" target="_blank" rel="noopener" aria-label="Twitter / X"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg></a>
+                    <a href="https://facebook.com" class="fsocial" target="_blank" rel="noopener" aria-label="Facebook"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg></a>
+                </div>
+            </div>
+            <div class="footer-col"><h5>The Maison</h5><ul>
+                <li><a href="heritage.html">Our Heritage</a></li>
+                <li><a href="ingredient-glossary.html">Ingredient Glossary</a></li>
+                <li><a href="layering-guide.html">Layering Guide</a></li>
+                <li><a href="../collection.html">The Library</a></li>
+                <li><a href="bespoke.html">Bespoke Enquiry</a></li>
+            </ul></div>
+            <div class="footer-col"><h5>Shop</h5><ul>
+                <li><a href="corporate-gifting.html">Corporate Gifting</a></li>
+                <li><a href="gift-cards.html">Gift Cards</a></li>
+                <li><a href="../collection.html?sort=new">New Arrivals</a></li>
+                <li><a href="../collection.html?sort=best">Best Sellers</a></li>
+                <li><a href="../collection.html">Full Collection</a></li>
+            </ul></div>
+            <div class="footer-col"><h5>Client Care</h5><ul>
+                <li><a href="contact.html">Contact Us</a></li>
+                <li><a href="consultation.html">Fragrance Consultation</a></li>
+                <li><a href="journal.html">The Journal</a></li>
+                <li><a href="newsletter.html">Newsletter</a></li>
+                <li><a href="loyalty.html">Rewards &amp; Loyalty</a></li>
+                <li><a href="shipping-policy.html">Shipping &amp; Delivery</a></li>
+                <li><a href="size-guide.html">Size Guide</a></li>
+                <li><a href="faq.html">FAQ</a></li>
+                <li><a href="account.html">My Account</a></li>
+                <li><a href="track-order.html">Track Order</a></li>
+            </ul></div>
+            <div class="footer-col"><h5>Legal</h5><ul>
+                <li><a href="terms.html">Terms of Service</a></li>
+                <li><a href="privacy.html">Privacy Policy</a></li>
+                <li><a href="cookies.html">Cookie Policy</a></li>
+                <li><a href="returns.html">Returns &amp; Shipping</a></li>
+            </ul></div>
+        </div>
+        <div class="footer-bottom">
+            <span>&copy; 2026 Sugandh Ink - All Rights Reserved</span>
+            <span class="footer-wa-note">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12.8 12.8 0 00-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+                Orders via WhatsApp: <a href="https://wa.me/919769445567" target="_blank">+91 97694 45567</a>
+            </span>
+        </div>
+    </footer>
+
+    <div class="sub-form-overlay" id="sub-form-overlay">
+        <div class="sub-form-modal">
+            <button class="sub-form-close" id="sub-form-close">&times;</button>
+            <div id="sub-form-content">
+                <h2>Start Your Subscription</h2>
+                <p class="sub-form-subtitle">Tell us about yourself and your scent preferences</p>
+                <form id="sub-form" novalidate>
+                    <input type="hidden" id="sub-form-plan" value="">
+
+                    <div class="sub-form-row">
+                        <div class="sub-form-group">
+                            <label>Full Name</label>
+                            <input type="text" id="sub-form-name" required placeholder="Your name">
+                        </div>
+                        <div class="sub-form-group">
+                            <label>Email</label>
+                            <input type="email" id="sub-form-email" required placeholder="your@email.com">
+                        </div>
+                    </div>
+
+                    <div class="sub-form-row">
+                        <div class="sub-form-group">
+                            <label>Phone / WhatsApp</label>
+                            <input type="tel" id="sub-form-phone" required placeholder="+91 98765 43210">
+                        </div>
+                        <div class="sub-form-group">
+                            <label>Selected Plan</label>
+                            <input type="text" id="sub-form-plan-display" readonly style="opacity:0.7;">
+                        </div>
+                    </div>
+
+                    <div class="sub-form-group">
+                        <label>Delivery Address</label>
+                        <textarea id="sub-form-address" required placeholder="Street address, landmark"></textarea>
+                    </div>
+
+                    <div class="sub-form-row">
+                        <div class="sub-form-group">
+                            <label>City</label>
+                            <input type="text" id="sub-form-city" required placeholder="Mumbai">
+                        </div>
+                        <div class="sub-form-group">
+                            <label>State</label>
+                            <input type="text" id="sub-form-state" required placeholder="Maharashtra">
+                        </div>
+                    </div>
+
+                    <div class="sub-form-row">
+                        <div class="sub-form-group">
+                            <label>Country</label>
+                            <input type="text" id="sub-form-country" value="India" required>
+                        </div>
+                        <div class="sub-form-group">
+                            <label>ZIP / Pin Code</label>
+                            <input type="text" id="sub-form-zip" required placeholder="400001">
+                        </div>
+                    </div>
+
+                    <div class="sub-form-pref-group">
+                        <label style="font-family:var(--font-body);font-size:0.7rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--ink-dim);display:block;margin-bottom:6px;">Preferred Mood</label>
+                        <div class="sub-form-prefs" id="sub-pref-mood">
+                            <div class="sub-form-pref-item" data-value="fresh">Fresh &amp; Clean</div>
+                            <div class="sub-form-pref-item" data-value="warm">Warm &amp; Spicy</div>
+                            <div class="sub-form-pref-item" data-value="dark">Dark &amp; Mysterious</div>
+                            <div class="sub-form-pref-item" data-value="light">Light &amp; Airy</div>
+                        </div>
+                    </div>
+
+                    <div class="sub-form-pref-group">
+                        <label style="font-family:var(--font-body);font-size:0.7rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--ink-dim);display:block;margin-bottom:6px;">Preferred Family</label>
+                        <div class="sub-form-prefs" id="sub-pref-family">
+                            <div class="sub-form-pref-item" data-value="floral">Floral</div>
+                            <div class="sub-form-pref-item" data-value="woody">Woody</div>
+                            <div class="sub-form-pref-item" data-value="oud">Oud &amp; Resins</div>
+                            <div class="sub-form-pref-item" data-value="fresh">Fresh &amp; Aquatic</div>
+                            <div class="sub-form-pref-item" data-value="gourmand">Gourmand</div>
+                            <div class="sub-form-pref-item" data-value="spicy">Spicy</div>
+                        </div>
+                    </div>
+
+                    <div class="sub-form-group">
+                        <label>Notes You Love</label>
+                        <input type="text" id="sub-form-love-notes" placeholder="e.g. bergamot, sandalwood, rose">
+                    </div>
+
+                    <div class="sub-form-group">
+                        <label>Notes to Avoid</label>
+                        <input type="text" id="sub-form-avoid-notes" placeholder="e.g. leather, tobacco, patchouli">
+                    </div>
+
+                    <div class="sub-form-group">
+                        <label>Delivery Frequency</label>
+                        <select id="sub-form-frequency">
+                            <option value="monthly">Monthly</option>
+                            <option value="quarterly">Quarterly</option>
+                        </select>
+                    </div>
+
+                    <button type="submit" class="sub-form-submit" id="sub-form-submit">Start Subscription</button>
+                </form>
+            </div>
+            <div class="sub-success" id="sub-success">
+                <h3>Welcome to the Atelier</h3>
+                <p>Your subscription has been initiated. Our team will reach out via WhatsApp to confirm your first curation.</p>
+                <div class="sub-success-id" id="sub-success-id"></div>
+                <p style="margin-top:16px;">You earned loyalty points for this subscription.</p>
+                <button class="btn btn-dark" onclick="location.href='account.html?tab=subscription'" style="margin-top:20px;">View in Account</button>
+            </div>
+        </div>
+    </div>
+
+    <script type="module" src="../js/loader.js"></script>
+    <script type="module" src="../js/transitions.js"></script>
+    <script type="module" src="../js/ui.js"></script>
+    <script type="module" src="../js/subscription.js"></script>
+</body>
+</html>

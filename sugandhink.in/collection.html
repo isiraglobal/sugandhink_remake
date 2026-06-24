@@ -58,6 +58,7 @@
 
             <!-- Right links + icons -->
             <div class="nav-right">
+                <a href="pages/compare.html" class="nav-link">Compare</a>
                 <a href="pages/journal.html" class="nav-link">Journal</a>
                 <a href="index.html#contact" class="nav-link">Contact</a>
                 <!-- Cart/Drawer -->
@@ -81,6 +82,7 @@
                 <a href="index.html#new-arrivals" class="mm-link" data-close>New Arrivals</a>
                 <a href="index.html#about" class="mm-link" data-close>Our Story</a>
                 <a href="pages/ingredient-glossary.html" class="mm-link" data-close>Scent Finder</a>
+                <a href="pages/compare.html" class="mm-link" data-close>Compare</a>
                 <a href="pages/journal.html" class="mm-link" data-close>Journal</a>
                 <a href="index.html#contact" class="mm-link" data-close>Contact</a>
             </nav>
@@ -196,6 +198,17 @@
                             <label class="filter-checkbox">
                                 <input type="checkbox" name="occasion" value="formal">
                                 <span>Formal & Special</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Filter Group: Availability -->
+                    <div class="filter-group">
+                        <h4>Availability</h4>
+                        <div class="filter-options">
+                            <label class="filter-checkbox">
+                                <input type="checkbox" name="availability" value="out-of-stock" id="show-out-of-stock">
+                                <span>Show Out of Stock</span>
                             </label>
                         </div>
                     </div>
@@ -341,6 +354,7 @@
     <script type="module" src="js/transitions.js"></script>
     <script type="module" src="js/ui.js"></script>
     <script type="module" src="js/scrolly.js"></script>
+    <script type="module" src="js/waitlist.js"></script>
     <script type="module" src="js/collection-page.js"></script>
 </body>
 </html>
