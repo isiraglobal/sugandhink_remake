@@ -241,8 +241,15 @@ function generateInvoicePDF(invoiceData) {
 // ════════════════════════════════════════════════════════════════════════════
 
 // Health Check
-app.get('/api/health', (req, res) => {
-    res.json({ status: 'ok', timestamp: new Date().toISOString() });
+app.get('/api/health', async (req, res) => {
+    let dbOk = false;
+    try {
+        if (supabase) {
+            const { error } = await supabase.from('products').select('count', { count: 'exact', head: true });
+            dbOk = !error;
+        }
+    } catch (_) { /* keep dbOk false */ }
+    res.json({ status: 'ok', database: dbOk, timestamp: new Date().toISOString() });
 });
 
 // ── CUSTOMER MANAGEMENT ──────────────────────────────────────────────────────
