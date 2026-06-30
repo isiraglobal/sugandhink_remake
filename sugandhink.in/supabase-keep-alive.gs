@@ -2,27 +2,34 @@
  * Sugandh Ink - Supabase Keep-Alive Script
  *
  * Prevents Supabase from pausing after 7 days of inactivity.
+ * Pings Supabase REST API directly every 4 days.
  *
  * HOW TO SET UP:
  *   1. Go to https://script.google.com
  *   2. Create a New Project
  *   3. Paste this entire file into Code.gs
- *   4. Replace YOUR_SITE_URL below with your actual domain
- *   5. Save (Cmd+S)
- *   6. In the toolbar, select setupTrigger from the dropdown and click Run
- *   7. Authorize the script (it needs permission to create triggers and fetch URLs)
- *   8. Done — the trigger will ping your site every 4 days
+ *   4. Save (Cmd+S)
+ *   5. In the toolbar, select setupTrigger from the dropdown and click Run
+ *   6. Authorize the script (it needs permission to create triggers and fetch URLs)
+ *   7. Done — no domain or config needed
  *
  * TO DELETE ALL TRIGGERS:
- *   Run the deleteAllTriggers() function from the dropdown.
+ *   Run deleteAllTriggers() from the dropdown.
  */
 
-var SITE_URL = 'https://YOUR_SITE_URL.com/api/health';
+var SUPABASE_URL = 'https://wqxugmhwmepngbzftxmq.supabase.co';
+var SUPABASE_KEY = 'sb_publishable_QVdxHYeZD2iP8O5yBEp-vw_ckagQo70';
 
-function pingSite() {
+function pingSupabase() {
+  var url = SUPABASE_URL + '/rest/v1/products?select=count&head=true';
+  var headers = {
+    apikey: SUPABASE_KEY,
+    Authorization: 'Bearer ' + SUPABASE_KEY
+  };
+  var params = { headers: headers, muteHttpExceptions: true };
   try {
-    var response = UrlFetchApp.fetch(SITE_URL, { muteHttpExceptions: true });
-    Logger.log('Ping success: ' + response.getContentText());
+    var response = UrlFetchApp.fetch(url, params);
+    Logger.log('Ping success: ' + response.getResponseCode());
   } catch (e) {
     Logger.log('Ping failed: ' + e.message);
   }
@@ -30,13 +37,13 @@ function pingSite() {
 
 function setupTrigger() {
   deleteAllTriggers();
-  ScriptApp.newTrigger('pingSite')
+  ScriptApp.newTrigger('pingSupabase')
     .timeBased()
     .everyDays(4)
     .atHour(9)
     .nearMinute(15)
     .create();
-  Logger.log('Trigger created: pings ' + SITE_URL + ' every 4 days at ~9:15 AM');
+  Logger.log('Trigger created — pings Supabase directly every 4 days at ~9:15 AM');
 }
 
 function deleteAllTriggers() {

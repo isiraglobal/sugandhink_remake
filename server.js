@@ -33,6 +33,19 @@ if (supabaseUrl && supabaseKey) {
     console.warn('⚠️  Supabase URL/Key missing in .env');
 }
 
+// Auto-keepalive: ping Supabase every 6 days to prevent 7-day inactivity pause
+const KEEPALIVE_MS = 6 * 24 * 60 * 60 * 1000;
+setInterval(async () => {
+    try {
+        if (supabase) {
+            const { error } = await supabase.from('products').select('count', { count: 'exact', head: true });
+            console.log('[KeepAlive]', error ? 'FAILED: ' + error.message : 'OK');
+        }
+    } catch (e) {
+        console.error('[KeepAlive] Error:', e.message);
+    }
+}, KEEPALIVE_MS);
+
 // Middleware
 app.use(cors());
 app.use(express.json({ limit: '10mb' }));
