@@ -1258,8 +1258,10 @@ app.put('/api/orders/:id/ship', async (req, res) => {
 
 initializeEmailService();
 
-app.listen(PORT, () => {
-    console.log(`✓ Sugandh Ink Admin Server running on http://localhost:${PORT}`);
-});
+if (!process.env.VERCEL) {
+    app.listen(PORT, () => {
+        console.log(`✓ Sugandh Ink Admin Server running on http://localhost:${PORT}`);
+    });
+}
 
 export default app;

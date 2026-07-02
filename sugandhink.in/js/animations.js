@@ -144,16 +144,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
     
-    // Animate Hero Stats Row
-    const heroStats = document.querySelector('.hero-stats');
-    if (heroStats) {
-        entranceTimeline.fromTo(heroStats,
-            { opacity: 0 },
-            { opacity: 1, duration: 0.8, ease: 'power2.out' },
-            '-=0.4'
-        );
-    }
-
     // ─── 4. Magnetic Buttons Hover Effect ──────────────────────────────────
     const magneticBtns = document.querySelectorAll('.btn, .fsocial, .reviews-nav button');
     magneticBtns.forEach(btn => {
@@ -190,16 +180,15 @@ document.addEventListener('DOMContentLoaded', () => {
             const x = e.clientX - rect.left;
             const y = e.clientY - rect.top;
             
-            // Calculate tilt angle (-6deg to 6deg)
-            const rotateX = ((rect.height / 2 - y) / (rect.height / 2)) * 6;
-            const rotateY = ((x - rect.width / 2) / (rect.width / 2)) * 6;
+            // Calculate tilt angle (-4deg to 4deg)
+            const rotateX = ((rect.height / 2 - y) / (rect.height / 2)) * 4;
+            const rotateY = ((x - rect.width / 2) / (rect.width / 2)) * 4;
             
             gsap.to(card, {
                 rotateX: rotateX,
                 rotateY: rotateY,
                 transformPerspective: 1000,
-                scale: 1.01,
-                boxShadow: '0 20px 40px rgba(24, 25, 26, 0.08)',
+                scale: 1.005,
                 duration: 0.3,
                 ease: 'power2.out'
             });
@@ -210,11 +199,83 @@ document.addEventListener('DOMContentLoaded', () => {
                 rotateX: 0,
                 rotateY: 0,
                 scale: 1,
-                boxShadow: 'none',
                 duration: 0.4,
                 ease: 'power2.out'
             });
         });
     });
 
+    // ─── 6. Parallax Editorial Reveal Animations (ScrollTrigger) ────────────
+    if (window.ScrollTrigger) {
+        gsap.registerPlugin(ScrollTrigger);
+
+        // Parallax effect on hero visual bottle frame
+        const visualFrame = document.querySelector('.hero-img-frame');
+        if (visualFrame) {
+            gsap.to(visualFrame, {
+                yPercent: 10,
+                scrollTrigger: {
+                    trigger: '#hero',
+                    start: 'top top',
+                    end: 'bottom top',
+                    scrub: true
+                }
+            });
+        }
+
+        // Reveal sections as they scroll into viewport
+        const revealElements = document.querySelectorAll('.section-head, .family-header, .ingredients-header, .story-text, .family-grid');
+        revealElements.forEach(el => {
+            gsap.fromTo(el, 
+                { opacity: 0, y: 32 },
+                {
+                    opacity: 1, y: 0, duration: 1, ease: 'power3.out',
+                    scrollTrigger: {
+                        trigger: el,
+                        start: 'top 88%',
+                        toggleActions: 'play none none none'
+                    }
+                }
+            );
+        });
+
+        // Parallax effect on story image
+        const storyImg = document.querySelector('.story-image');
+        if (storyImg && storyImg.querySelector('img')) {
+            gsap.fromTo(storyImg.querySelector('img'),
+                { scale: 1.05, yPercent: -6 },
+                {
+                    yPercent: 6, scale: 0.96,
+                    scrollTrigger: {
+                        trigger: storyImg,
+                        start: 'top bottom',
+                        end: 'bottom top',
+                        scrub: true
+                    }
+                }
+            );
+        }
+
+        // Asymmetric Parallax on Showcase images
+        const showcaseImages = document.querySelectorAll('.showcase-image-wrap');
+        showcaseImages.forEach((wrap, index) => {
+            const img = wrap.querySelector('img');
+            if (img) {
+                const yOffset = index % 2 === 0 ? 8 : -8;
+                gsap.fromTo(img,
+                    { yPercent: -yOffset },
+                    {
+                        yPercent: yOffset,
+                        scrollTrigger: {
+                            trigger: wrap,
+                            start: 'top bottom',
+                            end: 'bottom top',
+                            scrub: true
+                        }
+                    }
+                );
+            }
+        });
+    }
 });
+

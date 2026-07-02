@@ -3,36 +3,47 @@
    Shared tokens, reset, typography, utilities
    ========================================================================= */
 
+@import url('https://api.fontshare.com/v2/css?f[]=clash-display@500,600,700&f[]=satoshi@300,400,500,700&display=swap');
+
 /* ── Variables ─────────────────────────────────────────────────────────────── */
 :root {
-  --cream:         #f7f4ef;
-  --cream-2:       #edeae4;
-  --cream-3:       #e0dcd5;
-  --ink:           #18191a;
-  --ink-2:         #3c3d3e;
-  --ink-3:         #787a7b;
+  --cream:         #FAF5EB; /* Warm cream base */
+  --cream-2:       #ECECE4; /* Sand-beige secondary */
+  --cream-3:       #D5D5C4; /* Warm neutral border/accent */
+  --ink:           #33302C; /* Deep charcoal headings */
+  --ink-2:         #484036; /* Soft charcoal body */
+  --ink-3:         #666E72; /* Warm gray subtext */
+  
+  /* Accent Olive Tones from Forner */
+  --olive:         #CACAB0;
+  --olive-2:       #BFBFA3;
+  --olive-3:       #8E8E65;
+  --dark-olive:    #626248;
+  
+  /* Traditional Sugandh Ink Gold (Aesthetic Accent) */
   --gold:          #9b7a42;
   --gold-2:        #c4a265;
   --gold-pale:     #f2ece0;
   --white:         #ffffff;
-  --border:        rgba(24,25,26,0.1);
-  --border-2:      rgba(24,25,26,0.2);
+  --border:        rgba(72,64,54,0.12);
+  --border-2:      rgba(72,64,54,0.22);
   --error:         #c0392b;
   --success:       #27ae60;
 
   --serif:  'Cormorant Garamond', 'Georgia', serif;
-  --sans:   'Jost', 'Helvetica Neue', Arial, sans-serif;
+  --sans:   'Satoshi', 'Jost', 'Helvetica Neue', Arial, sans-serif;
+  --display: 'Clash Display', 'Satoshi', sans-serif;
 
   --ease:      cubic-bezier(0.22, 1, 0.36, 1);
   --ease-in:   cubic-bezier(0.76, 0, 0.24, 1);
 
-  --nav-h:    68px;
-  --max-w:    1340px;
-  --px:       clamp(18px, 5vw, 64px);
+  --nav-h:    72px;
+  --max-w:    1400px;
+  --px:       clamp(24px, 6vw, 80px);
 
   /* Curtain */
   --curtain-bg: var(--ink);
-  --curtain-dur: 600ms;
+  --curtain-dur: 700ms;
 }
 
 /* ── Reset ──────────────────────────────────────────────────────────────────── */
@@ -90,14 +101,14 @@ svg { display:block; }
   color: var(--gold);
 }
 .t-display {
-  font-family: var(--serif);
+  font-family: var(--display);
   font-size: clamp(2.4rem, 4vw, 4rem);
-  font-weight: 300;
-  line-height: 1.1;
-  letter-spacing: 0.01em;
+  font-weight: 500;
+  line-height: 1.05;
+  letter-spacing: -0.01em;
   color: var(--ink);
 }
-.t-body { font-size:0.9rem; line-height:1.85; color:var(--ink-2); }
+.t-body { font-size:0.92rem; line-height:1.85; color:var(--ink-2); font-weight: 300; }
 
 /* ── Buttons ────────────────────────────────────────────────────────────────── */
 .btn {
@@ -158,11 +169,11 @@ svg { display:block; }
   margin-bottom: 12px;
 }
 .section-title {
-  font-family: var(--serif);
-  font-size: clamp(1.8rem, 3.5vw, 3rem);
-  font-weight: 300;
-  letter-spacing: 0.01em;
-  line-height: 1.1;
+  font-family: var(--display);
+  font-size: clamp(1.8rem, 3.5vw, 3.2rem);
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  line-height: 1.05;
   color: var(--ink);
 }
 .section-link {

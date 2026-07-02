@@ -67,7 +67,6 @@ document.addEventListener('DOMContentLoaded', () => {
     window.addEventListener('auth:updated', updatePurchaseDetails);
     window.addEventListener('compare:updated', syncBadge);
 });
-});
 
 // ── Render Details ───────────────────────────────────────────────────────────
 function renderProductDetails() {
@@ -118,10 +117,10 @@ function renderProductDetails() {
         `A signature formulation from the Sugandh Ink atelier. Opens with distinct notes of ${product.notes.split(',').slice(0,2).join(' and ')}, maturing beautifully into a heart of ${product.notes.split(',').slice(2,4).join(' and ')}, resting on a lingering foundation of ${product.notes.split(',').slice(4).join(' and ')}. Crafted for ${product.occasion}.`;
 
     // Notes Pyramid
-    const notes = product.notes.split(',').map(n => n.trim());
-    document.getElementById('top-notes-list').textContent = notes.slice(0, 2).map(n => capitalize(n)).join(' · ');
-    document.getElementById('heart-notes-list').textContent = notes.slice(2, 5).map(n => capitalize(n)).join(' · ');
-    document.getElementById('base-notes-list').textContent = notes.slice(5).map(n => capitalize(n)).join(' · ');
+    document.getElementById('top-notes-list').textContent = (product.topNotes || '').split(',').map(n => capitalize(n.trim())).join(' · ') || 'Citrus · Bergamot';
+    document.getElementById('heart-notes-list').textContent = (product.heartNotes || '').split(',').map(n => capitalize(n.trim())).join(' · ') || 'Saffron · Cardamom';
+    document.getElementById('base-notes-list').textContent = (product.baseNotes || '').split(',').map(n => capitalize(n.trim())).join(' · ') || 'Sandalwood · Musk';
+
 
     // Thumbnails
     const thumbsContainer = document.getElementById('product-thumbs');

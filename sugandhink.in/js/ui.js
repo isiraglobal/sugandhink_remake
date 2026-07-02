@@ -1025,31 +1025,69 @@ function setupMobileMenu() {
     const menu = document.getElementById('mobile-menu');
     if (!btn || !menu) return;
 
+    const menuLinks = menu.querySelectorAll('.mm-link');
+    const menuFooter = menu.querySelector('.mm-footer');
+
+    // Reset initial states for GSAP
+    gsap.set(menu, { yPercent: -100, autoAlpha: 0 });
+    gsap.set(menuLinks, { y: 40, opacity: 0 });
+    if (menuFooter) gsap.set(menuFooter, { y: 20, opacity: 0 });
+
+    const menuTl = gsap.timeline({ paused: true })
+        .to(menu, { duration: 0.6, yPercent: 0, autoAlpha: 1, ease: 'power4.out' })
+        .to(menuLinks, { duration: 0.5, y: 0, opacity: 1, stagger: 0.08, ease: 'power3.out' }, '-=0.25');
+
+    if (menuFooter) {
+        menuTl.to(menuFooter, { duration: 0.4, y: 0, opacity: 1, ease: 'power3.out' }, '-=0.3');
+    }
+
+    let isOpen = false;
+
     btn.addEventListener('click', () => {
-        const open = menu.classList.toggle('open');
-        btn.classList.toggle('open', open);
-        document.body.style.overflow = open ? 'hidden' : '';
-        btn.setAttribute('aria-expanded', open);
+        isOpen = !isOpen;
+        btn.classList.toggle('open', isOpen);
+        btn.setAttribute('aria-expanded', isOpen);
+        document.body.style.overflow = isOpen ? 'hidden' : '';
+
+        if (isOpen) {
+            document.getElementById('site-header').style.zIndex = '2500';
+            menu.classList.add('open');
+            menuTl.play();
+        } else {
+            menuTl.reverse().then(() => {
+                menu.classList.remove('open');
+                document.getElementById('site-header').style.zIndex = '';
+            });
+        }
     });
 
     menu.querySelectorAll('[data-close]').forEach(a => {
         a.addEventListener('click', () => {
-            menu.classList.remove('open');
+            isOpen = false;
             btn.classList.remove('open');
+            btn.setAttribute('aria-expanded', 'false');
             document.body.style.overflow = '';
+            menuTl.reverse().then(() => {
+                menu.classList.remove('open');
+                document.getElementById('site-header').style.zIndex = '';
+            });
         });
     });
 
     const authMobileBtn = document.getElementById('mm-auth-btn');
     authMobileBtn?.addEventListener('click', (e) => {
         e.preventDefault();
-        menu.classList.remove('open');
+        isOpen = false;
         btn.classList.remove('open');
         btn.setAttribute('aria-expanded', 'false');
         document.body.style.overflow = '';
-        document.getElementById('btn-user-auth')?.click();
+        menuTl.reverse().then(() => {
+            menu.classList.remove('open');
+            document.getElementById('btn-user-auth')?.click();
+        });
     });
 }
+
 
 function setupHeader() {
     const header = document.getElementById('site-header');

@@ -50,3 +50,4 @@ tmp/
 
 # Generated PDFs (optional - keep if you want to track some)
 invoices/*.pdf
+.vercel

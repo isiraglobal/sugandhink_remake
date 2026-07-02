@@ -3,9 +3,17 @@
  * Powered by GSAP ScrollTrigger for premium performance and micro-animations.
  */
 
-gsap.registerPlugin(ScrollTrigger);
+if (typeof ScrollTrigger !== 'undefined') {
+    gsap.registerPlugin(ScrollTrigger);
+} else {
+    console.warn('ScrollTrigger is not defined. Scroll animations disabled.');
+}
 
 document.addEventListener('DOMContentLoaded', () => {
+    if (typeof ScrollTrigger === 'undefined') {
+        console.warn('ScrollTrigger is not defined. Scroll-based animations are bypassed.');
+        return;
+    }
 
     // ── 1. Parallax Scroll on Hero Bottle ─────────────────────────────────────
     const heroBottle = document.getElementById('hero-bottle');
